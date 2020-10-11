@@ -5,25 +5,16 @@ from fastapi import APIRouter, Depends, status
 from fastapi.exceptions import HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
-from passlib.context import CryptContext
 from pydantic.main import BaseModel
 
+from .utils import verify_password
+
 router = APIRouter()
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 SECRET_KEY = "bc1994fc98b4757f41cadf698c28bb06a6a560f59f74c27c9e81e71304f78010"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
-
-
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
-
-
-def get_password_hash(password):
-    return pwd_context.hash(password)
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
@@ -47,27 +38,10 @@ class DBUser(User):
     hashed_password: str
 
 
-valid_users = [
-    ("patrice", "patrice"),
-    ("username", "password"),
-    ("user", "pass"),
-    ("diego", "diego"),
-    ("pablo", "pablo"),
-]
-
-valid_users = [
-    DBUser(id=i, username=a, hashed_password=get_password_hash(b)) for i, (a, b) in enumerate(valid_users, 1)
-]
-
-
-def get_user(username: str):
-    for user in valid_users:
-        if username == user.username:
-            return user
-
-
 def authenticate_user(username: str, hashed_password: str):
-    user = get_user(username)
+    from app.users.crud import get_user_by_username
+
+    user = get_user_by_username(username)
     if not user:
         return False
     if not verify_password(hashed_password, user.hashed_password):
@@ -87,6 +61,8 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
 
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
+    from app.users.crud import get_user_by_username
+
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -100,14 +76,14 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
-    user = get_user(username=token_data.username)
+    user = get_user_by_username(username=token_data.username)
     if user is None:
         raise credentials_exception
     return user
 
 
 @router.post("/login", response_model=Token)
-def login_endpoint(form_data: OAuth2PasswordRequestForm = Depends()):
+def login_post(form_data: OAuth2PasswordRequestForm = Depends()):
     """Login endpoint."""
     user = authenticate_user(form_data.username, form_data.password)
     if not user:
@@ -123,12 +99,7 @@ def login_endpoint(form_data: OAuth2PasswordRequestForm = Depends()):
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.get("/users/me")
-async def read_users_me(current_user: User = Depends(get_current_user)):
-    return current_user
-
-
 @router.post("/logout")
-def logout_endpoint():
+def logout_post():
     """Logout endpoint."""
     return "logout-endpoint"

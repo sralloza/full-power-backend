@@ -2,20 +2,31 @@ from dotenv import load_dotenv
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from . import bot, users
+from app.database import engine, models
+
+from . import bot, security, users, conversations
+
+models.Base.metadata.create_all(bind=engine)
 
 load_dotenv()
 app = FastAPI(
     title="Health Bot API", description="Backend for Health Bot", version="1.0.0a1"
 )
 
-app.include_router(bot.router, dependencies=[Depends(users.get_current_user)])
-app.include_router(users.router)
 
-origins = [
-    "https?://localhost:*",
-    "https?://api.sralloza.es",
-]
+app.include_router(security.router, tags=["security"])
+app.include_router(
+    bot.router, dependencies=[Depends(security.get_current_user)], tags=["bot"]
+)
+app.include_router(
+    conversations.router,
+    dependencies=[Depends(security.get_current_user)],
+    tags=["conversations"],
+)
+app.include_router(
+    users.router, dependencies=[Depends(security.get_current_user)], tags=["users"]
+)
+
 
 app.add_middleware(
     CORSMiddleware,
