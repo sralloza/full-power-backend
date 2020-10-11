@@ -39,6 +39,7 @@ class Token(BaseModel):
 
 
 class User(BaseModel):
+    id: int
     username: str
 
 
@@ -55,7 +56,7 @@ valid_users = [
 ]
 
 valid_users = [
-    DBUser(username=a, hashed_password=get_password_hash(b)) for (a, b) in valid_users
+    DBUser(id=i, username=a, hashed_password=get_password_hash(b)) for i, (a, b) in enumerate(valid_users, 1)
 ]
 
 
