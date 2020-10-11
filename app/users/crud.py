@@ -31,7 +31,7 @@ def remove_user(user: schemas.UserCreate):
     db_user = get_user_by_username(user.username)
     db.delete(db_user)
     db.commit()
-    return db_user
+    return
 
 
 def _sample_user():
