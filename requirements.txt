@@ -1,3 +1,4 @@
+dialogflow
 fastapi
 gunicorn
 passlib[bcrypt]
