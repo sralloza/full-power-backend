@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import engine, models
 
-from . import bot, security, users
+from . import bot, security, users, conversations
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -19,13 +19,14 @@ app.include_router(
     bot.router, dependencies=[Depends(security.get_current_user)], tags=["bot"]
 )
 app.include_router(
+    conversations.router,
+    dependencies=[Depends(security.get_current_user)],
+    tags=["conversations"],
+)
+app.include_router(
     users.router, dependencies=[Depends(security.get_current_user)], tags=["users"]
 )
 
-origins = [
-    "https?://localhost:*",
-    "https?://api.sralloza.es",
-]
 
 app.add_middleware(
     CORSMiddleware,

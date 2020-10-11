@@ -1,19 +1,19 @@
 import os
-from typing import List
 
-from app.bot.crud import create_conversation, list_all_conversations, list_conversations
+from app.conversations.crud import create_conversation
+from app.conversations.schemas import ConversationCreate
 from app.database.models import User
 from app.security import get_current_user
 from fastapi import APIRouter, Depends
 
-from .schemas import ConversationCreate, UserInput
+from .schemas import UserInput
 from .utils import detect_intent_texts
 
 router = APIRouter()
 
 
 @router.post("/bot-message", response_model=ConversationCreate)
-async def bot_messsage_endpoint(
+async def bot_message_post(
     input_pack: UserInput, user: User = Depends(get_current_user)
 ):
     user_id = user.id
@@ -35,23 +35,8 @@ async def bot_messsage_endpoint(
 
 
 @router.get("/messages")
-def bot_messages():
+def messages_get():
     response_text = None
     if os.getenv("intent") == "Bot language":
         response_text = {"message": "hola"}
     return response_text
-
-
-@router.post("/conversations/user/{user_id}", response_model=schemas.Conversation)
-def url_create_conversation(user_id: int, conversation: schemas.ConversationCreate):
-    return create_conversation(conversation=conversation, user_id=user_id)
-
-
-@router.get("/conversations/user/{user_id}", response_model=List[schemas.Conversation])
-def url_list_conversation(user_id: int, skip: int = 0, limit: int = 100):
-    return list_conversations(user_id=user_id, skip=skip, limit=limit)
-
-
-@router.get("/conversations", response_model=List[schemas.Conversation])
-def url_list_all_conversations(skip: int = 0, limit: int = 100):
-    return list_all_conversations(skip=skip, limit=limit)

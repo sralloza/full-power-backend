@@ -83,7 +83,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 
 
 @router.post("/login", response_model=Token)
-def login_endpoint(form_data: OAuth2PasswordRequestForm = Depends()):
+def login_post(form_data: OAuth2PasswordRequestForm = Depends()):
     """Login endpoint."""
     user = authenticate_user(form_data.username, form_data.password)
     if not user:
@@ -100,12 +100,6 @@ def login_endpoint(form_data: OAuth2PasswordRequestForm = Depends()):
 
 
 @router.post("/logout")
-def logout_endpoint():
-    """Logout endpoint."""
-    return "logout-endpoint"
-
-
-@router.post("/logout")
-def logout_endpoint():
+def logout_post():
     """Logout endpoint."""
     return "logout-endpoint"

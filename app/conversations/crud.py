@@ -4,7 +4,7 @@ from app.users.crud import get_user
 from . import schemas
 
 
-def list_conversations(user_id: int, skip: int = 0, limit: int = 100):
+def list_user_conversations(user_id: int, skip: int = 0, limit: int = 100):
     return (
         db.query(models.Conversation)
         .filter_by(user_id=user_id)
