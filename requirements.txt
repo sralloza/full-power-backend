@@ -1,0 +1,6 @@
+fastapi
+gunicorn
+passlib[bcrypt]
+python-jose
+python-multipart
+uvicorn
