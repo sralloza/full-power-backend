@@ -4,7 +4,6 @@ from app.security.utils import get_password_hash
 from . import schemas
 
 
-
 def get_user(user_id: int):
     return db.query(models.User).filter(models.User.id == user_id).first()
 
@@ -26,3 +25,8 @@ def create_user(user: schemas.UserCreate):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+
+def _sample_user():
+    user = schemas.UserCreate(username="admin", password="1234", is_admin=True)
+    return create_user(user)
