@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from . import bot, conversations, security, users
 from .database import engine, models
+from .security.utils import get_current_user
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -22,16 +23,14 @@ app = FastAPI(**fastapi_kwargs)
 
 
 app.include_router(security.router, tags=["security"])
-app.include_router(
-    bot.router, dependencies=[Depends(security.get_current_user)], tags=["bot"]
-)
+app.include_router(bot.router, dependencies=[Depends(get_current_user)], tags=["bot"])
 app.include_router(
     conversations.router,
-    dependencies=[Depends(security.get_current_user)],
+    dependencies=[Depends(get_current_user)],
     tags=["conversations"],
 )
 app.include_router(
-    users.router, dependencies=[Depends(security.get_current_user)], tags=["users"]
+    users.router, dependencies=[Depends(get_current_user)], tags=["users"]
 )
 
 
