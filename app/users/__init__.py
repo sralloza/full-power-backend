@@ -37,7 +37,7 @@ def users_list_all(skip: int = 0, limit: int = 100):
     return users
 
 
-@router.get("/users/me/", response_model=schemas.User)
+@router.get("/users/me", response_model=schemas.User)
 def users_get_current_user(current_user: schemas.User = Depends(get_current_user)):
     return current_user
 
