@@ -22,6 +22,9 @@ class Conversation(ConversationBase):
     id: int
     user_id: int
 
+    class Config:
+        orm_mode = True
+
 
 class UserBase(BaseModel):
     """Base models for users."""
