@@ -16,8 +16,6 @@ router = APIRouter()
 )
 def users_create_post(user: schemas.UserCreate):
     """Create a new user."""
-    if crud.get_user_by_username(username=user.username):
-        raise HTTPException(status_code=400, detail="Username already registered")
     return crud.create_user(user=user)
 
 

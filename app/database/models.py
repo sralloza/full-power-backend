@@ -21,6 +21,7 @@ class User(Base):
             return ["admin", "basic"]
         return ["basic"]
 
+
 class Conversation(Base):
     __tablename__ = "conversations"
 

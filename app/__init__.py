@@ -24,11 +24,7 @@ app = FastAPI(**fastapi_kwargs)
 
 app.include_router(security.router, tags=["security"])
 
-app.include_router(
-    bot.router,
-    dependencies=[Depends(get_current_user)],
-    tags=["bot"],
-)
+app.include_router(bot.router, dependencies=[Depends(get_current_user)], tags=["bot"])
 
 app.include_router(
     conversations.router,

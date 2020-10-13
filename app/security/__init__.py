@@ -1,7 +1,7 @@
 from datetime import timedelta
 
 from app.users.crud import create_user
-from app.users.schemas import BasicUserCreate, User, UserCreate
+from app.users.schemas import BasicUserCreate, UserPublic, UserCreate
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 
@@ -32,7 +32,11 @@ def login_post(form_data: OAuth2PasswordRequestForm = Depends()):
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.post("/register", response_model=User)
+@router.post(
+    "/register",
+    response_model=UserPublic,
+    responses={400: {"description": "Username already registered"}},
+)
 def register_basic_user(user: BasicUserCreate):
     real_user = UserCreate(**user.dict(), is_admin=False)
     return create_user(real_user)

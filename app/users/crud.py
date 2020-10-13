@@ -1,5 +1,6 @@
 from app.database import db, models
 from app.security.utils import get_password_hash
+from fastapi import HTTPException
 
 from . import schemas
 
@@ -17,6 +18,9 @@ def get_users(skip: int = 0, limit: int = 100):
 
 
 def create_user(user: schemas.UserCreate):
+    if get_user_by_username(username=user.username):
+        raise HTTPException(status_code=400, detail="Username already registered")
+
     hashed_password = get_password_hash(user.password)
     db_user = models.User(
         username=user.username, hashed_password=hashed_password, is_admin=user.is_admin

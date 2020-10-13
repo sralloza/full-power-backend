@@ -42,10 +42,13 @@ class UserCreate(BasicUserCreate):
     is_admin: bool
 
 
-class User(UserBase):
-    id: int
+class UserPublic(UserBase):
     hashed_password: str
-    conversations: List[Conversation] = []
 
     class Config:
         orm_mode = True
+
+
+class User(UserPublic):
+    id: int
+    conversations: List[Conversation] = []
