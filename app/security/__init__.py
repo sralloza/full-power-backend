@@ -1,7 +1,7 @@
-from app.users.crud import create_user
-from app.users.schemas import BasicUserCreate, UserCreate, User
 from datetime import timedelta
 
+from app.users.crud import create_user
+from app.users.schemas import BasicUserCreate, User, UserCreate
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 
@@ -23,14 +23,16 @@ def login_post(form_data: OAuth2PasswordRequestForm = Depends()):
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
+
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        data={"sub": user.username, "scopes": user.scopes},
+        expires_delta=access_token_expires,
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
 
 @router.post("/register", response_model=User)
 def register_basic_user(user: BasicUserCreate):
-    real_user = UserCreate(user.dict(), is_admin=False)
+    real_user = UserCreate(**user.dict(), is_admin=False)
     return create_user(real_user)

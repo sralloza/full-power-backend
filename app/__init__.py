@@ -1,7 +1,7 @@
 import os
 
 from dotenv import load_dotenv
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, Security
 from fastapi.middleware.cors import CORSMiddleware
 
 from . import bot, conversations, security, users
@@ -23,14 +23,20 @@ app = FastAPI(**fastapi_kwargs)
 
 
 app.include_router(security.router, tags=["security"])
-app.include_router(bot.router, dependencies=[Depends(get_current_user)], tags=["bot"])
+app.include_router(
+    bot.router,
+    dependencies=[Depends(get_current_user)],
+    tags=["bot"],
+)
 app.include_router(
     conversations.router,
-    dependencies=[Depends(get_current_user)],
+    dependencies=[Security(get_current_user, scopes=["admin"])],
     tags=["conversations"],
 )
 app.include_router(
-    users.router, dependencies=[Depends(get_current_user)], tags=["users"]
+    users.router,
+    dependencies=[Security(get_current_user, scopes=["admin"])],
+    tags=["users"],
 )
 
 

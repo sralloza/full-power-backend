@@ -15,6 +15,11 @@ class User(Base):
 
     conversations = relationship("Conversation", back_populates="user")
 
+    @property
+    def scopes(self):
+        if self.is_admin:
+            return ["admin", "basic"]
+        return ["basic"]
 
 class Conversation(Base):
     __tablename__ = "conversations"

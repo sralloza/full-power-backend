@@ -20,10 +20,7 @@ def users_create_post(user: schemas.UserCreate):
     return crud.create_user(user=user)
 
 
-@router.delete(
-    "/users",
-    responses={404: {"description": "User not found"}},
-)
+@router.delete("/users", responses={404: {"description": "User not found"}})
 def users_delete(user: schemas.UserCreate):
     if not crud.get_user_by_username(username=user.username):
         raise HTTPException(status_code=404, detail="User does not exist")

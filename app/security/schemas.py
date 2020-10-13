@@ -1,10 +1,11 @@
-from typing import Optional
+from typing import List, Optional
 
 from pydantic.main import BaseModel
 
 
 class TokenData(BaseModel):
     username: Optional[str] = None
+    scopes: List[str] = []
 
 
 class Token(BaseModel):
