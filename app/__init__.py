@@ -23,21 +23,22 @@ app = FastAPI(**fastapi_kwargs)
 
 
 app.include_router(security.router, tags=["security"])
+
 app.include_router(
     bot.router,
     dependencies=[Depends(get_current_user)],
     tags=["bot"],
 )
+
 app.include_router(
     conversations.router,
     dependencies=[Security(get_current_user, scopes=["admin"])],
     tags=["conversations"],
 )
-app.include_router(
-    users.router,
-    dependencies=[Security(get_current_user, scopes=["admin"])],
-    tags=["users"],
-)
+
+# Users dependencies are defined for each route, because
+# /users/me doesn't need the admin scope
+app.include_router(users.router, tags=["users"])
 
 
 app.add_middleware(

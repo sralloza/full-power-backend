@@ -1,7 +1,7 @@
 from typing import List
 
 from app.security.utils import get_current_user
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Security
 
 from . import crud, schemas
 
@@ -12,6 +12,7 @@ router = APIRouter()
     "/users",
     response_model=schemas.User,
     responses={400: {"description": "Username already registered"}},
+    dependencies=[Security(get_current_user, scopes=["admin"])],
 )
 def users_create_post(user: schemas.UserCreate):
     """Create a new user."""
@@ -20,14 +21,22 @@ def users_create_post(user: schemas.UserCreate):
     return crud.create_user(user=user)
 
 
-@router.delete("/users", responses={404: {"description": "User not found"}})
+@router.delete(
+    "/users",
+    responses={404: {"description": "User not found"}},
+    dependencies=[Security(get_current_user, scopes=["admin"])],
+)
 def users_delete(user: schemas.UserCreate):
     if not crud.get_user_by_username(username=user.username):
         raise HTTPException(status_code=404, detail="User does not exist")
     return crud.remove_user(user=user)
 
 
-@router.get("/users", response_model=List[schemas.User])
+@router.get(
+    "/users",
+    response_model=List[schemas.User],
+    dependencies=[Security(get_current_user, scopes=["admin"])],
+)
 def users_list_all(skip: int = 0, limit: int = 100):
     """Get all users."""
     users = crud.get_users(skip=skip, limit=limit)
