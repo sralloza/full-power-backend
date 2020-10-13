@@ -32,13 +32,14 @@ app.include_router(
 
 app.include_router(
     conversations.router,
+    prefix="/conversations",
     dependencies=[Security(get_current_user, scopes=["admin"])],
     tags=["conversations"],
 )
 
 # Users dependencies are defined for each route, because
 # /users/me doesn't need the admin scope
-app.include_router(users.router, tags=["users"])
+app.include_router(users.router, tags=["users"], prefix="/users")
 
 
 app.add_middleware(

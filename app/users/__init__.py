@@ -9,7 +9,7 @@ router = APIRouter()
 
 
 @router.post(
-    "/users",
+    "/",
     response_model=schemas.User,
     responses={400: {"description": "Username already registered"}},
     dependencies=[Security(get_current_user, scopes=["admin"])],
@@ -22,7 +22,7 @@ def users_create_post(user: schemas.UserCreate):
 
 
 @router.delete(
-    "/users",
+    "/",
     responses={404: {"description": "User not found"}},
     dependencies=[Security(get_current_user, scopes=["admin"])],
 )
@@ -33,7 +33,7 @@ def users_delete(user: schemas.UserCreate):
 
 
 @router.get(
-    "/users",
+    "/",
     response_model=List[schemas.User],
     dependencies=[Security(get_current_user, scopes=["admin"])],
 )
@@ -43,13 +43,13 @@ def users_list_all(skip: int = 0, limit: int = 100):
     return users
 
 
-@router.get("/users/me", response_model=schemas.User)
+@router.get("/me", response_model=schemas.User)
 def users_get_current_user(current_user: schemas.User = Depends(get_current_user)):
     return current_user
 
 
 @router.get(
-    "/users/{user_id}",
+    "/{user_id}",
     response_model=schemas.User,
     responses={404: {"description": "User not found"}},
 )
