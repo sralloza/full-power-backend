@@ -49,6 +49,7 @@ def users_get_current_user(current_user: schemas.User = Depends(get_current_user
 @router.get(
     "/{user_id}",
     response_model=schemas.User,
+    dependencies=[Security(get_current_user, scopes=["admin"])],
     responses={404: {"description": "User not found"}},
 )
 def users_get_one(user_id: int):
