@@ -1,9 +1,10 @@
 from datetime import timedelta
 
-from app.users.crud import create_user
-from app.users.schemas import BasicUserCreate, UserPublic, UserCreate
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
+
+from app.users.crud import create_user
+from app.users.schemas import BasicUserCreate, UserCreate, UserPublic
 
 from .schemas import Token
 from .utils import authenticate_user, create_access_token

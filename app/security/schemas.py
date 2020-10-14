@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from pydantic.main import BaseModel
+from pydantic import BaseModel
 
 
 class TokenData(BaseModel):

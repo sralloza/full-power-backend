@@ -1,7 +1,8 @@
 from typing import List
 
-from app.security.utils import get_current_user
 from fastapi import APIRouter, Depends, HTTPException, Security
+
+from app.security.utils import get_current_user
 
 from . import crud, schemas
 

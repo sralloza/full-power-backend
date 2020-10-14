@@ -5,7 +5,9 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security.oauth2 import OAuth2PasswordBearer, SecurityScopes
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from pydantic.error_wrappers import ValidationError
+from pydantic import ValidationError
+
+from app.database.models import User
 
 from .schemas import TokenData
 

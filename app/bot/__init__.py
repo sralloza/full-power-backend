@@ -1,10 +1,11 @@
 import os
 
+from fastapi import APIRouter, Depends
+
 from app.conversations.crud import create_conversation
 from app.conversations.schemas import ConversationCreate
 from app.database.models import User
 from app.security.utils import get_current_user
-from fastapi import APIRouter, Depends
 
 from .schemas import UserInput
 from .utils import detect_intent_texts

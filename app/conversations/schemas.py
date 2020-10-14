@@ -1,7 +1,8 @@
 from typing import Optional
 
-from app.bot.schemas import UserInput
 from pydantic import Field
+
+from app.bot.schemas import UserInput
 
 
 class BaseConversation(UserInput):

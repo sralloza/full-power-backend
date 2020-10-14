@@ -1,6 +1,7 @@
+from fastapi import HTTPException
+
 from app.database import db, models
 from app.security.utils import get_password_hash
-from fastapi import HTTPException
 
 from . import schemas
 
