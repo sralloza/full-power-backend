@@ -21,18 +21,25 @@ oauth2_scheme = OAuth2PasswordBearer(
 )
 
 
-def authenticate_user(username: str, hashed_password: str):
+def authenticate_user(username: str, hashed_password: str) -> Optional[User]:
+    """Given a username and a hashed password, returns the user from the
+    database if the username and the hashed passwords are valid.
+    """
+
     from app.users.crud import get_user_by_username
 
     user = get_user_by_username(username)
     if not user:
-        return False
+        return None
     if not verify_password(hashed_password, user.hashed_password):
-        return False
+        return None
+
     return user
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+    """Encrypts the data to create a expirable token."""
+
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
@@ -43,15 +50,19 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     return encoded_jwt
 
 
-def get_current_user(
-    security_scopes: SecurityScopes, token: str = Depends(oauth2_scheme)
-):
+def get_current_user(sec_scopes: SecurityScopes, token: str = Depends(oauth2_scheme)):
+    """Returns the current user, given the token present in the header.
+
+    Returns 401 on any error.
+
+    """
+
     from app.users.crud import get_user_by_username
 
-    if security_scopes.scopes:
-        authenticate_value = f'Bearer scope="{security_scopes.scope_str}"'
+    if sec_scopes.scopes:
+        authenticate_value = f'Bearer scope="{sec_scopes.scope_str}"'
     else:
-        authenticate_value = f"Bearer"
+        authenticate_value = "Bearer"
 
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -74,7 +85,7 @@ def get_current_user(
     if user is None:
         raise credentials_exception
 
-    for scope in security_scopes.scopes:
+    for scope in sec_scopes.scopes:
         if scope not in token_data.scopes:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -84,11 +95,15 @@ def get_current_user(
     return user
 
 
-def verify_password(plain_password, hashed_password):
+def verify_password(plain_password: str, hashed_password: str):
+    """Returns True if passwords match, False otherwise."""
+
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def get_password_hash(password):
+def get_password_hash(password: str):
+    """Returns the hash of the password."""
+
     return pwd_context.hash(password)
 
 
