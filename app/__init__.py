@@ -1,6 +1,12 @@
-import os
+
+from pathlib import Path
 
 from dotenv import load_dotenv
+
+load_dotenv(Path(__file__).parent.with_name(".env"))
+
+import os
+
 from fastapi import Depends, FastAPI, Security
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -10,7 +16,6 @@ from .security.utils import get_current_user
 
 models.Base.metadata.create_all(bind=engine)
 
-load_dotenv()
 
 fastapi_kwargs = dict(
     title="Health Bot API", description="Backend for Health Bot", version="1.0.0a1"
