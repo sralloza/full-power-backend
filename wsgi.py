@@ -12,11 +12,7 @@ with activate_this_path.open() as file:
     exec(file.read(), dict(__file__=activate_this_path.as_posix()))
 
 
-try:
-    from a2wsgi import ASGIMiddleware
-except ImportError:
-    print("Install a2wsgi with 'pip install a2wsgi'", sys.stderr)
-    sys.exit(1)
+from a2wsgi import ASGIMiddleware
 
 sys.path.insert(0, Path(__file__).parent.as_posix())
 from app import app
