@@ -7,3 +7,4 @@ python-jose
 python-multipart
 sqlalchemy
 uvicorn
+a2wsgi
