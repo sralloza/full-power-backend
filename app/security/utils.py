@@ -1,3 +1,5 @@
+"""Security utils."""
+
 from datetime import datetime, timedelta
 from typing import Optional
 
@@ -37,7 +39,7 @@ def authenticate_user(username: str, hashed_password: str) -> Optional[User]:
     return user
 
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
     """Encrypts the data to create a expirable token."""
 
     to_encode = data.copy()
@@ -95,17 +97,19 @@ def get_current_user(sec_scopes: SecurityScopes, token: str = Depends(oauth2_sch
     return user
 
 
-def verify_password(plain_password: str, hashed_password: str):
+def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Returns True if passwords match, False otherwise."""
 
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def get_password_hash(password: str):
+def get_password_hash(password: str) -> str:
     """Returns the hash of the password."""
 
     return pwd_context.hash(password)
 
 
 def debug_token(token):
+    """Used for debugging, decrypts a token."""
+
     return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])

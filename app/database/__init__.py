@@ -14,7 +14,11 @@ db: Session = SessionLocal()
 
 
 class _Base:
+    """Base class for models."""
+
     def dict(self):
+        """Returns the attributes of self as a dict, like pydantic.Model."""
+
         return {k: v for k, v in self.__dict__.items() if not k.startswith("_")}
 
 

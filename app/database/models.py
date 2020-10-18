@@ -2,10 +2,14 @@ from sqlalchemy import Boolean, Column, Integer, String
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
 
-from app.database import Base
+from . import Base
+
+# pylint: disable=too-few-public-methods
 
 
 class User(Base):
+    """Represents a user."""
+
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -17,12 +21,16 @@ class User(Base):
 
     @property
     def scopes(self):
+        """Determines the permissions of the user."""
+
         if self.is_admin:
             return ["admin", "basic"]
         return ["basic"]
 
 
 class Conversation(Base):
+    """Represents a conversation between a user and the health bot."""
+
     __tablename__ = "conversations"
 
     id = Column(Integer, primary_key=True, index=True)

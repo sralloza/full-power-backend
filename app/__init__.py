@@ -1,3 +1,4 @@
+"""Backend of chatbot application."""
 
 import os
 

@@ -1,6 +1,10 @@
+"""Data schematics for user endpoints."""
+
 from typing import List
 
 from pydantic import BaseModel
+
+# pylint: disable=too-few-public-methods
 
 
 class ConversationBase(BaseModel):
@@ -13,8 +17,6 @@ class ConversationBase(BaseModel):
 class ConversationCreate(ConversationBase):
     """Model for creating conversations."""
 
-    pass
-
 
 class Conversation(ConversationBase):
     """"Model for conversations stored in database."""
@@ -22,7 +24,7 @@ class Conversation(ConversationBase):
     id: int
     user_id: int
 
-    class Config:
+    class Config:  # pylint: disable=missing-class-docstring
         orm_mode = True
 
 
@@ -39,16 +41,22 @@ class BasicUserCreate(UserBase):
 
 
 class UserCreate(BasicUserCreate):
+    """User's data ready to send to the database."""
+
     is_admin: bool
 
 
 class UserPublic(UserBase):
+    """User's public data."""
+
     hashed_password: str
 
     class Config:
         orm_mode = True
 
 
-class User(UserPublic):
+class PrivateUser(UserPublic):
+    """Model for manage all the user's data, even the private data."""
+
     id: int
     conversations: List[Conversation] = []

@@ -1,3 +1,5 @@
+"""Routes for manage bot conversations."""
+
 import os
 
 from fastapi import APIRouter, Depends
@@ -14,9 +16,9 @@ router = APIRouter()
 
 
 @router.post("/bot-message", response_model=ConversationCreate)
-async def bot_message_post(
-    input_pack: UserInput, user: User = Depends(get_current_user)
-):
+def bot_message_post(input_pack: UserInput, user: User = Depends(get_current_user)):
+    """Sends a message to the bot and returns the response back."""
+
     user_id = user.id
     message = input_pack.user_msg
     project_id = os.getenv("DIALOGFLOW_PROJECT_ID")
