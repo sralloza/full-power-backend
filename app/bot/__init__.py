@@ -35,11 +35,3 @@ def bot_message_post(input_pack: UserInput, user: User = Depends(get_current_use
     create_conversation(conversation, user_id)
 
     return conversation
-
-
-@router.get("/messages")
-def messages_get():
-    response_text = None
-    if os.getenv("intent") == "Bot language":
-        response_text = {"message": "hola"}
-    return response_text
