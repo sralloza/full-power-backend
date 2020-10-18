@@ -51,7 +51,7 @@ class UserPublic(UserBase):
 
     hashed_password: str
 
-    class Config: # pylint: disable=missing-class-docstring
+    class Config:  # pylint: disable=missing-class-docstring
         orm_mode = True
 
 

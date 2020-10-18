@@ -6,14 +6,18 @@ from fastapi import Depends, FastAPI, Security
 from fastapi.middleware.cors import CORSMiddleware
 
 from . import bot, conversations, security, users
+from ._version import get_versions
 from .database import engine, models
 from .security.utils import get_current_user
+
+__version__ = get_versions()["version"]
+del get_versions
 
 models.Base.metadata.create_all(bind=engine)
 
 
 fastapi_kwargs = dict(
-    title="Health Bot API", description="Backend for Health Bot", version="1.0.0a1"
+    title="Health Bot API", description="Backend for Health Bot", version=__version__
 )
 
 if os.getenv("PRODUCTION"):
