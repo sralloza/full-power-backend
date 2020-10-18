@@ -9,6 +9,7 @@ from . import bot, conversations, security, users
 from ._version import get_versions
 from .database import engine, models
 from .security.utils import get_current_user
+from .config import settings
 
 __version__ = get_versions()["version"]
 del get_versions
@@ -20,8 +21,8 @@ fastapi_kwargs = dict(
     title="Health Bot API", description="Backend for Health Bot", version=__version__
 )
 
-if os.getenv("PRODUCTION"):
-    fastapi_kwargs.update(docs_url=None, redoc_url=None)
+if settings.production:
+    fastapi_kwargs.update(openapi_url=None)
 
 app = FastAPI(**fastapi_kwargs)
 
