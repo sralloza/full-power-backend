@@ -1,9 +1,4 @@
-
-from pathlib import Path
-
-from dotenv import load_dotenv
-
-load_dotenv(Path(__file__).parent.with_name(".env"))
+"""Backend of chatbot application."""
 
 import os
 
@@ -21,7 +16,7 @@ fastapi_kwargs = dict(
     title="Health Bot API", description="Backend for Health Bot", version="1.0.0a1"
 )
 
-if os.getenv("PRODUCTION", False):
+if os.getenv("PRODUCTION"):
     fastapi_kwargs.update(docs_url=None, redoc_url=None)
 
 app = FastAPI(**fastapi_kwargs)

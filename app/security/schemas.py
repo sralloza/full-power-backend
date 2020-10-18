@@ -1,25 +1,19 @@
-from typing import List, Optional
+"""Data schematics for security endpoints."""
 
-from pydantic.main import BaseModel
+from typing import List
+
+from pydantic import BaseModel
 
 
 class TokenData(BaseModel):
-    username: Optional[str] = None
+    """Represents a token decrypted. Used only in backend."""
+
+    username: str
     scopes: List[str] = []
 
 
 class Token(BaseModel):
+    """Token data returned to the user after login."""
+
     access_token: str
     token_type: str
-
-
-class User(BaseModel):
-    id: int
-    username: str
-
-
-class DBUser(User):
-    hashed_password: str
-
-    class Config:
-        orm_mode = True

@@ -1,10 +1,13 @@
+"""Routes for manage bot conversations."""
+
 import os
+
+from fastapi import APIRouter, Depends
 
 from app.conversations.crud import create_conversation
 from app.conversations.schemas import ConversationCreate
 from app.database.models import User
 from app.security.utils import get_current_user
-from fastapi import APIRouter, Depends
 
 from .schemas import UserInput
 from .utils import detect_intent_texts
@@ -13,9 +16,9 @@ router = APIRouter()
 
 
 @router.post("/bot-message", response_model=ConversationCreate)
-async def bot_message_post(
-    input_pack: UserInput, user: User = Depends(get_current_user)
-):
+def bot_message_post(input_pack: UserInput, user: User = Depends(get_current_user)):
+    """Sends a message to the bot and returns the response back."""
+
     user_id = user.id
     message = input_pack.user_msg
     project_id = os.getenv("DIALOGFLOW_PROJECT_ID")
@@ -32,11 +35,3 @@ async def bot_message_post(
     create_conversation(conversation, user_id)
 
     return conversation
-
-
-@router.get("/messages")
-def messages_get():
-    response_text = None
-    if os.getenv("intent") == "Bot language":
-        response_text = {"message": "hola"}
-    return response_text

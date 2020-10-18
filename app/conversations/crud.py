@@ -1,3 +1,5 @@
+"""Manage database connections involving conversations data."""
+
 from fastapi import HTTPException
 
 from app.database import db, models
@@ -7,6 +9,8 @@ from . import schemas
 
 
 def list_user_conversations(user_id: int, skip: int = 0, limit: int = 100):
+    """Lists all conversations for a given user."""
+
     return (
         db.query(models.Conversation)
         .filter_by(user_id=user_id)
@@ -17,10 +21,14 @@ def list_user_conversations(user_id: int, skip: int = 0, limit: int = 100):
 
 
 def list_all_conversations(skip: int = 0, limit: int = 100):
+    """Lists all conversations for all users."""
+
     return db.query(models.Conversation).offset(skip).limit(limit).all()
 
 
 def create_conversation(conversation: schemas.ConversationCreate, user_id: int):
+    """Saves a conversation to the database."""
+
     db_item = models.Conversation(**conversation.dict(), user=get_user(user_id))
     db.add(db_item)
     db.commit()
@@ -29,6 +37,8 @@ def create_conversation(conversation: schemas.ConversationCreate, user_id: int):
 
 
 def remove_conversation(conversation_id: int):
+    """Removes a conversation from the database."""
+
     db_item = db.query(models.Conversation).filter_by(id=conversation_id).first()
     if not db_item:
         raise HTTPException(404, f"Conversation id={conversation_id} does not exist")

@@ -1,9 +1,12 @@
+"""Routes involving security, like /login and /register."""
+
 from datetime import timedelta
 
-from app.users.crud import create_user
-from app.users.schemas import BasicUserCreate, UserPublic, UserCreate
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
+
+from app.users.crud import create_user
+from app.users.schemas import BasicUserCreate, UserCreate, UserPublic
 
 from .schemas import Token
 from .utils import authenticate_user, create_access_token
@@ -16,6 +19,7 @@ router = APIRouter()
 @router.post("/login", response_model=Token)
 def login_post(form_data: OAuth2PasswordRequestForm = Depends()):
     """Login endpoint."""
+
     user = authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(
@@ -38,5 +42,7 @@ def login_post(form_data: OAuth2PasswordRequestForm = Depends()):
     responses={400: {"description": "Username already registered"}},
 )
 def register_basic_user(user: BasicUserCreate):
+    """Register endpoint."""
+
     real_user = UserCreate(**user.dict(), is_admin=False)
     return create_user(real_user)

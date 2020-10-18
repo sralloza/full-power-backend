@@ -1,7 +1,10 @@
+"""Routes for managing users (most of them require admin access, except /me)."""
+
 from typing import List
 
-from app.security.utils import get_current_user
 from fastapi import APIRouter, Depends, HTTPException, Security
+
+from app.security.utils import get_current_user
 
 from . import crud, schemas
 
@@ -10,12 +13,13 @@ router = APIRouter()
 
 @router.post(
     "/",
-    response_model=schemas.User,
+    response_model=schemas.PrivateUser,
     responses={400: {"description": "Username already registered"}},
     dependencies=[Security(get_current_user, scopes=["admin"])],
 )
 def users_create_post(user: schemas.UserCreate):
-    """Create a new user."""
+    """Creates a new user (can be admin, unlike in /register)."""
+
     return crud.create_user(user=user)
 
 
@@ -25,6 +29,8 @@ def users_create_post(user: schemas.UserCreate):
     dependencies=[Security(get_current_user, scopes=["admin"])],
 )
 def users_delete(user: schemas.UserCreate):
+    """Deletes a user."""
+
     if not crud.get_user_by_username(username=user.username):
         raise HTTPException(status_code=404, detail="User does not exist")
     return crud.remove_user(user=user)
@@ -32,28 +38,34 @@ def users_delete(user: schemas.UserCreate):
 
 @router.get(
     "/",
-    response_model=List[schemas.User],
+    response_model=List[schemas.PrivateUser],
     dependencies=[Security(get_current_user, scopes=["admin"])],
 )
 def users_list_all(skip: int = 0, limit: int = 100):
-    """Get all users."""
+    """Returns all users."""
+
     users = crud.get_users(skip=skip, limit=limit)
     return users
 
 
-@router.get("/me", response_model=schemas.User)
-def users_get_current_user(current_user: schemas.User = Depends(get_current_user)):
+@router.get("/me", response_model=schemas.PrivateUser)
+def users_get_current_user(
+    current_user: schemas.PrivateUser = Depends(get_current_user),
+):
+    """Returns the current user."""
+
     return current_user
 
 
 @router.get(
     "/{user_id}",
-    response_model=schemas.User,
+    response_model=schemas.PrivateUser,
     dependencies=[Security(get_current_user, scopes=["admin"])],
     responses={404: {"description": "User not found"}},
 )
 def users_get_one(user_id: int):
-    """Get one user."""
+    """Returns a user by its id."""
+
     db_user = crud.get_user(user_id=user_id)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
