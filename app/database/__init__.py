@@ -14,7 +14,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 db: Session = SessionLocal()
 
 
-class _Base: # pylint: disable=too-few-public-methods
+class _Base:  # pylint: disable=too-few-public-methods
     """Base class for models."""
 
     def dict(self):
