@@ -28,6 +28,7 @@ def authenticate_user(username: str, hashed_password: str) -> Optional[User]:
     database if the username and the hashed passwords are valid.
     """
 
+    # pylint: disable=import-outside-toplevel
     from app.users.crud import get_user_by_username
 
     user = get_user_by_username(username)
@@ -59,6 +60,7 @@ def get_current_user(sec_scopes: SecurityScopes, token: str = Depends(oauth2_sch
 
     """
 
+    # pylint: disable=import-outside-toplevel
     from app.users.crud import get_user_by_username
 
     if sec_scopes.scopes:
@@ -80,8 +82,8 @@ def get_current_user(sec_scopes: SecurityScopes, token: str = Depends(oauth2_sch
 
         token_scopes = payload.get("scopes", [])
         token_data = TokenData(scopes=token_scopes, username=username)
-    except (JWTError, ValidationError):
-        raise credentials_exception
+    except (JWTError, ValidationError) as exc:
+        raise credentials_exception from exc
 
     user = get_user_by_username(username=token_data.username)
     if user is None:
