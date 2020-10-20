@@ -7,9 +7,7 @@ from sqlalchemy.orm.session import Session
 
 from app.config import settings
 
-engine = create_engine(
-    settings.sqlalchemy_database_url, connect_args={"check_same_thread": False}
-)
+engine = create_engine(settings.sqlalchemy_database_url)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 db: Session = SessionLocal()
 
