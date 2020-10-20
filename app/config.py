@@ -3,24 +3,22 @@
 import os
 from pathlib import Path
 
-from pydantic import BaseSettings
+from pydantic import BaseSettings, Field
 
 
 class Settings(BaseSettings):
     """Internal settings of the API"""
 
-    dialogflow_project_id: str
-    google_application_credentials: str
-    production: bool = False
-    sqlalchemy_database_url: str
+    dialogflow_project_id: str = Field(..., env="DIALOGFLOW_PROJECT_ID")
+    google_application_credentials: str = Field(
+        ..., env="GOOGLE_APPLICATION_CREDENTIALS"
+    )
+    production: bool = Field(False, env="PRODUCTION")
+    sqlalchemy_database_url: str = Field(..., env="SQLALCHEMY_DATABASE_URL")
 
     class Config:
         env_file = Path(__file__).parent.with_name(".env").as_posix()
         env_file_encoding = "utf-8"
-        fields = {
-            "dialogflow_project_id": {"env": "DIALOGFLOW_PROJECT_ID"},
-            "google_application_credentials": {"env": "GOOGLE_APPLICATION_CREDENTIALS"},
-        }
 
     def set_environment(self):
         os.environ[
