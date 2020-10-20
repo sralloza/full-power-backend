@@ -1,10 +1,11 @@
+a2wsgi
 dialogflow
 fastapi
 gunicorn
 passlib[bcrypt]
+PyMySQL
 python-dotenv
 python-jose
 python-multipart
 sqlalchemy
 uvicorn
-a2wsgi
