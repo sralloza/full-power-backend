@@ -1,6 +1,21 @@
 """Bot related code."""
 
+import json
+from pathlib import Path
+
 import dialogflow
+from google.oauth2 import service_account
+
+from app.config import settings
+
+
+def get_credentials():
+
+
+    json_string = Path(settings.google_application_credentials).read_text()
+    info = json.loads(json_string)
+    credentials = service_account.Credentials.from_service_account_info(info)
+    return credentials
 
 
 def detect_intent_texts(project_id, session_id, text, language_code):

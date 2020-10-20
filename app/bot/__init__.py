@@ -4,6 +4,7 @@ import os
 
 from fastapi import APIRouter, Depends
 
+from app.config import settings
 from app.conversations.crud import create_conversation
 from app.conversations.schemas import ConversationCreate
 from app.database.models import User
@@ -21,7 +22,7 @@ def bot_message_post(input_pack: UserInput, user: User = Depends(get_current_use
 
     user_id = user.id
     message = input_pack.user_msg
-    project_id = os.getenv("DIALOGFLOW_PROJECT_ID")
+    project_id = settings.dialogflow_project_id
 
     response = detect_intent_texts(project_id, user_id, message, "en")
     fulfillment_text = response.query_result.fulfillment_text
