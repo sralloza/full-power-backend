@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.param_functions import Security
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 
+from app import __version__
 from app.config import Settings, settings
 from app.users.crud import create_user
 from app.users.schemas import BasicUserCreate, UserCreate, UserPublic
@@ -21,6 +22,11 @@ router = APIRouter()
 @router.get("/")
 def state():
     return {"detail": "backend server online"}
+
+
+@router.get("/version")
+def get_version():
+    return {"version": __version__}
 
 
 @router.post("/login", response_model=Token)
