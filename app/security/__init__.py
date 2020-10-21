@@ -50,6 +50,7 @@ def login_post(form_data: OAuth2PasswordRequestForm = Depends()):
         "access_token": access_token,
         "token_type": "bearer",
         "expires_minutes": ACCESS_TOKEN_EXPIRE_MINUTES,
+        "scopes": user.scopes,
     }
 
 
@@ -78,6 +79,7 @@ def login_post(user=Depends(get_current_user)):
         "access_token": access_token,
         "token_type": "bearer",
         "expires_minutes": ACCESS_TOKEN_EXPIRE_MINUTES,
+        "scopes": user.scopes,
     }
 
 
