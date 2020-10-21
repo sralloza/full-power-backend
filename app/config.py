@@ -37,6 +37,7 @@ class Settings(BaseSettings):
     logging_level: ValidLoggingLevel = Field(
         ValidLoggingLevel.INFO, env="LOGGING_LEVEL"
     )
+    token_expire_minutes: int = Field(30, env="TOKEN_EXPIRE_MINUTES")
 
     @validator("server_secret")
     def validate_secret(cls, value):
