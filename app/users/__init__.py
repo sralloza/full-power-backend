@@ -23,19 +23,6 @@ def users_create_post(user: schemas.UserCreate):
     return crud.create_user(user=user)
 
 
-@router.delete(
-    "/{user_id}",
-    responses={404: {"description": "User not found"}},
-    dependencies=[Security(get_current_user, scopes=["admin"])],
-)
-def users_delete(user_id: int):
-    """Deletes a user."""
-
-    if not crud.get_user(user_id=user_id):
-        raise HTTPException(status_code=404, detail="User does not exist")
-    return crud.remove_user(user_id=user_id)
-
-
 @router.get(
     "/",
     response_model=List[schemas.PrivateUser],
@@ -46,6 +33,15 @@ def users_list_all(skip: int = 0, limit: int = 100):
 
     users = crud.get_users(skip=skip, limit=limit)
     return users
+
+
+@router.get("/me", response_model=schemas.PrivateUser)
+def users_get_current_user(
+    current_user: schemas.PrivateUser = Depends(get_current_user),
+):
+    """Returns the current user."""
+
+    return current_user
 
 
 @router.get(
@@ -63,10 +59,14 @@ def users_get_one(user_id: int):
     return db_user
 
 
-@router.get("/me", response_model=schemas.PrivateUser)
-def users_get_current_user(
-    current_user: schemas.PrivateUser = Depends(get_current_user),
-):
-    """Returns the current user."""
+@router.delete(
+    "/{user_id}",
+    responses={404: {"description": "User not found"}},
+    dependencies=[Security(get_current_user, scopes=["admin"])],
+)
+def users_delete(user_id: int):
+    """Deletes a user."""
 
-    return current_user
+    if not crud.get_user(user_id=user_id):
+        raise HTTPException(status_code=404, detail="User does not exist")
+    return crud.remove_user(user_id=user_id)
