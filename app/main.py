@@ -51,7 +51,7 @@ def create_app():
         allow_headers=["*"],
     )
 
-    api.exception_handler(Exception)(catch_errors)
+    api.add_exception_handler(500, catch_errors)
 
     models.Base.metadata.create_all(bind=engine)
 

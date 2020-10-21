@@ -47,11 +47,11 @@ def catch_errors(request, exc):
         request_info,
         exc_info=exc_info,
     )
-    
+
     return JSONResponse(
         status_code=500,
         content={
             "detail": "Internal Server Error, please contact the server administrator."
         },
-        headers={"X-Error-ID": error_id},
+        headers={"X-Error-ID": str(error_id)},
     )
