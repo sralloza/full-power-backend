@@ -1,11 +1,15 @@
 """Manage database connections involving conversations data."""
 
+import logging
+
 from fastapi import HTTPException
 
 from app.database import db, models
 from app.users.crud import get_user
 
 from . import schemas
+
+logger = logging.getLogger(__name__)
 
 
 def list_user_conversations(user_id: int, skip: int = 0, limit: int = 100):
@@ -28,20 +32,24 @@ def list_all_conversations(skip: int = 0, limit: int = 100):
 
 def create_conversation(conversation: schemas.ConversationCreate, user_id: int):
     """Saves a conversation to the database."""
-
-    db_item = models.Conversation(**conversation.dict(), user=get_user(user_id))
-    db.add(db_item)
+    conv = models.Conversation(**conversation.dict(), user=get_user(user_id))
+    db.add(conv)
     db.commit()
-    db.refresh(db_item)
-    return db_item
+    db.refresh(conv)
+    
+    logger.debug("Conversation created for user_id=%d (conv_id=%d)", user_id, conv.id)
+    return conv
 
 
 def remove_conversation(conversation_id: int):
     """Removes a conversation from the database."""
 
-    db_item = db.query(models.Conversation).filter_by(id=conversation_id).first()
-    if not db_item:
+    conv = db.query(models.Conversation).filter_by(id=conversation_id).first()
+    if not conv:
+        logger.warning("Conversation id=%d does not exist", conv.id)
         raise HTTPException(404, f"Conversation id={conversation_id} does not exist")
 
-    db.delete(db_item)
+    db.delete(conv)
     db.commit()
+
+    logger.debug("Removed conversation id=%d", conv.id)

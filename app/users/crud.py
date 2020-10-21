@@ -1,4 +1,5 @@
 """Manages database connections involving users."""
+import logging
 
 from fastapi import HTTPException
 
@@ -6,6 +7,9 @@ from app.database import db, models
 from app.security.utils import get_password_hash
 
 from . import schemas
+
+
+logger = logging.getLogger(__name__)
 
 
 def get_user(user_id: int):
@@ -30,6 +34,9 @@ def create_user(user: schemas.UserCreate):
     """Creates a new user in the database."""
 
     if get_user_by_username(username=user.username):
+        logger.warning(
+            "Can't register user with username=%s as it's already registered", user.username
+        )
         raise HTTPException(status_code=400, detail="Username already registered")
 
     hashed_password = get_password_hash(user.password)
@@ -39,6 +46,8 @@ def create_user(user: schemas.UserCreate):
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
+
+    logger.info("Registered user with username=%r and id=%d", user.username, user.id)
     return db_user
 
 
@@ -46,9 +55,15 @@ def remove_user(user: schemas.UserCreate):
     """Removes a user."""
 
     db_user = get_user_by_username(user.username)
+
+    if not db_user:
+        logger.warning("Can't remove user with username=%s as it doesn't exist", user.username)
+        raise HTTPException(404, "User not found")
+
     db.delete(db_user)
     db.commit()
 
+    logger.debug("Removed user with id=%d", db_user.id)
 
 def create_sample_user():
     """Creates a sample admin user (used in development only)."""
