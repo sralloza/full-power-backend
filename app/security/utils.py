@@ -9,11 +9,11 @@ from jose import ExpiredSignatureError, JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import ValidationError
 
+from app.config import settings
 from app.database.models import User
 
 from .schemas import TokenData
 
-SECRET_KEY = "bc1994fc98b4757f41cadf698c28bb06a6a560f59f74c27c9e81e71304f78010"
 ALGORITHM = "HS256"
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -49,7 +49,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     else:
         expire = datetime.utcnow() + timedelta(minutes=15)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, settings.server_secret, algorithm=ALGORITHM)
     return encoded_jwt
 
 
@@ -75,7 +75,7 @@ def get_current_user(sec_scopes: SecurityScopes, token: str = Depends(oauth2_sch
     )
 
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, settings.server_secret, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
         if username is None:
             credentials_exception.headers["X-Error-Reason"] = "No username in token"
@@ -120,4 +120,4 @@ def get_password_hash(password: str) -> str:
 def debug_token(token):
     """Used for debugging, decrypts a token."""
 
-    return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    return jwt.decode(token, settings.server_secret, algorithms=[ALGORITHM])

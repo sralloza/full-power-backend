@@ -5,7 +5,7 @@ import os
 from enum import Enum
 from pathlib import Path
 
-from pydantic import BaseSettings, Field
+from pydantic import BaseSettings, Field, validator
 
 
 class ValidLoggingLevel(Enum):
@@ -22,6 +22,10 @@ class ValidLoggingLevel(Enum):
 class Settings(BaseSettings):
     """Internal settings of the API"""
 
+    server_secret: str = Field(
+        ...,
+        env="SECRET",
+    )
     dialogflow_project_id: str = Field(..., env="DIALOGFLOW_PROJECT_ID")
     google_application_credentials: str = Field(
         ..., env="GOOGLE_APPLICATION_CREDENTIALS"
@@ -33,6 +37,12 @@ class Settings(BaseSettings):
     logging_level: ValidLoggingLevel = Field(
         ValidLoggingLevel.INFO, env="LOGGING_LEVEL"
     )
+
+    @validator("server_secret")
+    def validate_secret(cls, value):
+        if len(value) != 64:
+            raise ValueError("SECRET must contain 64 characters")
+        return value
 
     class Config:
         env_file = Path(__file__).parent.with_name(".env").as_posix()
