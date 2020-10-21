@@ -65,6 +65,22 @@ def register_basic_user(user: BasicUserCreate):
     return create_user(real_user)
 
 
+@router.post("/refresh", response_model=Token)
+def login_post(user=Depends(get_current_user)):
+    """Login endpoint."""
+
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": user.username, "scopes": user.scopes},
+        expires_delta=access_token_expires,
+    )
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "expires_minutes": ACCESS_TOKEN_EXPIRE_MINUTES,
+    }
+
+
 @router.get(
     "/settings",
     dependencies=[Security(get_current_user, scopes=["admin"])],
