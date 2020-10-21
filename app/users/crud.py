@@ -60,6 +60,9 @@ def remove_user(user: schemas.UserCreate):
         logger.warning("Can't remove user with username=%s as it doesn't exist", user.username)
         raise HTTPException(404, "User not found")
 
+    for conversation in db_user.conversations:
+        db.delete(conversation)
+
     db.delete(db_user)
     db.commit()
 
