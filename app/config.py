@@ -22,21 +22,18 @@ class ValidLoggingLevel(Enum):
 class Settings(BaseSettings):
     """Internal settings of the API"""
 
-    server_secret: str = Field(
-        ...,
-        env="SECRET",
-    )
     dialogflow_project_id: str = Field(..., env="DIALOGFLOW_PROJECT_ID")
     google_application_credentials: str = Field(
         ..., env="GOOGLE_APPLICATION_CREDENTIALS"
     )
-    production: bool = Field(False, env="PRODUCTION")
-    sqlalchemy_database_url: str = Field(..., env="SQLALCHEMY_DATABASE_URL")
     log_path: str = Field(..., env="LOG_PATH")
-    max_logs: int = Field(0, env="MAX_LOGS")
     logging_level: ValidLoggingLevel = Field(
         ValidLoggingLevel.INFO, env="LOGGING_LEVEL"
     )
+    max_logs: int = Field(0, env="MAX_LOGS")
+    production: bool = Field(False, env="PRODUCTION")
+    server_secret: str = Field(..., env="SECRET")
+    sqlalchemy_database_url: str = Field(..., env="SQLALCHEMY_DATABASE_URL")
     token_expire_minutes: int = Field(30, env="TOKEN_EXPIRE_MINUTES")
 
     @validator("server_secret")
