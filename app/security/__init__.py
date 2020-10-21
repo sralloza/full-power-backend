@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.param_functions import Security
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 
+from app import __version__
 from app.config import Settings, settings
 from app.users.crud import create_user
 from app.users.schemas import BasicUserCreate, UserCreate, UserPublic
@@ -16,6 +17,16 @@ from .utils import authenticate_user, create_access_token, get_current_user
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 router = APIRouter()
+
+
+@router.get("/")
+def state():
+    return {"detail": "backend server online"}
+
+
+@router.get("/version")
+def get_version():
+    return {"version": __version__}
 
 
 @router.post("/login", response_model=Token)
@@ -35,7 +46,11 @@ def login_post(form_data: OAuth2PasswordRequestForm = Depends()):
         data={"sub": user.username, "scopes": user.scopes},
         expires_delta=access_token_expires,
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "expires_minutes": ACCESS_TOKEN_EXPIRE_MINUTES,
+    }
 
 
 @router.post(

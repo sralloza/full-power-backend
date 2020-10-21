@@ -5,7 +5,7 @@ from typing import Optional
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security.oauth2 import OAuth2PasswordBearer, SecurityScopes
-from jose import JWTError, jwt
+from jose import ExpiredSignatureError, JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import ValidationError
 
@@ -78,15 +78,21 @@ def get_current_user(sec_scopes: SecurityScopes, token: str = Depends(oauth2_sch
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
         if username is None:
+            credentials_exception.headers["X-Error-Reason"] = "No username in token"
             raise credentials_exception
 
         token_scopes = payload.get("scopes", [])
         token_data = TokenData(scopes=token_scopes, username=username)
+    except ExpiredSignatureError as exc:
+        credentials_exception.headers["X-Error-Reason"] = "Expired"
+        raise credentials_exception from exc
     except (JWTError, ValidationError) as exc:
+        credentials_exception.headers["X-Error-Reason"] = "Invalid token"
         raise credentials_exception from exc
 
     user = get_user_by_username(username=token_data.username)
     if user is None:
+        credentials_exception.headers["X-Error-Reason"] = "Invalid username"
         raise credentials_exception
 
     for scope in sec_scopes.scopes:
