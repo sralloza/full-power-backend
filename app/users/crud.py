@@ -51,13 +51,13 @@ def create_user(user: schemas.UserCreate):
     return db_user
 
 
-def remove_user(user: schemas.UserCreate):
+def remove_user(user_id: int):
     """Removes a user."""
 
-    db_user = get_user_by_username(user.username)
+    db_user = get_user(user_id=user_id)
 
     if not db_user:
-        logger.warning("Can't remove user with username=%s as it doesn't exist", user.username)
+        logger.warning("Can't remove user with id=%d as it doesn't exist", user_id)
         raise HTTPException(404, "User not found")
 
     for conversation in db_user.conversations:
