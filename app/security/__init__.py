@@ -18,6 +18,11 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 router = APIRouter()
 
 
+@router.get("/")
+def state():
+    return {"detail": "backend server online"}
+
+
 @router.post("/login", response_model=Token)
 def login_post(form_data: OAuth2PasswordRequestForm = Depends()):
     """Login endpoint."""
