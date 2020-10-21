@@ -35,7 +35,11 @@ def login_post(form_data: OAuth2PasswordRequestForm = Depends()):
         data={"sub": user.username, "scopes": user.scopes},
         expires_delta=access_token_expires,
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "expires_minutes": ACCESS_TOKEN_EXPIRE_MINUTES,
+    }
 
 
 @router.post(
