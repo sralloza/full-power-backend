@@ -5,9 +5,8 @@ from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.param_functions import Security
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
-from pydantic.env_settings import BaseSettings
 
-from app.config import settings
+from app.config import Settings, settings
 from app.users.crud import create_user
 from app.users.schemas import BasicUserCreate, UserCreate, UserPublic
 
@@ -54,7 +53,7 @@ def register_basic_user(user: BasicUserCreate):
 @router.get(
     "/settings",
     dependencies=[Security(get_current_user, scopes=["admin"])],
-    response_model=BaseSettings,
+    response_model=Settings,
 )
 def get_settings():
     """Returns the current api settings. Requires admin."""
