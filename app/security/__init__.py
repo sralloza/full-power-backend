@@ -14,7 +14,6 @@ from app.users.schemas import BasicUserCreate, UserCreate, UserPublic
 from .schemas import Token
 from .utils import authenticate_user, create_access_token, get_current_user
 
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 router = APIRouter()
 
@@ -41,7 +40,7 @@ def login_post(form_data: OAuth2PasswordRequestForm = Depends()):
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token_expires = timedelta(minutes=settings.token_expire_minutes)
     access_token = create_access_token(
         data={"sub": user.username, "scopes": user.scopes},
         expires_delta=access_token_expires,
@@ -49,7 +48,8 @@ def login_post(form_data: OAuth2PasswordRequestForm = Depends()):
     return {
         "access_token": access_token,
         "token_type": "bearer",
-        "expires_minutes": ACCESS_TOKEN_EXPIRE_MINUTES,
+        "expires_minutes": access_token_expires.seconds // 60,
+        "scopes": user.scopes,
     }
 
 
@@ -63,6 +63,23 @@ def register_basic_user(user: BasicUserCreate):
 
     real_user = UserCreate(**user.dict(), is_admin=False)
     return create_user(real_user)
+
+
+@router.post("/refresh", response_model=Token)
+def login_post(user=Depends(get_current_user)):
+    """Login endpoint."""
+
+    access_token_expires = timedelta(minutes=settings.token_expire_minutes)
+    access_token = create_access_token(
+        data={"sub": user.username, "scopes": user.scopes},
+        expires_delta=access_token_expires,
+    )
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "expires_minutes": access_token_expires.seconds // 60,
+        "scopes": user.scopes,
+    }
 
 
 @router.get(

@@ -18,3 +18,4 @@ class Token(BaseModel):
     access_token: str
     token_type: str
     expires_minutes: int
+    scopes: List[str] = []

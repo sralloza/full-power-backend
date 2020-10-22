@@ -47,7 +47,7 @@ def create_user(user: schemas.UserCreate):
     db.commit()
     db.refresh(db_user)
 
-    logger.info("Registered user with username=%r and id=%d", user.username, user.id)
+    logger.info("Registered user with username=%r and id=%d", db_user.username, db_user.id)
     return db_user
 
 
