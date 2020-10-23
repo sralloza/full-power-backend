@@ -20,6 +20,9 @@ def setup_logging():
         backupCount=settings.max_logs,
     )
 
+    if file_handler.shouldRollover(None):
+        file_handler.doRollover()
+
     logging.basicConfig(
         handlers=[file_handler],
         level=settings.logging_level.as_python_logging(),
@@ -31,12 +34,11 @@ def setup_logging():
     logging.getLogger("passlib").setLevel(50)
     logging.getLogger("werkzeug").setLevel(50)
 
-
 def catch_errors(request, exc):
     error_id = uuid4()
     scope = request.scope
     request_info = (
-        f"{scope['scheme'].upper()}/{scope['http_version']} "
+        f"[{request.client.host}] {scope['scheme'].upper()}/{scope['http_version']} "
         f"{scope['method']} {scope['path']}"
     )
 

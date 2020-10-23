@@ -200,3 +200,4 @@ $RECYCLE.BIN/
 
 *.json
 *.db
+logs/
