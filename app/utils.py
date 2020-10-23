@@ -20,6 +20,9 @@ def setup_logging():
         backupCount=settings.max_logs,
     )
 
+    if file_handler.shouldRollover(None):
+        file_handler.doRollover()
+
     logging.basicConfig(
         handlers=[file_handler],
         level=settings.logging_level.as_python_logging(),
