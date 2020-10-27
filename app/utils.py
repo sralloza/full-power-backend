@@ -4,7 +4,7 @@ from uuid import uuid4
 
 from starlette.responses import JSONResponse
 
-from .config import settings
+from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +33,7 @@ def setup_logging():
     logging.getLogger("multipart").setLevel(50)
     logging.getLogger("passlib").setLevel(50)
     logging.getLogger("werkzeug").setLevel(50)
+
 
 def catch_errors(request, exc):
     error_id = uuid4()
