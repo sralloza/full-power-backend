@@ -1,10 +1,8 @@
 """Data schematics for conversation endpoints."""
 
-from typing import Optional
 
 from pydantic import BaseModel
 
-from .user import UserInput
 
 # pylint: disable=too-few-public-methods
 
@@ -32,6 +30,7 @@ class ConversationInDB(ConversationBase):
 
     class Config:  # pylint: disable=missing-class-docstring
         orm_mode = True
+
 
 class Conversation(ConversationInDB):
     pass

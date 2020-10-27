@@ -2,18 +2,16 @@
 
 import logging
 
-from fastapi import HTTPException
 from sqlalchemy.orm.session import Session
 
 from app.crud.base import CRUDBase
-from app.crud.crud_conversation import CRUDConversation
 from app.models.conversation import Conversation
-from app.schemas.conversation import ConversationCreate
+from app.schemas.conversation import ConversationCreate, ConversationUpdate
 
 logger = logging.getLogger(__name__)
 
 
-class CRUDConversation(CRUDBase[Conversation, ConversationCreate, None]):
+class CRUDConversation(CRUDBase[Conversation, ConversationCreate, ConversationUpdate]):
     def get_user(self, db: Session, *, user_id: int, skip: int = 0, limit: int = 100):
         """Lists all conversations for a given user."""
 
@@ -24,7 +22,6 @@ class CRUDConversation(CRUDBase[Conversation, ConversationCreate, None]):
             .limit(limit)
             .all()
         )
-
 
 
 conversation = CRUDConversation(Conversation)
