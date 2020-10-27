@@ -6,7 +6,13 @@ import secrets
 from enum import Enum
 from pathlib import Path
 
-from pydantic import BaseSettings
+from pydantic import AnyUrl, BaseSettings, FilePath, conint, validator
+from pydantic.types import PositiveInt
+
+
+class SqlUrl(AnyUrl):
+    allowed_schemes = {"mysql+pymysql"}
+    user_required = True
 
 
 class ValidLoggingLevel(Enum):
@@ -25,13 +31,19 @@ class Settings(BaseSettings):
 
     dialogflow_project_id: str
     encryption_algorithm: str = "HS256"
-    google_application_credentials: str
-    log_path: str
+    google_application_credentials: FilePath
+    log_path: FilePath
     logging_level: ValidLoggingLevel = ValidLoggingLevel.INFO
-    max_logs: int = 0
+    max_logs: int = 30
     production: bool = False
     server_secret: str = secrets.token_urlsafe(32)
-    sqlalchemy_database_url: str
+    sqlalchemy_database_url: SqlUrl
+
+    @validator("sqlalchemy_database_url")
+    def check_db_name(cls, v):
+        assert v.path and len(v.path) > 1, "database must be provided"
+        return v
+
     token_expire_minutes: int = 30
 
     first_superuser_password: str
@@ -44,7 +56,7 @@ class Settings(BaseSettings):
     def set_environment(self):
         os.environ[
             "GOOGLE_APPLICATION_CREDENTIALS"
-        ] = self.google_application_credentials
+        ] = self.google_application_credentials.as_posix()
 
     username_test_user: str = "the_Test"
 
