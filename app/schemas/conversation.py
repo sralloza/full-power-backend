@@ -16,7 +16,7 @@ class BaseConversation(UserInput):
     intent: Optional[str]
 
 
-class Conversation(BaseConversation):
+class ConversationInDB(BaseConversation):
     """Represents a conversation stored in the database."""
 
     user_id: int
