@@ -35,6 +35,7 @@ class Settings(BaseSettings):
     server_secret: str = Field(..., env="SECRET")
     sqlalchemy_database_url: str = Field(..., env="SQLALCHEMY_DATABASE_URL")
     token_expire_minutes: int = Field(30, env="TOKEN_EXPIRE_MINUTES")
+    encryption_algorithm: str = "HS256"
 
     @validator("server_secret")
     def validate_secret(cls, value):
@@ -43,7 +44,7 @@ class Settings(BaseSettings):
         return value
 
     class Config:
-        env_file = Path(__file__).parent.with_name(".env").as_posix()
+        env_file = Path(__file__).parent.parent.with_name(".env").as_posix()
         env_file_encoding = "utf-8"
 
     def set_environment(self):

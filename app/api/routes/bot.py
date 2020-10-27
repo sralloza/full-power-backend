@@ -4,24 +4,26 @@ import os
 
 from fastapi import APIRouter, Depends
 
-from app.config import settings
-from app.conversations.crud import create_conversation
-from app.conversations.schemas import ConversationCreate
-from app.database.models import User
-from app.security.utils import get_current_user
-
-from .schemas import UserInput
-from .utils import detect_intent_texts
+from app import crud
+from app.api.dependencies.security import get_current_user
+from app.core.bot import detect_intent_texts
+from app.core.config import settings
+from app.models import User
+from app.schemas.bot import Msg
+from app.schemas.conversation import ConversationCreate
+from app.api.dependencies.database import get_db
 
 router = APIRouter()
 
 
 @router.post("/bot-message", response_model=ConversationCreate)
-def bot_message_post(input_pack: UserInput, user: User = Depends(get_current_user)):
+def bot_message_post(
+    *, db=Depends(get_db), input_pack: Msg, user: User = Depends(get_current_user)
+):
     """Sends a message to the bot and returns the response back."""
 
     user_id = user.id
-    message = input_pack.user_msg
+    message = input_pack.msg
     project_id = settings.dialogflow_project_id
 
     response = detect_intent_texts(project_id, user_id, message, "en")
@@ -31,8 +33,8 @@ def bot_message_post(input_pack: UserInput, user: User = Depends(get_current_use
     os.environ["intent"] = intent
 
     conversation = ConversationCreate(
-        user_msg=message, bot_msg=fulfillment_text, intent=intent
+        user_msg=message, bot_msg=fulfillment_text, intent=intent, user_id=user.id
     )
-    create_conversation(conversation, user_id)
+    crud.conversation.create(db, obj_in=conversation)
 
     return conversation

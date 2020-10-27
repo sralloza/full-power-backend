@@ -6,7 +6,7 @@ from pathlib import Path
 import dialogflow
 from google.oauth2 import service_account
 
-from app.config import settings
+from app.core.config import settings
 
 
 def get_credentials():
