@@ -35,6 +35,7 @@ class Settings(BaseSettings):
     server_secret: str = Field(..., env="SECRET")
     sqlalchemy_database_url: str = Field(..., env="SQLALCHEMY_DATABASE_URL")
     token_expire_minutes: int = Field(30, env="TOKEN_EXPIRE_MINUTES")
+    encryption_algorithm: str = "HS256"
 
     @validator("server_secret")
     def validate_secret(cls, value):

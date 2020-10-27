@@ -40,7 +40,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     else:
         expire = datetime.utcnow() + timedelta(minutes=15)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, settings.server_secret, algorithm=ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, settings.server_secret, algorithm=settings.encryption_algorithm)
     return encoded_jwt
 
 
@@ -59,4 +59,4 @@ def get_password_hash(password: str) -> str:
 def debug_token(token):
     """Used for debugging, decrypts a token."""
 
-    return jwt.decode(token, settings.server_secret, algorithms=[ALGORITHM])
+    return jwt.decode(token, settings.server_secret, algorithms=[settings.encryption_algorithm])

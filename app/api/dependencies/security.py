@@ -4,12 +4,11 @@ from jose import ExpiredSignatureError, JWTError, jwt
 from pydantic import ValidationError
 from sqlalchemy.orm.session import Session
 
+from app import crud
 from app.core.config import settings
 from app.schemas.token import TokenData
 
 from .database import get_db
-
-ALGORITHM = "HS256"
 
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="login", scopes={"admin": "admin stuff", "basic": "rest of users"}
@@ -40,7 +39,7 @@ def get_current_user(
     )
 
     try:
-        payload = jwt.decode(token, settings.server_secret, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, settings.server_secret, algorithms=[settings.encryption_algorithm])
         username: str = payload.get("sub")
 
         if username is None:
@@ -56,7 +55,7 @@ def get_current_user(
         credentials_exception.headers["X-Error-Reason"] = "Invalid token"
         raise credentials_exception from exc
 
-    user = crud.users.get_by_username(db, username=token_data.username)
+    user = crud.user.get_by_username(db, username=token_data.username)
     if user is None:
         credentials_exception.headers["X-Error-Reason"] = "Invalid username"
         raise credentials_exception
