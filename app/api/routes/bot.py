@@ -33,7 +33,7 @@ def bot_message_post(
     os.environ["intent"] = intent
 
     conversation = ConversationCreate(
-        user_msg=message, bot_msg=fulfillment_text, intent=intent
+        user_msg=message, bot_msg=fulfillment_text, intent=intent, user_id=user.id
     )
     crud.conversation.create(db, obj_in=conversation)
 
