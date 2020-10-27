@@ -1,5 +1,6 @@
 a2wsgi
 dialogflow
+email-validator
 fastapi
 gunicorn
 passlib[bcrypt]
@@ -8,4 +9,5 @@ python-dotenv
 python-jose
 python-multipart
 sqlalchemy
+tenacity
 uvicorn
