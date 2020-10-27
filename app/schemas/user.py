@@ -4,59 +4,50 @@ from typing import List
 
 from pydantic import BaseModel
 
+from .conversation import Conversation
+
 # pylint: disable=too-few-public-methods
 
 
-class ConversationBase(BaseModel):
-    """Base model for conversations."""
-
-    user_msg: str
-    bot_msg: str
-
-
-class ConversationCreate(ConversationBase):
-    """Model for creating conversations."""
-
-
-class Conversation(ConversationBase):
-    """"Model for conversations stored in database."""
-
-    id: int
-    user_id: int
-
-    class Config:  # pylint: disable=missing-class-docstring
-        orm_mode = True
-
-
 class UserBase(BaseModel):
-    """Base models for users."""
+    """Shared properties."""
 
     username: str
 
 
-class BasicUserCreate(UserBase):
-    """Model for creating basic users."""
-
+class PlainPasswordMixin(BaseModel):
     password: str
 
 
-class UserCreate(BasicUserCreate):
-    """User's data ready to send to the database."""
+class IdMixin(BaseModel):
+    id: int
 
+
+class AdminMixin(BaseModel):
     is_admin: bool
 
 
-class UserPublic(UserBase):
-    """User's public data."""
+class UserCreateBasic(UserBase, PlainPasswordMixin):
+    pass
 
-    hashed_password: str
 
+class UserCreateAdmin(UserCreateBasic, AdminMixin):
+    pass
+
+
+class UserUpdate(UserCreateBasic):
+    pass
+
+
+class UserInDBBase(UserBase, IdMixin, AdminMixin):
     class Config:  # pylint: disable=missing-class-docstring
         orm_mode = True
 
 
-class PrivateUser(UserPublic):
-    """Model for manage all the user's data, even the private data."""
+class User(UserInDBBase):
+    pass
 
-    id: int
+
+class UserInDB(UserInDBBase):
     conversations: List[Conversation] = []
+    hashed_password: str

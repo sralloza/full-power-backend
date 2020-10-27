@@ -1,9 +1,7 @@
 """Data schematics for bot endpoints."""
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
-class UserInput(BaseModel):
-    """Represents the data sent by the user to the bot."""
-
-    user_msg: str = Field(..., example="Hi bot! What time is it?")
+class Msg(BaseModel):
+    msg: str

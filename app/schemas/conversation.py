@@ -2,29 +2,36 @@
 
 from typing import Optional
 
-from pydantic import Field
+from pydantic import BaseModel
 
-from app.bot.schemas import UserInput
+from .user import UserInput
 
 # pylint: disable=too-few-public-methods
 
 
-class BaseConversation(UserInput):
+class ConversationBase(BaseModel):
     """Base class for conversations data."""
 
-    bot_msg: str = Field(..., example="Hi! It's 20:30.")
-    intent: Optional[str]
-
-
-class ConversationInDB(BaseConversation):
-    """Represents a conversation stored in the database."""
-
+    user_msg: str
+    bot_msg: str
+    intent: str
     user_id: int
+
+
+class ConversationCreate(ConversationBase):
+    pass
+
+
+# Just for CRUD compatibility, conversations can't be updated
+class ConversationUpdate(BaseModel):
+    pass
+
+
+class ConversationInDB(ConversationBase):
     id: int
 
     class Config:  # pylint: disable=missing-class-docstring
         orm_mode = True
 
-
-class ConversationCreate(BaseConversation):
-    """Represents the data needed to create a conversation."""
+class Conversation(ConversationInDB):
+    pass

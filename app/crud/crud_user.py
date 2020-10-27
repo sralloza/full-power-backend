@@ -5,13 +5,13 @@ from fastapi import HTTPException
 from sqlalchemy.orm.session import Session
 from app.crud.base import CRUDBase
 from app.models.user import User
-from app.schemas.user import UserCreate, UserUpdate
+from app.schemas.user import UserCreateAdmin, UserUpdate
 
 
 logger = logging.getLogger(__name__)
 
 
-class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
+class CRUDUser(CRUDBase[User, UserCreateAdmin, UserUpdate]):
     def get_by_username(self, db: Session, *, username: str) -> User:
         """Returns a user given its username."""
 
