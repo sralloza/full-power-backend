@@ -67,7 +67,7 @@ def register_basic_user(*, db: Session = Depends(get_db), user: UserCreateBasic)
 
 
 @router.post("/refresh", response_model=Token)
-def login_post(user=Depends(get_current_user)):
+def refresh_post(user=Depends(get_current_user)):
     """Login endpoint."""
 
     access_token_expires = timedelta(minutes=settings.token_expire_minutes)
