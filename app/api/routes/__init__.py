@@ -12,11 +12,14 @@ router.include_router(
 )
 router.include_router(
     conversations.router,
-    prefix="/conversations",
     dependencies=[Security(get_current_user, scopes=["admin"])],
+    prefix="/conversations",
     tags=["conversations"],
 )
 
-# Users dependencies are defined for each route, because
-# /users/me doesn't need the admin scope
-router.include_router(users.router, tags=["users"], prefix="/users")
+router.include_router(
+    users.router,
+    dependencies=[Security(get_current_user, scopes=["admin"])],
+    prefix="/users",
+    tags=["users"],
+)

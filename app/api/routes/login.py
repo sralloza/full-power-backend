@@ -92,3 +92,10 @@ def get_settings():
     """Returns the current api settings. Requires admin."""
 
     return settings
+
+
+@router.get("/me", response_model=User)
+def users_get_current_user(current_user: User = Depends(get_current_user)):
+    """Returns the current user."""
+
+    return current_user
