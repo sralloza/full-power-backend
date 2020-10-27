@@ -1,12 +1,8 @@
 from sqlalchemy.orm import Session
 
-from app import crud, schemas
+from app import crud
+from app.schemas.user import UserCreateAdmin
 from app.core.config import settings
-from app.db import base  # noqa: F401
-
-# make sure all SQL Alchemy models are imported (app.db.base) before initializing DB
-# otherwise, SQL Alchemy might fail to initialize relationships properly
-# for more details: https://github.com/tiangolo/full-stack-fastapi-postgresql/issues/28
 
 
 def init_db(db: Session) -> None:
@@ -15,11 +11,12 @@ def init_db(db: Session) -> None:
     # the tables un-commenting the next line
     # Base.metadata.create_all(bind=engine)
 
-    user = crud.user.get_by_email(db, email=settings.FIRST_SUPERUSER)
+    # TODO: make this configurable via settings
+    user = crud.user.get_by_username(db, username="admin")
     if not user:
-        user_in = schemas.UserCreate(
-            email=settings.FIRST_SUPERUSER,
-            password=settings.FIRST_SUPERUSER_PASSWORD,
-            is_superuser=True,
+        user_in = UserCreateAdmin(
+            username="admin",
+            password="1234",
+            admin=True,
         )
-        user = crud.user.create(db, obj_in=user_in)  # noqa: F841
+        user = crud.user.create(db, obj_in=user_in)
