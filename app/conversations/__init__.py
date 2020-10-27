@@ -5,6 +5,7 @@ from typing import List
 from fastapi import APIRouter
 
 from . import schemas
+from app import crud
 from .crud import (
     create_conversation,
     list_all_conversations,

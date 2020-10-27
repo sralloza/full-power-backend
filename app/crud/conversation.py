@@ -5,7 +5,7 @@ import logging
 from fastapi import HTTPException
 
 from app.database import db, models
-from app.users.crud import get_user
+from .users import get_user
 
 from . import schemas
 
@@ -36,7 +36,7 @@ def create_conversation(conversation: schemas.ConversationCreate, user_id: int):
     db.add(conv)
     db.commit()
     db.refresh(conv)
-    
+
     logger.debug("Conversation created for user_id=%d (conv_id=%d)", user_id, conv.id)
     return conv
 
