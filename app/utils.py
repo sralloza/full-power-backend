@@ -1,5 +1,6 @@
 import logging
 from logging.handlers import TimedRotatingFileHandler
+from pathlib import Path
 from uuid import uuid4
 
 from starlette.responses import JSONResponse
@@ -12,6 +13,8 @@ logger = logging.getLogger(__name__)
 def setup_logging():
     fmt = "[%(asctime)s] %(levelname)s - %(name)s:%(lineno)s - %(message)s"
     # fmt = "[%(asctime)s] %(levelname)s - %(threadName)s.%(module)s:%(lineno)s - %(message)s"
+
+    Path(settings.log_path).parent.mkdir(parents=True, exist_ok=True)
 
     file_handler = TimedRotatingFileHandler(
         settings.log_path,
