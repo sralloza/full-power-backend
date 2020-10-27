@@ -43,7 +43,7 @@ class Settings(BaseSettings):
         return value
 
     class Config:
-        env_file = Path(__file__).parent.with_name(".env").as_posix()
+        env_file = Path(__file__).parent.parent.with_name(".env").as_posix()
         env_file_encoding = "utf-8"
 
     def set_environment(self):
