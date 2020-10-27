@@ -3,35 +3,26 @@
 from datetime import datetime, timedelta
 from typing import Optional
 
-from fastapi import Depends, HTTPException, status
-from fastapi.security.oauth2 import OAuth2PasswordBearer, SecurityScopes
-from jose import ExpiredSignatureError, JWTError, jwt
+from jose import jwt
 from passlib.context import CryptContext
-from pydantic import ValidationError
+from sqlalchemy.orm.session import Session
 
-from app.config import settings
-from app.database.models import User
+from app.core.config import settings
+from app.models import User
+from app import crud
 
-from .schemas import TokenData
-
-ALGORITHM = "HS256"
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl="login", scopes={"admin": "admin stuff", "basic": "rest of users"}
-)
 
-
-def authenticate_user(username: str, hashed_password: str) -> Optional[User]:
+def authenticate_user(
+    db: Session, username: str, hashed_password: str
+) -> Optional[User]:
     """Given a username and a hashed password, returns the user from the
     database if the username and the hashed passwords are valid.
     """
 
-    # pylint: disable=import-outside-toplevel
-    from app.users.crud import get_user_by_username
-
-    user = get_user_by_username(username)
+    user = crud.user.get_by_username(db, username=username)
     if not user:
         return None
     if not verify_password(hashed_password, user.hashed_password):
@@ -51,58 +42,6 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, settings.server_secret, algorithm=ALGORITHM)
     return encoded_jwt
-
-
-def get_current_user(sec_scopes: SecurityScopes, token: str = Depends(oauth2_scheme)):
-    """Returns the current user, given the token present in the header.
-
-    Returns 401 on any error.
-
-    """
-
-    # pylint: disable=import-outside-toplevel
-    from app.users.crud import get_user_by_username
-
-    if sec_scopes.scopes:
-        authenticate_value = f'Bearer scope="{sec_scopes.scope_str}"'
-    else:
-        authenticate_value = "Bearer"
-
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": authenticate_value},
-    )
-
-    try:
-        payload = jwt.decode(token, settings.server_secret, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
-            credentials_exception.headers["X-Error-Reason"] = "No username in token"
-            raise credentials_exception
-
-        token_scopes = payload.get("scopes", [])
-        token_data = TokenData(scopes=token_scopes, username=username)
-    except ExpiredSignatureError as exc:
-        credentials_exception.headers["X-Error-Reason"] = "Expired"
-        raise credentials_exception from exc
-    except (JWTError, ValidationError) as exc:
-        credentials_exception.headers["X-Error-Reason"] = "Invalid token"
-        raise credentials_exception from exc
-
-    user = get_user_by_username(username=token_data.username)
-    if user is None:
-        credentials_exception.headers["X-Error-Reason"] = "Invalid username"
-        raise credentials_exception
-
-    for scope in sec_scopes.scopes:
-        if scope not in token_data.scopes:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail=f"Not enough permissions [{scope} required]",
-                headers={"WWW-Authenticate": authenticate_value},
-            )
-    return user
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
