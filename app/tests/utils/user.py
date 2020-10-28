@@ -8,6 +8,8 @@ from app.models.user import User
 from app.schemas.user import UserCreateAdmin, UserUpdate
 from app.tests.utils.utils import random_lower_string
 
+temp_passwords = {}
+
 
 def user_authentication_headers(
     *, client: TestClient, username: str, password: str
@@ -36,16 +38,23 @@ def authentication_token_from_username(
     Return a valid token for the user with given email.
     If the user doesn't exist it is created first.
     """
-    password = random_lower_string()
     user = crud.user.get_by_username(db, username=username)
 
-    if not user:
-        user_in_create = UserCreateAdmin(username=username, password=password, is_admin=False)
-        user = crud.user.create(db, obj_in=user_in_create)
-    else:
-        user_in_update = UserUpdate(password=password)
-        user = crud.user.update(db, db_obj=user, obj_in=user_in_update)
+    if username not in temp_passwords:
+        temp_passwords[username] = random_lower_string()
 
+        if not user:
+            user_in_create = UserCreateAdmin(
+                username=username, password=temp_passwords[username], is_admin=False
+            )
+            user = crud.user.create(db, obj_in=user_in_create)
+        else:
+            user_in_update = UserUpdate(
+                username=username, password=temp_passwords[username]
+            )
+            user = crud.user.update(db, db_obj=user, obj_in=user_in_update)
+
+    password = temp_passwords[username]
     return user_authentication_headers(
         client=client, username=username, password=password
     )

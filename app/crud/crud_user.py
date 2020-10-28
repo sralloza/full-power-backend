@@ -14,9 +14,6 @@ logger = logging.getLogger(__name__)
 
 class CRUDUser(CRUDBase[User, UserCreateAdmin, UserUpdate]):
     def create(self, db: Session, *, obj_in: UserCreateAdmin) -> User:
-        if self.get_by_username(db, username=obj_in.username):
-            raise HTTPException(400, "Username already registered")
-
         obj_dict = obj_in.dict()
         obj_dict["hashed_password"] = get_password_hash(obj_dict.pop("password"))
         db_obj = User(**obj_dict)
