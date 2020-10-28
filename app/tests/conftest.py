@@ -1,3 +1,4 @@
+import os
 from typing import Dict, Generator
 
 import pytest
@@ -13,7 +14,10 @@ from app.tests.utils.utils import get_superuser_token_headers
 
 @pytest.fixture(scope="session")
 def db() -> Generator:
-    yield SessionLocal()
+    db = SessionLocal()
+    yield db
+    db.close()
+    os.remove("testing-database.db")
 
 
 @pytest.fixture(scope="module")
