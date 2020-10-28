@@ -7,9 +7,11 @@ from sqlalchemy.orm.session import Session
 
 from app import crud
 from app.api.dependencies.database import get_db
+from app.core.users import raise_user_already_registered, raise_user_not_found
 from app.schemas.user import User, UserCreateAdmin
-from app.core.users import raise_user_not_found, raise_user_already_registered
+
 router = APIRouter()
+
 
 @router.post(
     "",

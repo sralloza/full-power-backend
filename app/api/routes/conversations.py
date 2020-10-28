@@ -13,7 +13,6 @@ router = APIRouter()
 
 
 @router.post("/", response_model=Conversation)
-
 def conversation_create_post(
     *, db: Session = Depends(get_db), conversation: ConversationCreate
 ):

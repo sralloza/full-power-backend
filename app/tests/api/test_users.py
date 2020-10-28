@@ -50,7 +50,9 @@ def test_create_user_existing_username(
     user_in = UserCreateAdmin(username=username, password=password, is_admin=False)
     crud.user.create(db, obj_in=user_in)
 
-    response = client.post("/users", headers=superuser_token_headers, json=user_in.dict())
+    response = client.post(
+        "/users", headers=superuser_token_headers, json=user_in.dict()
+    )
     assert response.status_code == 400
     assert response.json()["detail"] == "Username already registered"
 
@@ -111,6 +113,7 @@ def test_remove_existing_user(
 
     assert response.json() is None
     assert crud.user.get_by_username(db, username=username) is None
+
 
 def test_remove_nonexisting_user(
     client: TestClient, superuser_token_headers: dict, db: Session

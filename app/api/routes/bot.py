@@ -5,13 +5,13 @@ import os
 from fastapi import APIRouter, Depends
 
 from app import crud
+from app.api.dependencies.database import get_db
 from app.api.dependencies.security import get_current_user
 from app.core.bot import detect_intent_texts
 from app.core.config import settings
 from app.models import User
 from app.schemas.bot import Msg
 from app.schemas.conversation import ConversationCreate
-from app.api.dependencies.database import get_db
 
 router = APIRouter()
 

@@ -1,7 +1,6 @@
 """Manages database connections involving users."""
 import logging
 
-from fastapi import HTTPException
 from sqlalchemy.orm.session import Session
 
 from app.core.security import get_password_hash

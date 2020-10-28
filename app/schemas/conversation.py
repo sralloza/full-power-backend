@@ -3,7 +3,6 @@
 
 from pydantic import BaseModel
 
-
 # pylint: disable=too-few-public-methods
 
 

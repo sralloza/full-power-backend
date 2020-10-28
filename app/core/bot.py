@@ -11,7 +11,6 @@ from app.core.config import settings
 
 def get_credentials():
 
-
     json_string = Path(settings.google_application_credentials).read_text()
     info = json.loads(json_string)
     credentials = service_account.Credentials.from_service_account_info(info)

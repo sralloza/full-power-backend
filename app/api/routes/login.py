@@ -17,8 +17,6 @@ from app.schemas.user import User, UserCreateAdmin, UserCreateBasic
 router = APIRouter()
 
 
-
-
 @router.post("/login", response_model=Token)
 def login_post(
     *, db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()

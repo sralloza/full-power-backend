@@ -1,10 +1,9 @@
-from app.tests.conftest import normal_user_token_headers, superuser_token_headers
 from typing import Dict
+from unittest import mock
 
 from fastapi.testclient import TestClient
 
 from app.core.config import Settings, settings
-from unittest import mock
 
 
 def test_get_index(client: TestClient):

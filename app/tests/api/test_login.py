@@ -63,7 +63,7 @@ def test_register_basic_user(client: TestClient, db: Session):
     )
 
     assert response.status_code == 200
-    user= User(**response.json())
+    user = User(**response.json())
     assert user
 
     db_user = crud.user.get_by_username(db, username=username)
