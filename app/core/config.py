@@ -6,13 +6,7 @@ import secrets
 from enum import Enum
 from pathlib import Path
 
-from pydantic import AnyUrl, BaseSettings, FilePath, conint, validator
-from pydantic.types import PositiveInt
-
-
-class SqlUrl(AnyUrl):
-    allowed_schemes = {"mysql+pymysql"}
-    user_required = True
+from pydantic import BaseSettings, FilePath
 
 
 class ValidLoggingLevel(Enum):
@@ -37,12 +31,7 @@ class Settings(BaseSettings):
     max_logs: int = 30
     production: bool = False
     server_secret: str = secrets.token_urlsafe(32)
-    sqlalchemy_database_url: SqlUrl
-
-    @validator("sqlalchemy_database_url")
-    def check_db_name(cls, v):
-        assert v.path and len(v.path) > 1, "database must be provided"
-        return v
+    sqlalchemy_database_url: str
 
     token_expire_minutes: int = 30
 
