@@ -26,7 +26,7 @@ class Settings(BaseSettings):
     dialogflow_project_id: str
     encryption_algorithm: str = "HS256"
     google_application_credentials: FilePath
-    log_path: FilePath
+    log_path: Path
     logging_level: ValidLoggingLevel = ValidLoggingLevel.INFO
     max_logs: int = 30
     production: bool = False
