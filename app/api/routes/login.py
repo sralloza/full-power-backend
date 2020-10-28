@@ -2,14 +2,14 @@
 
 from datetime import timedelta
 
-from fastapi import APIRouter, Depends, HTTPException, Security, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from sqlalchemy.orm.session import Session
 
 from app import __version__, crud
 from app.api.dependencies.database import get_db
 from app.api.dependencies.security import get_current_user
-from app.core.config import Settings, settings
+from app.core.config import settings
 from app.core.security import authenticate_user, create_access_token
 from app.schemas.token import Token
 from app.schemas.user import User, UserCreateAdmin, UserCreateBasic
@@ -17,14 +17,6 @@ from app.schemas.user import User, UserCreateAdmin, UserCreateBasic
 router = APIRouter()
 
 
-@router.get("/")
-def state():
-    return {"detail": "backend server online"}
-
-
-@router.get("/version")
-def get_version():
-    return {"version": __version__}
 
 
 @router.post("/login", response_model=Token)
@@ -81,21 +73,3 @@ def refresh_post(user=Depends(get_current_user)):
         "expires_minutes": access_token_expires.seconds // 60,
         "scopes": user.scopes,
     }
-
-
-@router.get(
-    "/settings",
-    dependencies=[Security(get_current_user, scopes=["admin"])],
-    response_model=Settings,
-)
-def get_settings():
-    """Returns the current api settings. Requires admin."""
-
-    return settings
-
-
-@router.get("/me", response_model=User)
-def users_get_current_user(current_user: User = Depends(get_current_user)):
-    """Returns the current user."""
-
-    return current_user
