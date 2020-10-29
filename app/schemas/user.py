@@ -2,7 +2,7 @@
 
 from typing import List, Optional
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel
 
 from .conversation import Conversation
 
@@ -13,7 +13,7 @@ class UserBase(BaseModel):
     username: str
 
 
-class UserCreateBasic(BaseModel):
+class UserCreateBasic(UserBase):
     password: str
 
 
@@ -25,18 +25,12 @@ class UserUpdateBasic(UserBase):
     username: Optional[str] = None
     password: Optional[str] = None
 
-    @validator("*", pre=True, always=True)
-    def at_least_one_value(cls, value, values, **kwargs):
-        if not values and value is None:
-            raise ValueError("At least one field is required")
-        return value
-
 
 class UserUpdateAdmin(UserUpdateBasic):
     is_admin: bool = False
 
 
-class UserInDB(BaseModel):
+class UserInDB(UserBase):
     is_admin: bool
 
     id: int
@@ -48,8 +42,6 @@ class UserInDB(BaseModel):
 
 
 class User(UserInDB):
-    username: str
-    is_admin: str
 
     class Config:
         orm_mode = True
