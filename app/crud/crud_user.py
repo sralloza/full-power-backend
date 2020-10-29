@@ -6,12 +6,12 @@ from sqlalchemy.orm.session import Session
 from app.core.security import get_password_hash
 from app.crud.base import CRUDBase
 from app.models.user import User
-from app.schemas.user import UserCreateAdmin, UserUpdate
+from app.schemas.user import UserCreateAdmin, UserUpdateAdmin
 
 logger = logging.getLogger(__name__)
 
 
-class CRUDUser(CRUDBase[User, UserCreateAdmin, UserUpdate]):
+class CRUDUser(CRUDBase[User, UserCreateAdmin, UserUpdateAdmin]):
     def create(self, db: Session, *, obj_in: UserCreateAdmin) -> User:
         obj_dict = obj_in.dict()
         obj_dict["hashed_password"] = get_password_hash(obj_dict.pop("password"))

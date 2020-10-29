@@ -1,8 +1,8 @@
 """Data schematics for user endpoints."""
 
-from typing import List
+from typing import List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 from .conversation import Conversation
 
@@ -10,44 +10,46 @@ from .conversation import Conversation
 
 
 class UserBase(BaseModel):
-    """Shared properties."""
-
     username: str
 
 
-class PlainPasswordMixin(BaseModel):
+class UserCreateBasic(BaseModel):
     password: str
 
 
-class IdMixin(BaseModel):
-    id: int
+class UserCreateAdmin(UserCreateBasic):
+    is_admin: bool = False
 
 
-class AdminMixin(BaseModel):
+class UserUpdateBasic(UserBase):
+    username: Optional[str] = None
+    password: Optional[str] = None
+
+    @validator("*", pre=True, always=True)
+    def at_least_one_value(cls, value, values, **kwargs):
+        if not values and value is None:
+            raise ValueError("At least one field is required")
+        return value
+
+
+class UserUpdateAdmin(UserUpdateBasic):
+    is_admin: bool = False
+
+
+class UserInDB(BaseModel):
     is_admin: bool
 
+    id: int
+    conversations: List[Conversation] = []
+    hashed_password: str
 
-class UserCreateBasic(UserBase, PlainPasswordMixin):
-    pass
-
-
-class UserCreateAdmin(UserCreateBasic, AdminMixin):
-    pass
-
-
-class UserUpdate(UserCreateBasic):
-    pass
-
-
-class UserInDBBase(UserBase, IdMixin, AdminMixin):
-    class Config:  # pylint: disable=missing-class-docstring
+    class Config:
         orm_mode = True
 
 
-class User(UserInDBBase):
-    pass
+class User(UserInDB):
+    username: str
+    is_admin: str
 
-
-class UserInDB(UserInDBBase):
-    conversations: List[Conversation] = []
-    hashed_password: str
+    class Config:
+        orm_mode = True
