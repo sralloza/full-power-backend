@@ -49,8 +49,7 @@ def users_get_one(*, db: Session = Depends(get_db), user_id: int):
 
 
 @router.delete(
-    "/{user_id}",
-    responses={404: {"description": "User not found"}},
+    "/{user_id}", responses={404: {"description": "User not found"}}, status_code=204
 )
 def users_delete(*, db: Session = Depends(get_db), user_id: int):
     """Deletes a user."""

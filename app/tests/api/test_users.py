@@ -109,7 +109,7 @@ def test_remove_existing_user(
     user = crud.user.create(db, obj_in=user_in)
 
     response = client.delete(f"/users/{user.id}", headers=superuser_token_headers)
-    assert response.status_code == 200
+    assert response.status_code == 204
 
     assert response.json() is None
     assert crud.user.get_by_username(db, username=username) is None

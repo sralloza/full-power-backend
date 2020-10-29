@@ -40,7 +40,9 @@ def conversations_get_from_all_users(
 
 
 @router.delete(
-    "/{conversation_id}", responses={404: {"description": "Conversation not found"}}
+    "/{conversation_id}",
+    responses={404: {"description": "Conversation not found"}},
+    status_code=204,
 )
 def conversation_delete(*, db: Session = Depends(get_db), conversation_id: int):
     """Removes a conversation."""
