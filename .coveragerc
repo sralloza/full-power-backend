@@ -4,14 +4,18 @@ branch = True
 source = app, app/tests, ./
 
 omit =
-    app/_version.py
     .venv/*
+    app/_version.py
+    app/backend_pre_start.py
+    app/db/init_db.py
+    app/initial_data.py
+    run_windows.py
     setup.py
     versioneer.py
 
 [report]
 exclude_lines =
-    noqa$
-    pragma: no cover
     if __name__ == "__main__":
+    noqa$
     pass$
+    pragma: no cover
