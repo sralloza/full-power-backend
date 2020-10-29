@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from app import crud
 from app.models.user import User
-from app.schemas.user import UserCreateAdmin, UserUpdate
+from app.schemas.user import UserCreateAdmin, UserUpdateAdmin
 from app.tests.utils.utils import random_lower_string
 
 temp_passwords = {}
@@ -49,7 +49,7 @@ def authentication_token_from_username(
             )
             user = crud.user.create(db, obj_in=user_in_create)
         else:
-            user_in_update = UserUpdate(
+            user_in_update = UserUpdateAdmin(
                 username=username, password=temp_passwords[username]
             )
             user = crud.user.update(db, db_obj=user, obj_in=user_in_update)
