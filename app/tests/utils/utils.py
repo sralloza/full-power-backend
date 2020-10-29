@@ -15,6 +15,10 @@ def random_email() -> str:
     return f"{random_lower_string()}@{random_lower_string()}.com"
 
 
+def random_int() -> int:
+    return int("".join(random.choices(string.digits, k=10)))
+
+
 def get_superuser_token_headers(client: TestClient) -> Dict[str, str]:
     login_data = {
         "username": settings.first_superuser,
