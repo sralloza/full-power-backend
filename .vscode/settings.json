@@ -1,3 +1,7 @@
 {
-    "python.pythonPath": ".venv\\Scripts\\python.exe"
+  "python.pythonPath": ".venv\\Scripts\\python.exe",
+  "python.testing.unittestEnabled": false,
+  "python.testing.nosetestsEnabled": false,
+  "python.testing.pytestEnabled": true
+  // "python.testing.pytestPath": "${workspaceFolder}/scripts/run-tests.cmd"
 }
