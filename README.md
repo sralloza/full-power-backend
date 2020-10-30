@@ -96,7 +96,8 @@ Settings:
 - `LOGGING_LEVEL`: logging level. Must be `DEBUG`, `INFO`, `WARNING`, `ERROR` or `CRITICAL`.
 - `MAX_LOGS`: max number of logs. Defaults to 30.
 - `PRODUCTION`: if not present or False, the server will be running in debug mode. Defualts to False.
-- `SERVER_SECRET`: 32-bytes base64 encoded token used to encrypt and decrypt JSON Web Tokens.
+- `SERVER_SECRET`: 32-bytes base64 encoded token used to encrypt and decrypt JSON Web Tokens. To get a valid secret using python,
+  execute `python -c "import secrets;print(secrets.token_urlsafe(32))"`.
 - `SQLALCHEMY_DATABASE_URL`: path of the database. For sql must be like `mysql+pymysql://<user>:<password>@<host>:<port>/<table>`
 - `TOKEN_EXPIRE_MINUTES`: number of minutes before the JSON Web Token expires.
 
