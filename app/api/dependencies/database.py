@@ -1,4 +1,4 @@
-from app.db.session import SessionLocal
+from app.db.session import SessionLocal, engine
 
 
 async def get_db():
@@ -7,3 +7,4 @@ async def get_db():
         yield db
     finally:
         db.close()
+        engine.dispose()
