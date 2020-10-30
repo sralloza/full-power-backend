@@ -101,6 +101,30 @@ Settings:
 - `SQLALCHEMY_DATABASE_URL`: path of the database. For sql must be like `mysql+pymysql://<user>:<password>@<host>:<port>/<table>`
 - `TOKEN_EXPIRE_MINUTES`: number of minutes before the JSON Web Token expires.
 
+## Troubleshooting
+
+Common problems and how to solve them.
+
+### After the user logs in and get the token, server always returns 401
+
+Check the header `X-Error-Reason`. If it is set to `Invalid token`, the reason behind it may be that the server is not using the same secret for each request. In the file `app/api/routes/utils.py`, comment the line `dependencies=...` as shown here:
+
+```python
+@router.get(
+    "/settings",
+    # dependencies=[Security(get_current_user, scopes=["admin"])],
+    response_model=Settings,
+)
+def get_settings():
+    """Returns the current api settings. Requires admin."""
+
+    return settings
+```
+
+Then, open a couple times the route `/settings`. If each time the response shows a different `server_secret`, this is the cause.
+To fix it, set your environment variable `SERVER_SECRET` or write `SERVER_SECRET=<secret>` in your env file. To get a valid secret
+using python, execute `python -c "import secrets;print(secrets.token_urlsafe(32))"`.
+
 ## Contributing
 
 This project uses the following conventions:
