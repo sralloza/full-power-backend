@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Set
 
 from fastapi.testclient import TestClient
 from pydantic import parse_obj_as
@@ -83,22 +83,23 @@ def test_get_nonexisting_user(client: TestClient, superuser_token_headers: dict)
 
 
 def test_retrieve_users(client: TestClient, superuser_token_headers: dict, db: Session):
-    username = random_lower_string()
-    password = random_lower_string()
-    user_in = UserCreateAdmin(username=username, password=password, is_admin=False)
-    crud.user.create(db, obj_in=user_in)
+    username_1 = random_lower_string()
+    password_2 = random_lower_string()
+    user_in_1 = UserCreateAdmin(username=username_1, password=password_2, is_admin=False)
+    user_db_1 = crud.user.create(db, obj_in=user_in_1)
 
-    username2 = random_lower_string()
-    password2 = random_lower_string()
-    user_in2 = UserCreateAdmin(username=username2, password=password2, is_admin=False)
-    crud.user.create(db, obj_in=user_in2)
+    username_2 = random_lower_string()
+    password_2 = random_lower_string()
+    user_in_2 = UserCreateAdmin(username=username_2, password=password_2, is_admin=False)
+    user_db_2 = crud.user.create(db, obj_in=user_in_2)
+
+    users = {User.from_orm(x) for x in [user_db_1, user_db_2]}
 
     response = client.get("/users", headers=superuser_token_headers)
-    all_users = response.json()
+    assert response.status_code == 200
+    all_users = parse_obj_as(Set[User], response.json())
 
-    assert len(all_users) > 1
-    assert parse_obj_as(List[User], all_users)
-
+    assert users.issubset(all_users)
 
 def test_remove_existing_user(
     client: TestClient, superuser_token_headers: dict, db: Session

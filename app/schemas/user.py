@@ -12,6 +12,9 @@ from .conversation import Conversation
 class UserBase(BaseModel):
     username: str
 
+    def __hash__(self):
+        return hash(self.json())
+
 
 class UserCreateBasic(UserBase):
     password: str
@@ -42,6 +45,5 @@ class UserInDB(UserBase):
 
 
 class User(UserInDB):
-
     class Config:
         orm_mode = True
