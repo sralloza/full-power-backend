@@ -60,13 +60,25 @@ python app/initial_data.py
 
 ## Developing
 
-Already covered in [Installing / Getting started](#installing--getting-started).
+To develop the backend, first install the dependencies.
 
-### Building
+```shell
+# Install production dependencies
+python -m pip install requirements-prod.txt
 
-<p style="color: red; font-weight: bold">
-TODO: fill
-</p>
+# If you want to develop it, install development dependencies
+python -m pip install requirements-dev.txt
+```
+
+You can run the app asyncrhonously (ASGI) o syncrhonously (WSGI).
+
+```shell
+# ASGI
+uvicorn --port 80 --reload app:app
+
+# WSGI
+python run_windows.py
+```
 
 ### Deploying / Publishing
 
