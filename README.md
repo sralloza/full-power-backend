@@ -68,6 +68,12 @@ python -m pip install requirements-prod.txt
 
 # If you want to develop it, install development dependencies
 python -m pip install requirements-dev.txt
+
+# Check database connection and settings are ok
+python app/backend_pre_start.py
+
+# If you don't have the database tables created, execute
+python app/initial_data.py
 ```
 
 You can run the app asyncrhonously (ASGI) o syncrhonously (WSGI).
@@ -79,6 +85,15 @@ uvicorn --port 80 --reload app:app
 # WSGI
 python run_windows.py
 ```
+
+The tests are run with `pytest`. To run them:
+
+```shell
+call scripts/run-tests.cmd
+```
+
+Right now, testing is only available in windows. In next releses will be changed to work with every platform, using
+`pytest` command instead of `cmd` or `shell` script.
 
 ### Deploying / Publishing
 
@@ -139,6 +154,14 @@ Settings:
 ## Troubleshooting
 
 Common problems and how to solve them.
+
+### Basic diagnosing tool
+
+To check that the database is online and all the settings are ok, you can use the following script:
+
+```shell
+python app/backend_pre_start.py
+```
 
 ### After the user logs in and get the token, server always returns 401
 
