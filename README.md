@@ -82,9 +82,32 @@ python run_windows.py
 
 ### Deploying / Publishing
 
-<p style="color: red; font-weight: bold">
-TODO: fill
-</p>
+This app is built using [FastAPI](https://fastapi.tiangolo.com/), a python framework to build asyncronous APIs. It normally needs an ASGI server to run, but due to compatibility (as most popular web servers like apache and nginx do not support ASGI) it includes a WSGI interface. The conversion is made thanks to [a2wsgi](https://github.com/abersheeran/a2wsgi).
+
+### ASGI deploy
+
+To deploy this app using ASGI you should use a linux server. FastAPI's docs recommend gunicorn to deploy the app:
+
+```shell
+# Install dependencies
+pip install -r requirements-prod.txt
+
+# Run server
+gunicorn -k uvicorn.workers.UvicornWorker -w 2 -b :<port> app:app --reload --log-level <log-level> --access-logfile "/absolute/path/to/access.log" --error-logfile "/absolute/path/to/error.log"
+```
+
+### WSGI deploy
+
+To deploy the backend as WSGI (like apache), you'll need a server compatible with the WSGI standard. If you are using apache, you can check the docs for [mod_wsgi](https://modwsgi.readthedocs.io/en/master/).
+
+The server will handle the wsgi for you. If it doesn't work you can setup a really simple wsgi app:
+
+```python
+# simple-wsgi.py
+def application(environ, start_response):
+    start_response('200 OK', [('Content-Type', 'text/plain')])
+    yield b'Hello, World\n'
+```
 
 ## Features
 
