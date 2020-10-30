@@ -10,8 +10,7 @@ Backend for the ingage's health chatbot application.
 
 ## Installing / Getting started
 
-A quick introduction of the minimal setup you need to get a hello world up &
-running.
+A quick introduction of the minimal setup you need to get the backend up & running.
 
 You'll need `python 3.7+` installed to run the backend.
 
