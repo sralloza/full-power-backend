@@ -18,3 +18,5 @@ def init_db(db: Session) -> None:
             is_admin=True,
         )
         user = crud.user.create(db, obj_in=user_in)
+
+    db.commit()
