@@ -124,12 +124,6 @@ def application(environ, start_response):
     yield b'Hello, World\n'
 ```
 
-## Features
-
-<p style="color: red; font-weight: bold">
-TODO: fill
-</p>
-
 ## Configuration
 
 Here you should write what are all of the configurations a user can enter when
@@ -162,6 +156,10 @@ To check that the database is online and all the settings are ok, you can use th
 ```shell
 python app/backend_pre_start.py
 ```
+
+### Permission error: 'c++' installing grpcio
+
+It's caused by an old version of `pip`. Update `pip` using `pip install --upgrade pip` and try to install `grpcio` again.
 
 ### After the user logs in and get the token, server always returns 401
 
