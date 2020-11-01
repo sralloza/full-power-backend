@@ -45,10 +45,27 @@ def test_login_success(client: TestClient, db: Session):
     assert token.token_type == "bearer"
 
 
-def test_login_error(client: TestClient):
+def test_login_wrong_username(client: TestClient):
     username = random_lower_string()
     password = random_lower_string()
     response = client.post("/login", data={"username": username, "password": password})
+
+    error = response.json()
+    assert response.status_code == 401
+    assert error["detail"] == "Incorrect username or password"
+
+
+def test_login_wrong_password(client: TestClient, db: Session):
+    username = random_lower_string()
+    password = random_lower_string()
+    fake_password = random_lower_string()
+
+    user_in = UserCreateAdmin(username=username, password=password, is_admin=False)
+    crud.user.create(db, obj_in=user_in)
+
+    response = client.post(
+        "/login", data={"username": username, "password": fake_password}
+    )
 
     error = response.json()
     assert response.status_code == 401
