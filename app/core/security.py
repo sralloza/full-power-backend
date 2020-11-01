@@ -57,7 +57,7 @@ def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
 
-def debug_token(token):
+def debug_token(token):  # noqa
     """Used for debugging, decrypts a token."""
 
     return jwt.decode(
