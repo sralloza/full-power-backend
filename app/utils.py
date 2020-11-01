@@ -23,7 +23,7 @@ def setup_logging():
         backupCount=settings.max_logs,
     )
 
-    if file_handler.shouldRollover(None):
+    if file_handler.shouldRollover(None):  # noqa
         file_handler.doRollover()
 
     logging.basicConfig(

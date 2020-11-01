@@ -23,7 +23,7 @@ def user_authentication_headers(
     return headers
 
 
-def create_random_user(db: Session) -> User:
+def create_random_user(db: Session) -> User:  # noqa
     username = random_lower_string()
     password = random_lower_string()
     user_in = UserCreateAdmin(username=username, password=password, is_admin=False)
@@ -33,7 +33,7 @@ def create_random_user(db: Session) -> User:
 
 def authentication_token_from_username(
     *, client: TestClient, username: str, db: Session
-) -> Dict[str, str]:
+) -> Dict[str, str]:  # noqa
     """
     Return a valid token for the user with given email.
     If the user doesn't exist it is created first.
