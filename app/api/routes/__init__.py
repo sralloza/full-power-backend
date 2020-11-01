@@ -9,7 +9,7 @@ router = APIRouter()
 router.include_router(login.router, tags=["security"])
 router.include_router(utils.router, tags=["utils"])
 router.include_router(
-    bot.router, dependencies=[Depends(get_current_user)], tags=["bot"]
+    bot.router, dependencies=[Depends(get_current_user)], prefix="/bot", tags=["bot"]
 )
 router.include_router(
     conversations.router,
