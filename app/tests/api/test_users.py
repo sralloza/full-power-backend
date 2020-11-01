@@ -85,12 +85,16 @@ def test_get_nonexisting_user(client: TestClient, superuser_token_headers: dict)
 def test_retrieve_users(client: TestClient, superuser_token_headers: dict, db: Session):
     username_1 = random_lower_string()
     password_2 = random_lower_string()
-    user_in_1 = UserCreateAdmin(username=username_1, password=password_2, is_admin=False)
+    user_in_1 = UserCreateAdmin(
+        username=username_1, password=password_2, is_admin=False
+    )
     user_db_1 = crud.user.create(db, obj_in=user_in_1)
 
     username_2 = random_lower_string()
     password_2 = random_lower_string()
-    user_in_2 = UserCreateAdmin(username=username_2, password=password_2, is_admin=False)
+    user_in_2 = UserCreateAdmin(
+        username=username_2, password=password_2, is_admin=False
+    )
     user_db_2 = crud.user.create(db, obj_in=user_in_2)
 
     users = {User.from_orm(x) for x in [user_db_1, user_db_2]}
@@ -100,6 +104,7 @@ def test_retrieve_users(client: TestClient, superuser_token_headers: dict, db: S
     all_users = parse_obj_as(Set[User], response.json())
 
     assert users.issubset(all_users)
+
 
 def test_remove_existing_user(
     client: TestClient, superuser_token_headers: dict, db: Session

@@ -16,7 +16,6 @@ def test_create_user(db: Session) -> None:
     assert hasattr(user, "hashed_password")
 
 
-
 def test_get_user(db: Session) -> None:
     password = random_lower_string()
     username = random_lower_string()
