@@ -45,21 +45,21 @@ def get_current_user(
         username: str = payload.get("sub")
 
         if username is None:
-            credentials_exception.headers["X-Error-Reason"] = "No username in token"
+            credentials_exception.headers["X-Login-Error"] = "No username in token"
             raise credentials_exception
 
         token_scopes = payload.get("scopes", [])
         token_data = TokenData(scopes=token_scopes, username=username)
     except ExpiredSignatureError as exc:
-        credentials_exception.headers["X-Error-Reason"] = "Expired"
+        credentials_exception.headers["X-Login-Error"] = "Token expired"
         raise credentials_exception from exc
     except (JWTError, ValidationError) as exc:
-        credentials_exception.headers["X-Error-Reason"] = "Invalid token"
+        credentials_exception.headers["X-Login-Error"] = "Invalid token"
         raise credentials_exception from exc
 
     user = crud.user.get_by_username(db, username=token_data.username)
     if user is None:
-        credentials_exception.headers["X-Error-Reason"] = "Invalid username"
+        credentials_exception.headers["X-Login-Error"] = "Invalid username"
         raise credentials_exception
 
     for scope in sec_scopes.scopes:
