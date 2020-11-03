@@ -37,6 +37,4 @@ def create_app():
 
     app.add_exception_handler(500, catch_errors)
 
-    Base.metadata.create_all(bind=engine)
-
     return app

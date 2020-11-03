@@ -1,29 +1,28 @@
 """Manages database connections involving users."""
 import logging
+from typing import Union
 
-from fastapi import HTTPException
 from sqlalchemy.orm.session import Session
 
 from app.core.security import get_password_hash
 from app.crud.base import CRUDBase
 from app.models.user import User
-from app.schemas.user import UserCreateAdmin, UserUpdate
+from app.schemas.user import UserCreateAdmin, UserUpdateAdmin, UserUpdateBasic
 
 logger = logging.getLogger(__name__)
+UserUpdateAlias = Union[UserUpdateAdmin, UserUpdateBasic]
 
 
-class CRUDUser(CRUDBase[User, UserCreateAdmin, UserUpdate]):
+class CRUDUser(CRUDBase[User, UserCreateAdmin, UserUpdateAdmin]):
     def create(self, db: Session, *, obj_in: UserCreateAdmin) -> User:
-        if self.get_by_username(db, username=obj_in.username):
-            raise HTTPException(400, "Username already registered")
-
         obj_dict = obj_in.dict()
         obj_dict["hashed_password"] = get_password_hash(obj_dict.pop("password"))
-        db_obj = User(**obj_dict)
-        db.add(db_obj)
-        db.commit()
-        db.refresh(db_obj)
-        return db_obj
+        return super().create(db, obj_in=obj_dict)
+
+    def update(self, db: Session, *, db_obj: User, obj_in: UserUpdateAlias) -> User:
+        obj_dict = obj_in.dict()
+        obj_dict["hashed_password"] = get_password_hash(obj_dict.pop("password"))
+        return super().update(db, db_obj=db_obj, obj_in=obj_dict)
 
     def get_by_username(self, db: Session, *, username: str) -> User:
         """Returns a user given its username."""

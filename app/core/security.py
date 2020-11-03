@@ -7,10 +7,9 @@ from jose import jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm.session import Session
 
+from app import crud
 from app.core.config import settings
 from app.models import User
-from app import crud
-
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -40,7 +39,9 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     else:
         expire = datetime.utcnow() + timedelta(minutes=15)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, settings.server_secret, algorithm=settings.encryption_algorithm)
+    encoded_jwt = jwt.encode(
+        to_encode, settings.server_secret, algorithm=settings.encryption_algorithm
+    )
     return encoded_jwt
 
 
@@ -56,7 +57,9 @@ def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
 
-def debug_token(token):
+def debug_token(token):  # noqa
     """Used for debugging, decrypts a token."""
 
-    return jwt.decode(token, settings.server_secret, algorithms=[settings.encryption_algorithm])
+    return jwt.decode(
+        token, settings.server_secret, algorithms=[settings.encryption_algorithm]
+    )

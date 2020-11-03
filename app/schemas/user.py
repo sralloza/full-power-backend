@@ -1,6 +1,6 @@
 """Data schematics for user endpoints."""
 
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -10,44 +10,40 @@ from .conversation import Conversation
 
 
 class UserBase(BaseModel):
-    """Shared properties."""
-
     username: str
 
+    def __hash__(self):
+        return hash(self.json())
 
-class PlainPasswordMixin(BaseModel):
+
+class UserCreateBasic(UserBase):
     password: str
 
 
-class IdMixin(BaseModel):
-    id: int
+class UserCreateAdmin(UserCreateBasic):
+    is_admin: bool = False
 
 
-class AdminMixin(BaseModel):
+class UserUpdateBasic(UserBase):
+    username: Optional[str] = None
+    password: Optional[str] = None
+
+
+class UserUpdateAdmin(UserUpdateBasic):
+    is_admin: bool = False
+
+
+class UserInDB(UserBase):
     is_admin: bool
 
+    id: int
+    conversations: List[Conversation] = []
+    hashed_password: str
 
-class UserCreateBasic(UserBase, PlainPasswordMixin):
-    pass
-
-
-class UserCreateAdmin(UserCreateBasic, AdminMixin):
-    pass
-
-
-class UserUpdate(UserCreateBasic):
-    pass
-
-
-class UserInDBBase(UserBase, IdMixin, AdminMixin):
-    class Config:  # pylint: disable=missing-class-docstring
+    class Config:
         orm_mode = True
 
 
-class User(UserInDBBase):
-    pass
-
-
-class UserInDB(UserInDBBase):
-    conversations: List[Conversation] = []
-    hashed_password: str
+class User(UserInDB):
+    class Config:
+        orm_mode = True

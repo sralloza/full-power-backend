@@ -1,8 +1,8 @@
 """Data schematics for conversation endpoints."""
 
 
+from typing import Optional
 from pydantic import BaseModel
-
 
 # pylint: disable=too-few-public-methods
 
@@ -20,9 +20,11 @@ class ConversationCreate(ConversationBase):
     pass
 
 
-# Just for CRUD compatibility, conversations can't be updated
 class ConversationUpdate(BaseModel):
-    pass
+    user_msg: Optional[str]
+    bot_msg: Optional[str]
+    intent: Optional[str]
+    user_id: Optional[int]
 
 
 class ConversationInDB(ConversationBase):

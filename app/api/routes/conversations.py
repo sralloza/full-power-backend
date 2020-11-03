@@ -12,8 +12,7 @@ from app.schemas.conversation import Conversation, ConversationCreate
 router = APIRouter()
 
 
-@router.post("/", response_model=Conversation)
-
+@router.post("", response_model=Conversation)
 def conversation_create_post(
     *, db: Session = Depends(get_db), conversation: ConversationCreate
 ):
@@ -31,7 +30,7 @@ def conversation_get_from_user(
     return crud.conversation.get_user(db, user_id=user_id, skip=skip, limit=limit)
 
 
-@router.get("/", response_model=List[Conversation])
+@router.get("", response_model=List[Conversation])
 def conversations_get_from_all_users(
     *, db: Session = Depends(get_db), skip: int = 0, limit: int = 100
 ):
@@ -41,7 +40,9 @@ def conversations_get_from_all_users(
 
 
 @router.delete(
-    "/{conversation_id}", responses={404: {"description": "Conversation not found"}}
+    "/{conversation_id}",
+    responses={404: {"description": "Conversation not found"}},
+    status_code=204,
 )
 def conversation_delete(*, db: Session = Depends(get_db), conversation_id: int):
     """Removes a conversation."""

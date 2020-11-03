@@ -89,11 +89,8 @@ python run_windows.py
 The tests are run with `pytest`. To run them:
 
 ```shell
-call scripts/run-tests.cmd
+pytest -vv
 ```
-
-Right now, testing is only available in windows. In next releses will be changed to work with every platform, using
-`pytest` command instead of `cmd` or `shell` script.
 
 ### Deploying / Publishing
 
