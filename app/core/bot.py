@@ -7,6 +7,31 @@ import dialogflow
 from google.oauth2 import service_account
 
 from app.core.config import settings
+from app.schemas.conversation import ConversationCreate
+from app.schemas.health_data import HealthDataCreate
+
+algorithm = {
+    "get_up": (
+        "Congratulations, continue because the regularity of the time to get up is essential for a quality sleep.",
+        "The regularity of the time to get up is essential for quality sleep. See the sleep chapter.",
+    ),
+    "sleep": (
+        "Well done! Persevere in keeping enough sleep each night, otherwise the old problems may return ;-)",
+        "If you don't get enough sleep, you risk increasing your sleep deficit. See the sleep chapter.",
+    ),
+    "screen": (
+        "Compliment We realize that this is difficult. By avoiding screens you double the amount of deep sleep, the most restful every night ...",
+        "Yep, it's not easy. We understand well. However, by avoiding screens you double the amount of deep sleep, the most recovering each night... See the sleep chapter.",
+    ),
+    "bedroom": (
+        "It happened! Well done. These small changes greatly promote quality sleep.",
+        "A cool, dark and quiet bedroom can greatly improve the quality of sleep. Wouldn't it be worth it? See the sleep chapter.",
+    ),
+    "stress": (
+        "Super good news! Stress is the number one enemy of restful sleep. Continue to anchor this habit by being rigorous in this practice for another 1 or 2 months. It will become as automatic as brushing your teeth!",
+        "Stress is the number one enemy of restful sleep. Explore the different ways to reduce your stress, if meditation is not your cup of tea, for example try a good bath, reading, music or a good walk in the evening. More ideas in the sleep chapter.",
+    ),
+}
 
 
 def fix_conversation(conversation: ConversationCreate, health_data: HealthDataCreate):
