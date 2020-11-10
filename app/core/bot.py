@@ -9,6 +9,45 @@ from google.oauth2 import service_account
 from app.core.config import settings
 
 
+def fix_conversation(conversation: ConversationCreate, health_data: HealthDataCreate):
+    for key, value in health_data.dict().items():
+        if value is None:
+            continue
+        if key in algorithm:
+            value = int(not value)
+            response = algorithm[key][value]
+            conversation.bot_msg = response + "\n" + conversation.bot_msg
+            break
+
+
+def gen_report(conversation: ConversationCreate, health_data: HealthDataCreate):
+    string = ""
+    for key, value in health_data.dict().items():
+        if key in algorithm:
+            value = int(not value)
+            response = algorithm[key][value]
+            string += f"{key}: {response}\n\n"
+
+    conversation.bot_msg = string
+    return conversation
+
+
+def parse_parameters_field(fields):
+    real = {}
+    fields = dict(fields)
+    for k, v in fields.items():
+        real[k] = str(v).strip()
+        for attr in dir(v):
+            if not attr.endswith("value"):
+                continue
+            value = getattr(v, attr)
+            if not value:
+                continue
+            real[k] = value
+            break
+    return real
+
+
 def get_credentials():
 
     json_string = Path(settings.google_application_credentials).read_text()
