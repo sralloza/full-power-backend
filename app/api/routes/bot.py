@@ -5,7 +5,12 @@ from fastapi import APIRouter, Depends, Query
 from app import crud
 from app.api.dependencies.database import get_db
 from app.api.dependencies.security import get_current_user
-from app.core.bot import detect_intent_texts, fix_conversation, parse_parameters_field
+from app.core.bot import (
+    detect_end,
+    detect_intent_texts,
+    fix_conversation,
+    parse_parameters_field,
+)
 from app.core.config import settings
 from app.models import HealthData, User
 from app.schemas.bot import Msg
@@ -13,6 +18,7 @@ from app.schemas.conversation import ConversationCreate
 from app.schemas.health_data import HealthDataCreate, HealthDataUpdate
 
 router = APIRouter()
+
 
 @router.post("/process-msg", response_model=ConversationCreate)
 def bot_message_post(
@@ -34,12 +40,7 @@ def bot_message_post(
 
     intent = response.query_result.intent.display_name
 
-    is_end = False
-    try:
-        if response.query_result.diagnostic_info:
-            is_end = True
-    except AttributeError:
-        pass
+    is_end = detect_end(response)
 
     if response.query_result.parameters.fields:
         real = parse_parameters_field(response.query_result.parameters.fields)
@@ -61,6 +62,6 @@ def bot_message_post(
     crud.conversation.create(db, obj_in=conversation)
 
     if health_data is not None:
-        fix_conversation(conversation, health_data)
+        fix_conversation(lang, conversation, health_data)
 
     return conversation
