@@ -19,6 +19,7 @@ class User(Base):
     is_admin = Column(Boolean, default=True)
 
     conversations = relationship("Conversation", back_populates="user")
+    health_data = relationship("HealthData", back_populates="user")
 
     @property
     def scopes(self):
