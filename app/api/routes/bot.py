@@ -16,7 +16,11 @@ router = APIRouter()
 
 @router.post("/process-msg", response_model=ConversationCreate)
 def bot_message_post(
-    *, db=Depends(get_db), input_pack: Msg, user: User = Depends(get_current_user)
+    *,
+    db=Depends(get_db),
+    input_pack: Msg,
+    user: User = Depends(get_current_user),
+    lang: str = Query("en")
 ):
     """Sends a message to the bot and returns the response back."""
 
@@ -24,7 +28,7 @@ def bot_message_post(
     message = input_pack.msg
     project_id = settings.dialogflow_project_id
 
-    response = detect_intent_texts(project_id, user_id, message, "en")
+    response = detect_intent_texts(project_id, user_id, message, lang)
     fulfillment_text = response.query_result.fulfillment_text
 
     intent = response.query_result.intent.display_name
