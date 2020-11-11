@@ -1,5 +1,7 @@
 """Routes for manage bot conversations."""
 
+from datetime import datetime
+
 from fastapi import APIRouter, Depends, Query
 
 from app import crud
@@ -50,6 +52,8 @@ def bot_message_post(
         )
         real["user_id"] = user.id
         if current_health_data:
+            if is_end:
+                real["timestamp"] = datetime.now()
             health_data = HealthDataUpdate(**real, valid=is_end)
             crud.health_data.update(db, db_obj=current_health_data, obj_in=health_data)
         else:

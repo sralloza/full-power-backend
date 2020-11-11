@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel
@@ -9,6 +10,7 @@ class HealthDataCreate(BaseModel):
     screen: Optional[bool]
     bedroom: Optional[bool]
     stress: Optional[bool]
+    timestamp: Optional[datetime]
     user_id: int
     valid: bool = False
 

@@ -3,7 +3,7 @@
 from sqlalchemy import Column, Integer
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
-from sqlalchemy.sql.sqltypes import Boolean
+from sqlalchemy.sql.sqltypes import Boolean, DateTime
 
 from app.db.base_class import Base
 
@@ -21,6 +21,7 @@ class HealthData(Base):
     screen = Column(Boolean)
     bedroom = Column(Boolean)
     stress = Column(Boolean)
+    timestamp = Column(DateTime)
     valid = Column(Boolean, nullable=False)
 
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
