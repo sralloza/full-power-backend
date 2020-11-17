@@ -51,6 +51,7 @@ def bot_message_post(
             db.query(HealthData).filter_by(valid=False, user_id=user.id).first()
         )
         real["user_id"] = user.id
+
         if current_health_data:
             if is_end:
                 real["timestamp"] = datetime.now()
@@ -59,13 +60,9 @@ def bot_message_post(
         else:
             health_data = HealthDataCreate(**real, valid=is_end)
             crud.health_data.create(db, obj_in=health_data)
-
     conversation = ConversationCreate(
         user_msg=message, bot_msg=fulfillment_text, intent=intent, user_id=user.id
     )
     crud.conversation.create(db, obj_in=conversation)
-
-    if health_data is not None:
-        fix_conversation(lang, conversation, health_data)
 
     return conversation

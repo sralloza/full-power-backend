@@ -16,11 +16,29 @@ class HealthData(Base):
     __tablename__ = "health-data"
 
     id = Column(Integer, primary_key=True, index=True)
-    get_up = Column(Boolean)
-    sleep = Column(Boolean)
-    screen = Column(Boolean)
-    bedroom = Column(Boolean)
-    stress = Column(Boolean)
+
+    energy = Column(Integer)
+    restful_sleep = Column(Integer)
+    fall_asleep_easily = Column(Integer)
+    deep_sleep = Column(Integer)
+    enough_sleep = Column(Integer)
+    energy_morning = Column(Integer)
+
+    uniform_mood = Column(Integer)
+    memory = Column(Integer)
+    concentration = Column(Integer)
+    creativity = Column(Integer)
+    stress = Column(Integer)
+    cramps = Column(Integer)
+    dagger = Column(Integer)
+
+    pump_strokes = Column(Integer)
+    uplifts = Column(Integer)
+    swollen_belly = Column(Integer)
+    gases = Column(Integer)
+    bowel_movement = Column(Integer)
+    sheet_wipe = Column(Integer)
+
     timestamp = Column(DateTime)
     valid = Column(Boolean, nullable=False)
 
