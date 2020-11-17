@@ -1,10 +1,17 @@
 """Data schematics for conversation endpoints."""
 
 
+from enum import Enum
 from typing import Optional
+
 from pydantic import BaseModel
 
 # pylint: disable=too-few-public-methods
+
+
+class DisplayType(Enum):
+    default = "default"
+    five_stars = "five_stars"
 
 
 class ConversationBase(BaseModel):
@@ -14,6 +21,7 @@ class ConversationBase(BaseModel):
     bot_msg: str
     intent: str
     user_id: int
+    display_type: Optional[DisplayType]
 
 
 class ConversationCreate(ConversationBase):
