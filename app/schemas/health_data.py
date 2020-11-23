@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-class HealthDataCreate(BaseModel):
+class HealthDataBase(BaseModel):
     energy: Optional[int]  # 1
     restful_sleep: Optional[int]  # 2
     fall_asleep_easily: Optional[int]  # 3
@@ -32,5 +32,20 @@ class HealthDataCreate(BaseModel):
     valid: bool = False
 
 
-class HealthDataUpdate(HealthDataCreate):
+class HealthDataCreate(HealthDataBase):
+    pass
+
+
+class HealthDataUpdate(HealthDataBase):
+    pass
+
+
+class HealthDataInDB(HealthDataBase):
+    id: int
+
+    class Config:  # pylint: disable=missing-class-docstring
+        orm_mode = True
+
+
+class HealthData(HealthDataInDB):
     pass
