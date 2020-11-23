@@ -15,8 +15,10 @@ from app.models import HealthData, User
 from app.schemas.bot import Msg
 from app.schemas.conversation import ConversationCreate
 from app.schemas.health_data import HealthDataCreate, HealthDataUpdate
+from logging import getLogger
 
 router = APIRouter()
+logger = getLogger(__name__)
 
 
 @router.post("/process-msg", response_model=ConversationCreate)
@@ -32,6 +34,7 @@ def bot_message_post(
 
     health_data = None
     message = input_pack.msg
+    logger.debug("User's message: %r", message)
 
     dialogflow_response = detect_intent_texts(
         settings.dialogflow_project_id, user.id, message, lang
@@ -55,9 +58,11 @@ def bot_message_post(
         if current_health_data:
             if is_end:
                 real["timestamp"] = datetime.now()
+            logger.debug("real=%r", real)
             health_data = HealthDataUpdate(**real, valid=is_end)
             crud.health_data.update(db, db_obj=current_health_data, obj_in=health_data)
         else:
+            logger.debug("real=%r", real)
             health_data = HealthDataCreate(**real, valid=is_end)
             crud.health_data.create(db, obj_in=health_data)
 
