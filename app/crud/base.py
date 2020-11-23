@@ -1,6 +1,7 @@
 from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
 
 from fastapi.encoders import jsonable_encoder
+from fastapi.exceptions import HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
@@ -60,6 +61,10 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
     def remove(self, db: Session, *, id: int) -> None:
         obj = db.query(self.model).get(id)
+        if obj is None:
+            detail = f"{self.model.__name__} with id={id} does not exist"
+            raise HTTPException(404, detail)
+
         db.delete(obj)
         db.commit()
         return
