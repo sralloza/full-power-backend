@@ -1,9 +1,11 @@
 """Conversations manager."""
 
+from http import HTTPStatus
 from typing import List
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm.session import Session
+from starlette.responses import Response
 
 from app import crud
 from app.api.dependencies.database import get_db
@@ -47,4 +49,5 @@ def conversations_get_from_all_users(
 def conversation_delete(*, db: Session = Depends(get_db), conversation_id: int):
     """Removes a conversation."""
 
-    return crud.conversation.remove(db, id=conversation_id)
+    crud.conversation.remove(db, id=conversation_id)
+    return Response(status_code=HTTPStatus.NO_CONTENT.value)
