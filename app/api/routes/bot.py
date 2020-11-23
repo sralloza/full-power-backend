@@ -69,8 +69,8 @@ def bot_message_post(
     if is_end:
         hole_data = db.query(HealthData).filter_by(id=current_health_data.id).first()
         health_data_result = process_health_data(hole_data)
-        main_problem = detect_main_problem(health_data_result)
-        fulfillment_text = f"{fulfillment_text}. Your main problem is {main_problem}"
+        main_problem_text = detect_main_problem(health_data_result, lang=lang)
+        fulfillment_text = f"{fulfillment_text}. {main_problem_text}"
         response.headers["health-data-result"] = dumps(health_data_result)
 
     conversation = ConversationCreate(

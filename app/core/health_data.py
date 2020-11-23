@@ -3,6 +3,26 @@ from typing import Dict, Union
 from app.models.health_data import HealthData
 
 problem_names = ["vitamines", "sleep", "diet", "stress"]
+problem_text = {
+    "es": "Tu principal problema es %s",
+    "en": "Your main problem is %s",
+    "fr": "votre problème principal est %s",
+}
+problem_names_international = {
+    "vitamines": {
+        "es": "vitaminas",
+        "en": "vitamines",
+        "fr": "vitamines",
+    },
+    "sleep": {
+        "es": "dormir",
+        "en": "sleep",
+        "fr": "sommeil",
+    },
+    "diet": {"es": "alimentación", "en": "diet", "fr": "alimentation"},
+    "stress": {"es": "estrés", "en": "stress", "fr": "stress"},
+}
+
 coefficients = {
     "energy": (1, 0, 0, 0),
     "restful_sleep": (1, 2, 0, 0),
@@ -49,9 +69,10 @@ def process_health_data(data: Union[HealthData, HealthDataCreate]):
     return problems
 
 
-def detect_main_problem(health_data_result: Dict[str, float]):
+def detect_main_problem(health_data_result: Dict[str, float], lang:str):
     max_ratio = max(health_data_result.values())
     for key, value in health_data_result.items():
         if value == max_ratio:
-            return key
+            template = problem_text[lang]
+            return template % problem_names_international[key][lang]
     return None
