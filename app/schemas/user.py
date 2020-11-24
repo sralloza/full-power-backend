@@ -33,17 +33,19 @@ class UserUpdateAdmin(UserUpdateBasic):
     is_admin: bool = False
 
 
-class UserInDB(UserBase):
-    is_admin: bool
-
+class UserInDBBase(UserBase):
     id: int
-    conversations: List[Conversation] = []
-    hashed_password: str
+    is_admin: bool
 
     class Config:
         orm_mode = True
 
 
-class User(UserInDB):
+class UserInDB(UserInDBBase):
+    hashed_password: str
+    conversations: List[Conversation] = []
+
+
+class User(UserInDBBase):
     class Config:
         orm_mode = True
