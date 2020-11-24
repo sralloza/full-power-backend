@@ -1,6 +1,12 @@
-from app.schemas.health_data import HealthDataCreate
+import logging
 from typing import Dict, Union
+
+from starlette.exceptions import HTTPException
+
 from app.models.health_data import HealthData
+from app.schemas.health_data import HealthDataCreate
+
+logger = logging.getLogger(__name__)
 
 problem_names = ["vitamines", "sleep", "diet", "stress"]
 problem_text = {
@@ -62,14 +68,14 @@ def process_health_data(data: Union[HealthData, HealthDataCreate]):
                 problem_name = problem_names[coef_idx]
                 problems[problem_name] += value * coef
         except:
-            print(repr(data))
-            raise
+            logger.error("Found error processing health data (%r)", data)
+            raise HTTPException(500, "Fatal error processing health data")
 
     problems = {k: v / sums[k] for k, v in problems.items()}
     return problems
 
 
-def detect_main_problem(health_data_result: Dict[str, float], lang:str):
+def detect_main_problem(health_data_result: Dict[str, float], lang: str):
     max_ratio = max(health_data_result.values())
     for key, value in health_data_result.items():
         if value == max_ratio:
