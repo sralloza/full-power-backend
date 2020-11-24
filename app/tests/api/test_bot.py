@@ -4,8 +4,10 @@ from app import crud
 from app.schemas.conversation import Conversation, ConversationCreate
 
 
+@mock.patch("app.api.routes.bot.detect_end")
 @mock.patch("app.api.routes.bot.detect_intent_texts")
-def test_process_msg(dit_m, client, db, normal_user_token_headers):
+def test_process_msg(dit_m, detect_end_m, client, db, normal_user_token_headers):
+    detect_end_m.return_value = False
     dit_m.return_value.query_result.fulfillment_text = "this is the bot message"
     dit_m.return_value.query_result.intent.display_name = "this is the intent"
     response = client.post(

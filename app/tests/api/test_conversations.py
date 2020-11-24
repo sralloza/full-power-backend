@@ -80,4 +80,4 @@ def test_conversation_delete(client: TestClient, db: Session, superuser_token_he
         f"/conversations/{conv_db.id}", headers=superuser_token_headers
     )
     assert response.status_code == 204
-    assert response.json() is None
+    assert response.content == b""
