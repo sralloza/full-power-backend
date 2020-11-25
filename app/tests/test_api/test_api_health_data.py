@@ -9,8 +9,6 @@ from app.schemas.health_data import HealthData
 from app.tests.utils.health_data import gen_health_data_create
 from app.tests.utils.utils import random_int
 
-# noqa
-
 
 def test_health_data_post(client: TestClient, db: Session, superuser_token_headers):
     health_data_in = gen_health_data_create(random_int(), True)

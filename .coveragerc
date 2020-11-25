@@ -9,6 +9,7 @@ omit =
     app/backend_pre_start.py
     app/db/init_db.py
     app/initial_data.py
+    app/tests/utils/*
     run_windows.py
     setup.py
     versioneer.py

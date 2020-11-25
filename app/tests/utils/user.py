@@ -9,7 +9,6 @@ from app.models.user import User
 from app.schemas.user import UserCreateAdmin, UserUpdateAdmin
 from app.tests.utils.utils import random_lower_string
 
-# noqa
 temp_passwords = {}
 
 
