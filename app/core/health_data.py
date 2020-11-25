@@ -1,7 +1,7 @@
 import logging
 from typing import Dict, Union
 
-from starlette.exceptions import HTTPException
+from fastapi import HTTPException
 
 from app.models.health_data import HealthData
 from app.schemas.health_data import HealthDataCreate
@@ -77,8 +77,7 @@ def process_health_data(data: Union[HealthData, HealthDataCreate]):
 
 def detect_main_problem(health_data_result: Dict[str, float], lang: str):
     max_ratio = max(health_data_result.values())
-    for key, value in health_data_result.items():
+    for key, value in health_data_result.items():  # noqa
         if value == max_ratio:
             template = problem_text[lang]
             return template % problem_names_international[key][lang]
-    return None
