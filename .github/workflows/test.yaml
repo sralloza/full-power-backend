@@ -33,7 +33,7 @@ jobs:
         touch invalid.json
         pip install pytest
         pip install pytest-cov
-        pytest --cov=./ --cov-report=xml
+        pytest --cov=./ --cov-report=xml -vvl
       env:
         DIALOGFLOW_PROJECT_ID: dialogflow-project-id
         FIRST_SUPERUSER_PASSWORD: default-admin
