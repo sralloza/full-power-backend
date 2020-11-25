@@ -37,19 +37,17 @@ def bot_message_post(
     logger.debug("User's message: %r", message)
 
     dialogflow_response = detect_intent_texts(user.id, message, lang)
-    fulfillment_text = dialogflow_response.query_result.fulfillment_text
+    fulfillment_text = dialogflow_response.fulfillment_text
 
-    intent = dialogflow_response.query_result.intent.display_name
+    intent = dialogflow_response.intent.display_name
 
     is_end = detect_end(dialogflow_response)
 
     current_health_data = (
         db.query(HealthData).filter_by(valid=False, user_id=user.id).first()
     )
-    if dialogflow_response.query_result.parameters.fields:
-        real = parse_parameters_field(
-            dialogflow_response.query_result.parameters.fields
-        )
+    if dialogflow_response.parameters.fields:
+        real = parse_parameters_field(dialogflow_response.parameters.fields)
 
         real["user_id"] = user.id
 

@@ -9,10 +9,10 @@ from google.oauth2 import service_account
 from app.core.config import settings
 
 
-def detect_end(response):
+def detect_end(query_result):
     is_end = False
     try:
-        if response.query_result.diagnostic_info:
+        if query_result.diagnostic_info:
             is_end = True
     except AttributeError:
         pass
@@ -56,4 +56,4 @@ def detect_intent_texts(session_id, text, language_code):
     query_input = dialogflow.types.QueryInput(text=text_input)
 
     response = session_client.detect_intent(session=session, query_input=query_input)
-    return response
+    return response.query_result
