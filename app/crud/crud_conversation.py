@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class CRUDConversation(CRUDBase[Conversation, ConversationCreate, ConversationUpdate]):
     def create(self, db: Session, *, obj_in: ConversationCreate) -> Conversation:
         obj_in.display_type = DisplayType.default
-        if re.search(r"\d", obj_in.intent) and "19" not in obj_in.intent:
+        if re.search(r"a\d+", obj_in.intent) and "19" not in obj_in.intent:
             obj_in.display_type = DisplayType.five_stars
 
         return super().create(db, obj_in=obj_in)

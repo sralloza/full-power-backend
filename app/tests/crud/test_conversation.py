@@ -1,14 +1,27 @@
+import pytest
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
 from app import crud
-from app.schemas.conversation import ConversationCreate, ConversationUpdate
+from app.schemas.conversation import ConversationCreate, ConversationUpdate, DisplayType
 from app.tests.utils.utils import random_int, random_lower_string
 
 
-def test_create_conversation(db: Session):
+display_type_data = (
+    ("a01-energy", DisplayType.five_stars),
+    ("a02-restful-sleep", DisplayType.five_stars),
+    ("a08-memory", DisplayType.five_stars),
+    ("b2.sleep", DisplayType.default),
+    ("b4.bedroom", DisplayType.default),
+    ("bot-name", DisplayType.default),
+    ("Default Welcome Intent", DisplayType.default),
+    ("xx-start", DisplayType.default),
+)
+
+
+@pytest.mark.parametrize("intent,display_type", display_type_data)
+def test_create_conversation(db: Session, intent, display_type):
     user_id = random_int()
-    intent = random_lower_string()
     bot_msg = random_lower_string()
     user_msg = random_lower_string()
     conversation_in = ConversationCreate(
@@ -20,6 +33,7 @@ def test_create_conversation(db: Session):
     assert conversation.bot_msg == bot_msg
     assert conversation.user_msg == user_msg
     assert conversation.intent == intent
+    assert conversation.display_type == display_type
     assert hasattr(conversation, "id")
     assert conversation.id
 
