@@ -5,34 +5,20 @@ from pathlib import Path
 
 import dialogflow
 from google.oauth2 import service_account
+from google.protobuf.json_format import MessageToDict
 
 from app.core.config import settings
 
 
-def detect_end(query_result):
+
+def detect_end(df_response: dict):
     is_end = False
     try:
-        if query_result.diagnostic_info:
+        if df_response["diagnosticInfo"]:
             is_end = True
-    except AttributeError:
+    except KeyError:
         pass
     return is_end
-
-
-def parse_parameters_field(fields):
-    real = {}
-    fields = dict(fields)
-    for k, v in fields.items():
-        real[k] = str(v).strip()
-        for attr in dir(v):
-            if not attr.endswith("value"):
-                continue
-            value = getattr(v, attr)
-            if not value:
-                continue
-            real[k] = value
-            break
-    return real
 
 
 def get_credentials():
@@ -42,7 +28,7 @@ def get_credentials():
     return credentials
 
 
-def detect_intent_texts(session_id, text, language_code):
+def detect_intent_texts(session_id: int, text: str, language_code: str) -> dict:
     """Returns the result of detect intent with texts as inputs.
 
     Using the same `session_id` between requests allows continuation
@@ -56,4 +42,4 @@ def detect_intent_texts(session_id, text, language_code):
     query_input = dialogflow.types.QueryInput(text=text_input)
 
     response = session_client.detect_intent(session=session, query_input=query_input)
-    return response.query_result
+    return MessageToDict(response.query_result)

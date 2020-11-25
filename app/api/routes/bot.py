@@ -8,8 +8,7 @@ from fastapi import APIRouter, Depends, Query, Response
 from app import crud
 from app.api.dependencies.database import get_db
 from app.api.dependencies.security import get_current_user
-from app.core.bot import detect_end, detect_intent_texts, parse_parameters_field
-from app.core.config import settings
+from app.core.bot import detect_end, detect_intent_texts
 from app.core.health_data import detect_main_problem, process_health_data
 from app.models import HealthData, User
 from app.schemas.bot import Msg
@@ -36,30 +35,30 @@ def bot_message_post(
     message = input_pack.msg
     logger.debug("User's message: %r", message)
 
-    dialogflow_response = detect_intent_texts(user.id, message, lang)
-    fulfillment_text = dialogflow_response.fulfillment_text
+    df_response = detect_intent_texts(user.id, message, lang)
+    fulfillment_text = df_response["fulfillmentText"]
 
-    intent = dialogflow_response.intent.display_name
+    parameters = df_response["parameters"]
+    intent = df_response["intent"]["displayName"]
 
-    is_end = detect_end(dialogflow_response)
+    is_end = detect_end(df_response)
 
     current_health_data = (
         db.query(HealthData).filter_by(valid=False, user_id=user.id).first()
     )
-    if dialogflow_response.parameters.fields:
-        real = parse_parameters_field(dialogflow_response.parameters.fields)
-
-        real["user_id"] = user.id
+    if parameters:
+        parameters["user_id"] = user.id
 
         if current_health_data:
             if is_end:
-                real["timestamp"] = datetime.now()
-            logger.debug("real=%r", real)
-            health_data = HealthDataUpdate(**real, valid=is_end)
+                parameters["timestamp"] = datetime.now()
+
+            logger.debug("parameters=%r", parameters)
+            health_data = HealthDataUpdate(**parameters, valid=is_end)
             crud.health_data.update(db, db_obj=current_health_data, obj_in=health_data)
         else:
-            logger.debug("real=%r", real)
-            health_data = HealthDataCreate(**real, valid=is_end)
+            logger.debug("parameters=%r", parameters)
+            health_data = HealthDataCreate(**parameters, valid=is_end)
             crud.health_data.create(db, obj_in=health_data)
 
     if is_end:
