@@ -36,9 +36,7 @@ def bot_message_post(
     message = input_pack.msg
     logger.debug("User's message: %r", message)
 
-    dialogflow_response = detect_intent_texts(
-        settings.dialogflow_project_id, user.id, message, lang
-    )
+    dialogflow_response = detect_intent_texts(user.id, message, lang)
     fulfillment_text = dialogflow_response.query_result.fulfillment_text
 
     intent = dialogflow_response.query_result.intent.display_name
