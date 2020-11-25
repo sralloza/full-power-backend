@@ -2,7 +2,6 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
 from app import crud
-from app.core.security import verify_password
 from app.schemas.conversation import ConversationCreate, ConversationUpdate
 from app.tests.utils.utils import random_int, random_lower_string
 
