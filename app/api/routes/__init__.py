@@ -20,7 +20,7 @@ router.include_router(
 router.include_router(
     health_data.router,
     dependencies=[Security(get_current_user, scopes=["admin"])],
-    prefix="/heath-data",
+    prefix="/health-data",
     tags=["health-data"],
 )
 
