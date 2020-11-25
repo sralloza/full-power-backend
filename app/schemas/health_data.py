@@ -37,7 +37,8 @@ class HealthDataCreate(HealthDataBase):
 
 
 class HealthDataUpdate(HealthDataBase):
-    pass
+    user_id: Optional[int]
+    valid: Optional[bool] = False
 
 
 class HealthDataInDB(HealthDataBase):
