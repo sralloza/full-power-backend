@@ -5,6 +5,8 @@ from fastapi.testclient import TestClient
 
 from app.core.config import Settings, settings
 
+# noqa
+
 
 def test_get_index(client: TestClient):
     response = client.get("/")
