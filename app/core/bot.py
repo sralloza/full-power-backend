@@ -1,5 +1,6 @@
 """Bot related code."""
 
+from app.schemas.bot import DFResponse
 import json
 from pathlib import Path
 
@@ -8,7 +9,6 @@ from google.oauth2 import service_account
 from google.protobuf.json_format import MessageToDict
 
 from app.core.config import settings
-
 
 
 def detect_end(df_response: dict):
@@ -28,12 +28,7 @@ def get_credentials():
     return credentials
 
 
-def detect_intent_texts(session_id: int, text: str, language_code: str) -> dict:
-    """Returns the result of detect intent with texts as inputs.
-
-    Using the same `session_id` between requests allows continuation
-    of the conversation."""
-
+def get_df_response(session_id: int, text: str, language_code: str) -> DFResponse:
     session_client = dialogflow.SessionsClient()
     session = session_client.session_path(settings.dialogflow_project_id, session_id)
 
@@ -42,4 +37,14 @@ def detect_intent_texts(session_id: int, text: str, language_code: str) -> dict:
     query_input = dialogflow.types.QueryInput(text=text_input)
 
     response = session_client.detect_intent(session=session, query_input=query_input)
-    return MessageToDict(response.query_result)
+    response = MessageToDict(response.query_result)
+    return parse_df_response(response)
+
+
+def parse_df_response(df_response: dict):
+    return DFResponse(
+        bot_msg=df_response["fulfillmentText"],
+        intent=df_response["intent"]["displayName"],
+        is_end=detect_end(df_response),
+        parameters=df_response.get("parameters", dict()),
+    )

@@ -9,7 +9,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from app import crud
 from app.api.dependencies.database import get_db
 from app.api.dependencies.security import get_current_user
-from app.core.bot import detect_end, detect_intent_texts
+from app.core.bot import get_df_response
 from app.core.health_data import detect_main_problem, process_health_data
 from app.models import User
 from app.schemas.bot import Msg
@@ -35,43 +35,32 @@ def bot_message_post(
     message = input_pack.msg
     logger.debug("User's message: %r", message)
 
-    df_response = detect_intent_texts(user.id, message, lang)
-    fulfillment_text = df_response["fulfillmentText"]
+    df_resp = get_df_response(user.id, message, lang)
+    logger.debug("Bot response: %r", df_resp)
+    pending_hd = crud.health_data.get_pending_from_user(db, user_id=user.id)
 
-    parameters = df_response.get("parameters", dict())
-    intent = df_response["intent"]["displayName"]
+    if df_resp.parameters:
+        df_resp.parameters.update(dict(user_id=user.id, timestamp=datetime.now()))
 
-    is_end = detect_end(df_response)
-
-    current_health_data = crud.health_data.get_pending_from_user(db, user_id=user.id)
-
-    if parameters:
-        parameters["user_id"] = user.id
-
-        if current_health_data:
-            if is_end:
-                parameters["timestamp"] = datetime.now()
-
-            logger.debug("parameters=%r", parameters)
-            health_data = HealthDataUpdate(**parameters, valid=is_end)
-            crud.health_data.update(db, db_obj=current_health_data, obj_in=health_data)
+        if pending_hd:
+            health_data = HealthDataUpdate(**df_resp.parameters, valid=df_resp.is_end)
+            crud.health_data.update(db, db_obj=pending_hd, obj_in=health_data)
         else:
-            logger.debug("parameters=%r", parameters)
-            health_data = HealthDataCreate(**parameters, valid=is_end)
+            health_data = HealthDataCreate(**df_resp.parameters, valid=df_resp.is_end)
             crud.health_data.create(db, obj_in=health_data)
 
-    if is_end:
-        hole_data = crud.health_data.get(db, id=current_health_data.id)
-        if hole_data is None:
+    if df_resp.is_end:
+        filled_hd = crud.health_data.get(db, id=pending_hd.id)
+        if filled_hd is None:
             raise HTTPException(500, "HealthData was not saved before processing")
 
-        health_data_result = process_health_data(hole_data)
-        main_problem_text = detect_main_problem(health_data_result, lang=lang)
-        fulfillment_text = f"{fulfillment_text}. {main_problem_text}"
-        response.headers["health-data-result"] = dumps(health_data_result)
+        result = process_health_data(filled_hd)
+        problem_explanation = detect_main_problem(result, lang=lang)
+        df_resp.bot_msg = f"{df_resp.bot_msg}. {problem_explanation}"
+        response.headers["health-data-result"] = dumps(result)
 
     conversation = ConversationCreate(
-        user_msg=message, bot_msg=fulfillment_text, intent=intent, user_id=user.id
+        user_msg=message, user_id=user.id, **df_resp.dict()
     )
     crud.conversation.create(db, obj_in=conversation)
 
