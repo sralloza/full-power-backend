@@ -40,6 +40,16 @@ def test_get_health_data(db: Session):
     assert jsonable_encoder(health_data_db) == jsonable_encoder(health_data_db_2)
 
 
+def test_get_pending_health_data(db: Session):
+    user_id = random_int()
+    hd_in_1 = crud.health_data.create(db, obj_in=gen_health_data_create(user_id, True))
+    hd_in_2 = crud.health_data.create(db, obj_in=gen_health_data_create(user_id, False))
+
+    pending_health_data = crud.health_data.get_pending_from_user(db, user_id=user_id)
+    assert pending_health_data == hd_in_2
+    assert pending_health_data != hd_in_1
+
+
 def test_update_health_data(db: Session):
     user_id = random_int()
     health_data_in = gen_health_data_create(user_id, True)

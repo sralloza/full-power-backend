@@ -8,8 +8,10 @@ from app.schemas.conversation import Conversation, ConversationCreate
 @mock.patch("app.api.routes.bot.detect_intent_texts")
 def test_process_msg(dit_m, detect_end_m, client, db, normal_user_token_headers):
     detect_end_m.return_value = False
-    dit_m.return_value.query_result.fulfillment_text = "this is the bot message"
-    dit_m.return_value.query_result.intent.display_name = "this is the intent"
+    dit_m.return_value = {
+        "fulfillmentText": "this is the bot message",
+        "intent": {"displayName": "this is the intent"},
+    }
     response = client.post(
         "/bot/process-msg",
         json={"msg": "this is the user message"},
@@ -21,7 +23,7 @@ def test_process_msg(dit_m, detect_end_m, client, db, normal_user_token_headers)
     assert conv.user_msg == "this is the user message"
     assert conv.bot_msg == "this is the bot message"
     assert conv.intent == "this is the intent"
-    dit_m.assert_called_once_with(mock.ANY, mock.ANY, conv.user_msg, "en")
+    dit_m.assert_called_once_with(mock.ANY, conv.user_msg, "en")
 
     convs_db = crud.conversation.get_multi(db)
     assert len(convs_db) == 1

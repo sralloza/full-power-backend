@@ -20,5 +20,8 @@ class CRUDHealthData(CRUDBase[HealthData, HealthDataCreate, HealthDataUpdate]):
             .all()
         )
 
+    def get_pending_from_user(self, db: Session, *, user_id: int):
+        return db.query(self.model).filter_by(valid=False, user_id=user_id).first()
+
 
 health_data = CRUDHealthData(HealthData)
