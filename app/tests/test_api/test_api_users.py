@@ -117,7 +117,7 @@ def test_remove_existing_user(
     response = client.delete(f"/users/{user.id}", headers=superuser_token_headers)
     assert response.status_code == 204
 
-    assert response.json() is None
+    assert response.content == b""
     assert crud.user.get_by_username(db, username=username) is None
 
 
@@ -128,4 +128,4 @@ def test_remove_nonexisting_user(
     assert response.status_code == 404
 
     error = response.json()
-    assert error["detail"] == "User not found"
+    assert error["detail"] == "User with id=46549812123 does not exist"

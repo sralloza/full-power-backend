@@ -25,7 +25,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements-prod.txt
+        pip install -r requirements.txt
         pip install -r requirements-dev.txt
         pip install -e .
     - name: Test and generate coverage report
@@ -33,7 +33,7 @@ jobs:
         touch invalid.json
         pip install pytest
         pip install pytest-cov
-        pytest --cov=./ --cov-report=xml
+        pytest --cov=./ --cov-report=xml -vvl
       env:
         DIALOGFLOW_PROJECT_ID: dialogflow-project-id
         FIRST_SUPERUSER_PASSWORD: default-admin

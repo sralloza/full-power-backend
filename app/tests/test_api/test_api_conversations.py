@@ -80,4 +80,12 @@ def test_conversation_delete(client: TestClient, db: Session, superuser_token_he
         f"/conversations/{conv_db.id}", headers=superuser_token_headers
     )
     assert response.status_code == 204
-    assert response.json() is None
+    assert response.content == b""
+
+
+def test_remove_nonexisting_conv(client: TestClient, superuser_token_headers):
+    response = client.delete("/conversations/198526", headers=superuser_token_headers)
+
+    error = response.json()
+    assert response.status_code == 404
+    assert error["detail"] == "Conversation with id=198526 does not exist"
