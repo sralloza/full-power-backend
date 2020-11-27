@@ -1,11 +1,8 @@
 """Bot related code."""
 
 from app.schemas.bot import DFResponse
-import json
-from pathlib import Path
 
 import dialogflow
-from google.oauth2 import service_account
 from google.protobuf.json_format import MessageToDict
 
 from app.core.config import settings
@@ -19,13 +16,6 @@ def detect_end(df_response: dict):
     except KeyError:
         pass
     return is_end
-
-
-def get_credentials():
-    json_string = Path(settings.google_application_credentials).read_text()
-    info = json.loads(json_string)
-    credentials = service_account.Credentials.from_service_account_info(info)
-    return credentials
 
 
 def get_df_response(session_id: int, text: str, language_code: str) -> DFResponse:
