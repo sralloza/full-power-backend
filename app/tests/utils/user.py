@@ -4,6 +4,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
 from app import crud
+from app.core.config import settings
 from app.models.user import User
 from app.schemas.user import UserCreateAdmin, UserUpdateAdmin
 from app.tests.utils.utils import random_lower_string
@@ -23,7 +24,7 @@ def user_authentication_headers(
     return headers
 
 
-def create_random_user(db: Session) -> User:  # noqa
+def create_random_user(db: Session) -> User:
     username = random_lower_string()
     password = random_lower_string()
     user_in = UserCreateAdmin(username=username, password=password, is_admin=False)
@@ -33,7 +34,7 @@ def create_random_user(db: Session) -> User:  # noqa
 
 def authentication_token_from_username(
     *, client: TestClient, username: str, db: Session
-) -> Dict[str, str]:  # noqa
+) -> Dict[str, str]:
     """
     Return a valid token for the user with given email.
     If the user doesn't exist it is created first.
@@ -57,4 +58,37 @@ def authentication_token_from_username(
     password = temp_passwords[username]
     return user_authentication_headers(
         client=client, username=username, password=password
+    )
+
+
+def create_test_user(db: Session):
+    user_in = UserCreateAdmin(
+        username=settings.username_test_user,
+        password=settings.username_test_password,
+        is_admin=False,
+    )
+    user_db = crud.user.get_by_username(db, username=user_in.username)
+    if not user_db:
+        user = crud.user.create(db=db, obj_in=user_in)
+        return user
+    return user_db
+
+
+def get_superuser_token_headers(client: TestClient) -> Dict[str, str]:
+    from .user import user_authentication_headers
+
+    return user_authentication_headers(
+        client=client,
+        username=settings.first_superuser,
+        password=settings.first_superuser_password,
+    )
+
+
+def get_normal_user_token_headers(client: TestClient) -> Dict[str, str]:
+    from .user import user_authentication_headers
+
+    return user_authentication_headers(
+        client=client,
+        username=settings.username_test_user,
+        password=settings.username_test_password,
     )

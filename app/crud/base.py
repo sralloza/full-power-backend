@@ -1,6 +1,7 @@
 from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
 
 from fastapi.encoders import jsonable_encoder
+from fastapi.exceptions import HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
@@ -30,7 +31,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         return db.query(self.model).offset(skip).limit(limit).all()
 
     def create(self, db: Session, *, obj_in: CreateSchemaType) -> ModelType:
-        obj_in_data = jsonable_encoder(obj_in)
+        obj_in_data = obj_in.dict()
         db_obj = self.model(**obj_in_data)
         db.add(db_obj)
         db.commit()
@@ -42,7 +43,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         db: Session,
         *,
         db_obj: ModelType,
-        obj_in: Union[UpdateSchemaType, Dict[str, Any]]
+        obj_in: Union[UpdateSchemaType, Dict[str, Any]],
     ) -> ModelType:
 
         obj_data = jsonable_encoder(db_obj)
@@ -60,6 +61,10 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
     def remove(self, db: Session, *, id: int) -> None:
         obj = db.query(self.model).get(id)
+        if obj is None:
+            detail = f"{self.model.__name__} with id={id} does not exist"
+            raise HTTPException(404, detail)
+
         db.delete(obj)
         db.commit()
         return

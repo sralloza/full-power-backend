@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Security
 
 from app.api.dependencies.security import get_current_user
 
-from . import bot, conversations, login, users, utils
+from . import bot, conversations, health_data, login, users, utils
 
 router = APIRouter()
 
@@ -16,6 +16,12 @@ router.include_router(
     dependencies=[Security(get_current_user, scopes=["admin"])],
     prefix="/conversations",
     tags=["conversations"],
+)
+router.include_router(
+    health_data.router,
+    dependencies=[Security(get_current_user, scopes=["admin"])],
+    prefix="/health-data",
+    tags=["health-data"],
 )
 
 router.include_router(

@@ -48,6 +48,7 @@ class Settings(BaseSettings):
         ] = self.google_application_credentials.as_posix()
 
     username_test_user: str = "the_Test"
+    username_test_password: str = "the_TestPassword"
 
 
 settings = Settings()

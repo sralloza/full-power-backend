@@ -1,9 +1,11 @@
 """Routes for managing users (most of them require admin access, except /me)."""
 
+from http import HTTPStatus
 from typing import List
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm.session import Session
+from starlette.responses import Response
 
 from app import crud
 from app.api.dependencies.database import get_db
@@ -54,6 +56,5 @@ def users_get_one(*, db: Session = Depends(get_db), user_id: int):
 def users_delete(*, db: Session = Depends(get_db), user_id: int):
     """Deletes a user."""
 
-    if not crud.user.get(db, id=user_id):
-        raise_user_not_found()
-    return crud.user.remove(db, id=user_id)
+    crud.user.remove(db, id=user_id)
+    return Response(status_code=HTTPStatus.NO_CONTENT.value)
