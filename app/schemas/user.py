@@ -24,6 +24,11 @@ class UserCreateAdmin(UserCreateBasic):
     is_admin: bool = False
 
 
+class UserCreateAdminDBIn(UserBase):
+    is_admin: bool = False
+    hashed_password: Optional[str] = None
+
+
 class UserUpdateBasic(UserBase):
     username: Optional[str] = None
     password: Optional[str] = None
