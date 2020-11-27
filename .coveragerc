@@ -6,10 +6,11 @@ source = app, app/tests, ./
 omit =
     .venv/*
     app/_version.py
-    app/backend_pre_start.py
     app/db/init_db.py
-    app/initial_data.py
+    app/scripts/*
     app/tests/utils/*
+    app/backend_pre_start.py
+    app/initial_data.py
     wsgi.py
     run_windows.py
     setup.py
