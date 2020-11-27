@@ -1,6 +1,19 @@
-![Logo of the project](https://ingage.institute/wp-content/uploads/2020/08/GIA_LOGO.png)
 
-<!-- <p align="center"></p> -->
+<p align="center">
+  <a href="https://ingage.institute">
+    <img alt="logo" src="https://ingage.institute/wp-content/uploads/2020/08/GIA_LOGO.png" style="background-color: black; padding: 3em; border-radius: 50px">
+  </a>
+  <br><br><br>
+  <a href="https://codecov.io/gh/BelinguoAG/full-power-backend">
+    <img alt="coverage" src="https://codecov.io/gh/BelinguoAG/full-power-backend/branch/master/graph/badge.svg">
+  </a>
+  <a href="https://github.com/BelinguoAG/full-power-backend/workflows/Tests">
+    <img alt="test" src="https://github.com/BelinguoAG/full-power-backend/workflows/Tests/badge.svg">
+  </a>
+  <a href="https://github.com/psf/black">
+    <img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg">
+  </a>
+</p>
 
 # Chatbot Backend
 

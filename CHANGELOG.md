@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Setup github actions (CI) and codecov as coverage analyser.
+- Add badges to [readme](README.md).
+
 ### Changed
 
 - Refactor entire application based on [full-stack-fastapi-postgresql](https://github.com/tiangolo/full-stack-fastapi-postgresql/tree/master/%7B%7Bcookiecutter.project_slug%7D%7D/backend/app/app)
@@ -15,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Enable CI and coverage analyser
+
+### Fixed
+
+- Rollback database if error detected.
 
 ## [0.5.1] - 2020-10-24
 
