@@ -1,4 +1,5 @@
 a2wsgi
+alembic
 dialogflow
 email-validator
 fastapi
