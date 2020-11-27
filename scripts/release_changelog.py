@@ -1,3 +1,4 @@
+import sys
 from datetime import datetime
 from pathlib import Path
 
@@ -15,8 +16,8 @@ class ChangelogEditor:
         for i, line in enumerate(self.lines):
             if "[Unreleased]" in line and "##" in line:
                 today_str = datetime.now().strftime("%Y-%m-%d")
-                self.lines.insert(i+1, f"## [{new_version}] - {today_str}")
-                self.lines.insert(i+1, "")
+                self.lines.insert(i + 1, f"## [{new_version}] - {today_str}")
+                self.lines.insert(i + 1, "")
                 return
 
     def fix_links(self, new_version):
@@ -24,7 +25,7 @@ class ChangelogEditor:
             if "[unreleased]" in line and "#" not in line:
                 self.lines[i] = line.replace(self.current_release, new_version)
                 new_link = "https://github.com/BelinguoAG/full-power-backend/compare/v{}...v{}".format(
-                    self.current_release,new_version
+                    self.current_release, new_version
                 )
                 new_link = f"[{new_version}]: {new_link}"
                 self.lines.insert(i + 1, new_link)
@@ -37,9 +38,9 @@ class ChangelogEditor:
         raise Exception
 
     def write(self):
-        Path("CHANGELOGb.md").write_text("\n".join(self.lines), "utf8")
+        Path("CHANGELOG.md").write_text("\n".join(self.lines) + "\n", "utf8")
 
 
 changelog = ChangelogEditor()
-changelog.release("2.0.1")
+changelog.release(sys.argv[1])
 changelog.write()
