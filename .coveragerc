@@ -10,6 +10,7 @@ omit =
     app/db/init_db.py
     app/initial_data.py
     app/tests/utils/*
+    wsgi.py
     run_windows.py
     setup.py
     versioneer.py
