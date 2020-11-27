@@ -50,8 +50,10 @@ def bot_message_post(
             crud.health_data.create(db, obj_in=health_data)
 
     if df_resp.is_end:
-        filled_hd = crud.health_data.get(db, id=pending_hd.id)
-        if filled_hd is None:
+        try:
+            filled_hd = crud.health_data.get(db, id=pending_hd.id)
+            assert filled_hd is not None
+        except (AssertionError, AttributeError):
             raise HTTPException(500, "HealthData was not saved before processing")
 
         result = process_health_data(filled_hd)

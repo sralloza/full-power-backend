@@ -79,6 +79,7 @@ detect_end_data = (
     ({}, False),
 )
 
+
 @pytest.mark.parametrize("df_response,expected", detect_end_data)
 def test_detect_end(df_response, expected):
     assert detect_end(df_response) == expected
