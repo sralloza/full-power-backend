@@ -225,7 +225,7 @@ links to humans using your project. You can include links like:
 
 - Project homepage: https://github.com/BelinguoAG/full-power-backend
 - Repository: https://github.com/BelinguoAG/full-power-backend
-- Issue tracker: https://github.com/BelinguoAG/full-power-backendissues
+- Issue tracker: https://github.com/BelinguoAG/full-power-backend/issues
 - Changelog: [changelog](CHANGELOG.md)
 - Related projects:
   - Backend: https://github.com/BelinguoAG/bot-frontend
