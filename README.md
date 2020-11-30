@@ -39,10 +39,10 @@ source <virtualenv-path>/bin/activate
 which python  # check it's using the virtualenv python binary
 
 # Install production dependencies
-python -m pip install requirements.txt
+python -m pip install -r requirements.txt
 
 # If you want to develop it, install development dependencies
-python -m pip install requirements-dev.txt
+python -m pip install -r requirements-dev.txt
 ```
 
 ### Initial Configuration
@@ -76,10 +76,10 @@ To develop the backend, first install the dependencies.
 
 ```shell
 # Install production dependencies
-python -m pip install requirements.txt
+python -m pip install -r requirements.txt
 
 # If you want to develop it, install development dependencies
-python -m pip install requirements-dev.txt
+python -m pip install -r requirements-dev.txt
 
 # Check database connection and settings are ok
 python scripts/check-db-connectoin.py
