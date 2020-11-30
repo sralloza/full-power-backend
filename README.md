@@ -1,7 +1,6 @@
-
 <p align="center">
   <a href="https://ingage.institute">
-    <img alt="logo" src="https://ingage.institute/wp-content/uploads/2020/08/GIA_LOGO.png" style="background-color: black; padding: 3em; border-radius: 50px">
+    <img alt="logo" src="./.github/ingage-logo-black-bg-round.png" height="auto" width="auto" style="border-radius: 50">
   </a>
   <br><br><br>
   <a href="https://codecov.io/gh/BelinguoAG/full-power-backend">
