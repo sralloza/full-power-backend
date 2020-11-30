@@ -1,8 +1,12 @@
 import logging
+import warnings
 
 from app.db.init_db import init_db
 from app.db.session import SessionLocal
 
+warnings.warn(
+    "Don't use this, use always 'alembic upgrade' to setup the database tables"
+)
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
