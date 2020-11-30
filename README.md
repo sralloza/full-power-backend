@@ -22,13 +22,13 @@ Backend for the ingage's health chatbot application.
 
 ## Installing / Getting started
 
-A quick introduction of the minimal setup you need to get the backend up & running.
+Here you have a quick introduction of the minimal setup you need to get the backend up & running.
 
 You'll need `python 3.7+` installed to run the backend.
 
 ```shell
 # First clone the repo, wether you are going to develop or deploy it.
-git clone https://github.com/BelinguoAG/full-power-backend
+git clone https://github.com/BelinguoAG/full-power-backend.git
 cd full-power-backend
 
 # If you don't have a virtualenv created, create one with:
@@ -64,10 +64,10 @@ After setting up the settings, you must setup the database. With the virtualenv 
 
 ```shell
 # Check database connection:
-python app/backend_pre_start.py
+python scripts/check-db-connection.py
 
 # Create database tables
-python app/initial_data.py
+alembic upgrade head
 ```
 
 ## Developing
@@ -82,10 +82,10 @@ python -m pip install requirements.txt
 python -m pip install requirements-dev.txt
 
 # Check database connection and settings are ok
-python app/backend_pre_start.py
+python scripts/check-db-connectoin.py
 
 # If you don't have the database tables created, execute
-python app/initial_data.py
+alembic upgrade head
 ```
 
 You can run the app asyncrhonously (ASGI) o syncrhonously (WSGI).
@@ -104,9 +104,25 @@ The tests are run with `pytest`. To run them:
 pytest -vv
 ```
 
-### Deploying / Publishing
+## Deploying / Publishing
 
 This app is built using [FastAPI](https://fastapi.tiangolo.com/), a python framework to build asyncronous APIs. It normally needs an ASGI server to run, but due to compatibility (as most popular web servers like apache and nginx do not support ASGI) it includes a WSGI interface. The conversion is made thanks to [a2wsgi](https://github.com/abersheeran/a2wsgi).
+
+### Before deploy
+
+Before you deploy the app, the database must be correctly setup. If you have deployed a version of the backend **without** using database migrations (`alembic`), you have 2 choices:
+
+#### First choice: remove all tables
+
+The easy solution is to remove all tables and then execute `alembic upgrade head`.
+
+#### Second choice: hack alembic
+
+If you know exactly in which point of the migration workflow you are, you can "tell" alembic the exact revision. If you are now confused or you don't now anything about migrations, I'm afraid you need to select the [first solution](#first-choice-remove-all-tables).
+
+First, execute `alembic current`. It will output some nonesense into the terminal, but it will also create a new table in the database called `alembic_version`. You only need to set the first row of the table (**important: this table must always have one and only one row**) to the alembic revision identifier you are absolutely sure your database is at. Note that the alembic migration identifier is something like `aa206f5fe915` (you can search the `alembic/versions` folder or the `alembic history`).
+
+After you set the correct alembic revision in the database, you can execute `alembic upgrade head` safely.
 
 ### ASGI deploy
 
@@ -163,7 +179,7 @@ Common problems and how to solve them.
 To check that the database is online and all the settings are ok, you can use the following script:
 
 ```shell
-python app/backend_pre_start.py
+python scripts/check-db-connection.py
 ```
 
 ### Permission error: 'c++' installing grpcio
@@ -216,8 +232,4 @@ links to humans using your project. You can include links like:
 
 ## Licensing
 
-One really important part: Give your project a proper license. Here you should
-state what the license is and how to find the text version of the license.
-Something like:
-
-"The code in this project is licensed under MIT license."
+Since this is a private repo, it's not signed under any licence.
