@@ -80,13 +80,9 @@ python -m pip install -r requirements.txt
 
 # If you want to develop it, install development dependencies
 python -m pip install -r requirements-dev.txt
-
-# Check database connection and settings are ok
-python scripts/check-db-connectoin.py
-
-# If you don't have the database tables created, execute
-alembic upgrade head
 ```
+
+Now, it's time to setup the database. Read about it [here](#database-setup).
 
 You can run the app asyncrhonously (ASGI) o syncrhonously (WSGI).
 
@@ -104,25 +100,30 @@ The tests are run with `pytest`. To run them:
 pytest -vv
 ```
 
+## Database setup
+
+First, check if database connection and settings are ok.
+
+```shell
+python scripts/check-db-connection.py
+```
+
+If this is the first time you deploy the backend or you have already deployed a version of the backend using database migrations (`alembic`) and you want to upgrade it, just execute `alembic upgrade head` to create the database's tables. If you have already deployed a version of the backend **without** using database migrations (`alembic`), you have 2 choices:
+
+1. **Remove all tables**. The easy solution is to remove all tables and then execute `alembic upgrade head`.
+2. **Second choice: hack alembic.** If you know exactly in which point of the migration workflow you are, you can "tell" alembic the exact revision. If you are now confused or you don't now anything about migrations, I'm afraid you need to select the first solution. First, execute `alembic current`. It will output some nonesense into the terminal, but it will also create a new table in the database called `alembic_version`. You only need to set the first row of the table (**important: this table must always have one and only one row**) to the alembic revision identifier you are absolutely sure your database is at. Note that the alembic migration identifier is something like `aa206f5fe915` (you can search the `alembic/versions` folder or the `alembic history`). After you set the correct alembic revision in the database, you can execute `alembic upgrade head` safely.
+
+Once you have the tables created, it's time to create the first admin.
+
+```shell
+python scripts/create-first-admin.py
+```
+
 ## Deploying / Publishing
 
 This app is built using [FastAPI](https://fastapi.tiangolo.com/), a python framework to build asyncronous APIs. It normally needs an ASGI server to run, but due to compatibility (as most popular web servers like apache and nginx do not support ASGI) it includes a WSGI interface. The conversion is made thanks to [a2wsgi](https://github.com/abersheeran/a2wsgi).
 
-### Before deploy
-
-Before you deploy the app, the database must be correctly setup. If you have deployed a version of the backend **without** using database migrations (`alembic`), you have 2 choices:
-
-#### First choice: remove all tables
-
-The easy solution is to remove all tables and then execute `alembic upgrade head`.
-
-#### Second choice: hack alembic
-
-If you know exactly in which point of the migration workflow you are, you can "tell" alembic the exact revision. If you are now confused or you don't now anything about migrations, I'm afraid you need to select the [first solution](#first-choice-remove-all-tables).
-
-First, execute `alembic current`. It will output some nonesense into the terminal, but it will also create a new table in the database called `alembic_version`. You only need to set the first row of the table (**important: this table must always have one and only one row**) to the alembic revision identifier you are absolutely sure your database is at. Note that the alembic migration identifier is something like `aa206f5fe915` (you can search the `alembic/versions` folder or the `alembic history`).
-
-After you set the correct alembic revision in the database, you can execute `alembic upgrade head` safely.
+If you haven't setup the database already, now it's time. Check the [instructions](#database-setup).
 
 ### ASGI deploy
 
