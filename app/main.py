@@ -5,9 +5,6 @@ from logging import getLogger
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.db.base_class import Base
-from app.db.session import engine
-
 from . import __version__, api
 from .core.config import settings
 from .utils import catch_errors
