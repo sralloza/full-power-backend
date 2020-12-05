@@ -42,7 +42,7 @@ def test_login_success(client: TestClient, db: Session):
     assert response.status_code == 200
     token = Token(**response.json())
     assert token
-    assert token.token_type == "bearer"
+    assert token.token_type == "Bearer"
 
 
 def test_login_wrong_username(client: TestClient):
@@ -75,9 +75,8 @@ def test_login_wrong_password(client: TestClient, db: Session):
 def test_register_basic_user(client: TestClient, db: Session):
     username = random_lower_string()
     password = random_lower_string()
-    response = client.post(
-        "/register", json={"username": username, "password": password}
-    )
+    payload = {"username": username, "password": password}
+    response = client.post("/register", json=payload)
 
     assert response.status_code == 200
     user = User(**response.json())
@@ -87,6 +86,10 @@ def test_register_basic_user(client: TestClient, db: Session):
     assert db_user
     assert db_user.username == username
     assert user.username == username
+
+    response_2 = client.post("/register", json=payload)
+    assert response_2.status_code == 400
+    assert response_2.json()["detail"] == f"User {username!r} is already registered"
 
 
 def test_refresh_token(client: TestClient, normal_user_token_headers: dict):

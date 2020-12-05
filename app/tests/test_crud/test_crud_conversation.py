@@ -44,7 +44,11 @@ def test_get_conversation(db: Session):
     bot_msg = random_lower_string()
     user_msg = random_lower_string()
     conversation_in = ConversationCreate(
-        bot_msg=bot_msg, user_msg=user_msg, user_id=user_id, intent=intent
+        bot_msg=bot_msg,
+        user_msg=user_msg,
+        user_id=user_id,
+        intent=intent,
+        display_type=DisplayType.default,
     )
     conversation = crud.conversation.create(db, obj_in=conversation_in)
     conversation_2 = crud.conversation.get(db, id=conversation.id)
@@ -55,6 +59,7 @@ def test_get_conversation(db: Session):
     assert conversation_2.user_msg == conversation.user_msg
     assert conversation_2.intent == conversation.intent
     assert conversation_2.id == conversation.id
+    assert conversation_2.display_type == DisplayType.default
     assert jsonable_encoder(conversation) == jsonable_encoder(conversation_2)
 
 
@@ -64,7 +69,11 @@ def test_update_conversation(db: Session):
     bot_msg = random_lower_string()
     user_msg = random_lower_string()
     conversation_in = ConversationCreate(
-        bot_msg=bot_msg, user_msg=user_msg, user_id=user_id, intent=intent
+        bot_msg=bot_msg,
+        user_msg=user_msg,
+        user_id=user_id,
+        intent=intent,
+        display_type=DisplayType.default,
     )
     conversation = crud.conversation.create(db, obj_in=conversation_in)
 
@@ -80,6 +89,7 @@ def test_update_conversation(db: Session):
     assert conversation_2.intent == intent
     assert conversation_2.bot_msg == new_bot_msg
     assert conversation_2.user_msg == new_user_msg
+    assert conversation_2.display_type == DisplayType.default
 
 
 def test_get_conversations_from_user(db: Session):
@@ -90,7 +100,11 @@ def test_get_conversations_from_user(db: Session):
         bot_msg = random_lower_string()
         user_msg = random_lower_string()
         conversation_in = ConversationCreate(
-            bot_msg=bot_msg, user_msg=user_msg, user_id=user_id, intent=intent
+            bot_msg=bot_msg,
+            user_msg=user_msg,
+            user_id=user_id,
+            intent=intent,
+            display_type=DisplayType.default,
         )
         convs.append(crud.conversation.create(db, obj_in=conversation_in))
 

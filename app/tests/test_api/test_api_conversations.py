@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from starlette.testclient import TestClient
 
 from app import crud
-from app.schemas.conversation import Conversation, ConversationCreate
+from app.schemas.conversation import Conversation, ConversationCreate, DisplayType
 from app.tests.utils.utils import random_int, random_lower_string
 
 
@@ -25,6 +25,30 @@ def test_conversation_post(client: TestClient, db: Session, superuser_token_head
 
     conversation_db = crud.conversation.get(db, id=conversation_created.id)
     assert conversation_created == Conversation.from_orm(conversation_db)
+
+
+def test_conversation_get_or_404(
+    client: TestClient, db: Session, superuser_token_headers
+):
+    response = client.get("/conversations/56456", headers=superuser_token_headers)
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Conversation with id=56456 does not exist"
+
+    conversation_in = ConversationCreate(
+        user_id=random_int(),
+        bot_msg=random_lower_string(),
+        user_msg=random_lower_string(),
+        intent=random_lower_string(),
+    )
+    conv_db = crud.conversation.create(db, obj_in=conversation_in)
+    response = client.get(
+        "/conversations/%d" % conv_db.id, headers=superuser_token_headers
+    )
+    assert response.status_code == 200
+
+    conv = Conversation.parse_obj(response.json())
+    assert conv.id
+    assert conv == Conversation.from_orm(conv_db)
 
 
 def test_conversation_get_from_user(
