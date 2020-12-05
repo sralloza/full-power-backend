@@ -28,20 +28,18 @@ class HealthDataBase(BaseModel):
     sheet_wipe: Optional[int]  # 19
 
     timestamp: Optional[datetime]
-    user_id: int
     valid: bool = False
 
 
 class HealthDataCreate(HealthDataBase):
-    pass
+    user_id: int
 
 
 class HealthDataUpdate(HealthDataBase):
-    user_id: Optional[int]
     valid: Optional[bool] = False
 
 
-class HealthDataInDB(HealthDataBase):
+class HealthDataInDB(HealthDataCreate):
     id: int
 
     class Config:  # pylint: disable=missing-class-docstring

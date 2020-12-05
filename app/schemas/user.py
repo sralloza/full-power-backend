@@ -24,9 +24,9 @@ class UserCreateAdmin(UserCreateBasic):
     is_admin: bool = False
 
 
-class UserCreateAdminDBIn(UserBase):
+class UserCreateAdminInner(UserBase):
     is_admin: bool = False
-    hashed_password: Optional[str] = None
+    hashed_password: str
 
 
 class UserUpdateBasic(UserBase):
@@ -36,6 +36,12 @@ class UserUpdateBasic(UserBase):
 
 class UserUpdateAdmin(UserUpdateBasic):
     is_admin: bool = False
+
+
+class UserUpdateInner(UserBase):
+    username: Optional[str] = None
+    is_admin: Optional[bool] = None
+    hashed_password: Optional[str] = None
 
 
 class UserInDBBase(UserBase):
@@ -48,9 +54,8 @@ class UserInDBBase(UserBase):
 
 class UserInDB(UserInDBBase):
     hashed_password: str
-    conversations: List[Conversation] = []
+    conversations: List[Conversation]
 
 
 class User(UserInDBBase):
-    class Config:
-        orm_mode = True
+    pass
