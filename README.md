@@ -4,7 +4,7 @@
   </a>
   <br><br><br>
   <a href="https://codecov.io/gh/BelinguoAG/full-power-backend">
-    <img alt="coverage" src="https://codecov.io/gh/BelinguoAG/full-power-backend/branch/master/graph/badge.svg">
+    <img src="https://codecov.io/gh/BelinguoAG/full-power-backend/branch/master/graph/badge.svg?token=ow3IXellp0"/>
   </a>
   <a href="https://github.com/BelinguoAG/full-power-backend/workflows/Tests">
     <img alt="test" src="https://github.com/BelinguoAG/full-power-backend/workflows/Tests/badge.svg">
