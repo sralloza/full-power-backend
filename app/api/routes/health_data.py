@@ -1,4 +1,4 @@
-"""Conversations manager."""
+"""Health data related routes."""
 
 from typing import List
 

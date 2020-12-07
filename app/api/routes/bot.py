@@ -57,8 +57,10 @@ def bot_message_post(
         try:
             filled_hd = crud.health_data.get(db, id=pending_hd.id)
             assert filled_hd is not None
-        except (AssertionError, AttributeError):
-            raise HTTPException(500, "HealthData was not saved before processing")
+        except (AssertionError, AttributeError) as exc:
+            raise HTTPException(
+                500, "HealthData was not saved before processing"
+            ) from exc
 
         result = process_health_data(filled_hd)
         problem_explanation = detect_main_problem(result, lang=lang)

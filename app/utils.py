@@ -1,8 +1,11 @@
+"""Useful functions for the entire application."""
+
 import logging
 from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
 from uuid import uuid4
 
+from fastapi import Request
 from starlette.responses import JSONResponse
 
 from app.core.config import settings
@@ -12,7 +15,6 @@ logger = logging.getLogger(__name__)
 
 def setup_logging():
     fmt = "[%(asctime)s] %(levelname)s - %(name)s:%(lineno)s - %(message)s"
-    # fmt = "[%(asctime)s] %(levelname)s - %(threadName)s.%(module)s:%(lineno)s - %(message)s"
 
     Path(settings.log_path).parent.mkdir(parents=True, exist_ok=True)
 
@@ -23,7 +25,7 @@ def setup_logging():
         backupCount=settings.max_logs,
     )
 
-    if file_handler.shouldRollover(None):  # noqa
+    if file_handler.shouldRollover(None):  # type: ignore noqa
         file_handler.doRollover()
 
     logging.basicConfig(
@@ -38,7 +40,8 @@ def setup_logging():
     logging.getLogger("werkzeug").setLevel(50)
 
 
-def catch_errors(request, exc):
+def catch_errors(request: Request, exc: Exception):
+    """Logs an error and returns 500 to the user."""
     error_id = uuid4()
     scope = request.scope
     request_info = (

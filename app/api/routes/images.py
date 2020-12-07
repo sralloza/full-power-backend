@@ -1,3 +1,5 @@
+"""Image related routes."""
+
 from typing import List
 
 from fastapi import APIRouter, Depends, File, Response, Security

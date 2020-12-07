@@ -3,7 +3,7 @@ from unittest import mock
 from fastapi.testclient import TestClient
 from sqlalchemy.orm.session import Session
 
-from app import crud, models
+from app import crud
 from app.schemas.image import ImageCreate, ImageCreateInner, ImageCreateResult
 
 
@@ -40,7 +40,7 @@ def test_get_image_id_list(pic_m, client: TestClient, db: Session):
 
 
 @mock.patch("app.crud.crud_image.process_image_content")
-def test_create_image(pic_m, client: TestClient, db: Session, superuser_token_headers):
+def test_create_image(pic_m, client: TestClient, superuser_token_headers):
     pic_m.side_effect = simulation_image_process
     file = {"image_content": ("image.png", b"image-binary")}
 

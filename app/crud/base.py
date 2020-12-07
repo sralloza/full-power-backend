@@ -1,4 +1,4 @@
-from typing import Any, Generic, List, Optional, Type, TypeVar, Union
+from typing import Any, Generic, List, Optional, Type, TypeVar
 
 from fastapi.exceptions import HTTPException
 from pydantic import BaseModel
@@ -48,8 +48,8 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         db.refresh(db_obj)
         return db_obj
 
+    @staticmethod
     def update(
-        self,
         db: Session,
         *,
         db_obj: ModelType,
@@ -69,4 +69,3 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         obj = self.get_or_404(db, id=id)
         db.delete(obj)
         db.commit()
-        return

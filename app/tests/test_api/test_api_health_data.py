@@ -73,7 +73,7 @@ def test_health_datas_get_from_all_users(
     convs_db = crud.health_data.get_multi(db)
     convs = [HealthData.from_orm(x) for x in convs_db]
 
-    response = client.get(f"/health-data", headers=superuser_token_headers)
+    response = client.get("/health-data", headers=superuser_token_headers)
     assert response.status_code == 200
     real_heath_datas = parse_obj_as(List[HealthData], response.json())
     assert real_heath_datas == convs

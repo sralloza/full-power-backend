@@ -1,12 +1,10 @@
-# crud.file.remove(db, id=file_id)
-
 from unittest import mock
 
 import pytest
 from fastapi import HTTPException
 from sqlalchemy.orm.session import Session
 
-from app import crud, models
+from app import crud
 from app.core.files import get_file_id_from_name
 from app.schemas.file import FileCreateInner, FileUpdate
 

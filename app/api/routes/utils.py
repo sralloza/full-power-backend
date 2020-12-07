@@ -1,3 +1,5 @@
+"""Routes for utils."""
+
 from fastapi import APIRouter, Depends, Security
 
 from app import __version__

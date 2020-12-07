@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from starlette.testclient import TestClient
 
 from app import crud
-from app.schemas.conversation import Conversation, ConversationCreate, DisplayType
+from app.schemas.conversation import Conversation, ConversationCreate
 from app.tests.utils.utils import random_int, random_lower_string
 
 

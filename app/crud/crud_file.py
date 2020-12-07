@@ -26,11 +26,11 @@ class CRUDFile(CRUDBase[File, FileCreate, FileUpdateInner]):
     def create(self, db: Session, *, obj_in: FileCreateInner) -> File:
         try:
             return super().create(db, obj_in=obj_in)
-        except HTTPException:
+        except HTTPException as exc:
             name = obj_in.name
             lang = obj_in.lang
             detail = f"File with name={name} and lang={lang} already exists"
-            raise HTTPException(400, detail)
+            raise HTTPException(400, detail) from exc
 
     def update(self, db: Session, *, db_obj: File, obj_in: FileUpdate) -> File:
         update_dict = obj_in.dict(exclude_unset=True)
@@ -50,15 +50,14 @@ class CRUDFile(CRUDBase[File, FileCreate, FileUpdateInner]):
         file_id = get_file_id_from_name(name, lang)
         try:
             return super().get_or_404(db, id=file_id)
-        except HTTPException:
+        except HTTPException as exc:
             detail = f"File with name={name} and lang={lang} does not exist"
-            raise HTTPException(404, detail)
+            raise HTTPException(404, detail) from exc
 
     def remove_by_name(self, db: Session, *, name: str, lang: str) -> None:
         obj = self.get_or_404_by_name(db, name=name, lang=lang)
         db.delete(obj)
         db.commit()
-        return
 
     def get_db_file_list(
         self, db: Session, *, lang: str, skip: int = 0, limit: int = 100
