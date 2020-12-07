@@ -37,11 +37,6 @@ def test_get_or_404(pic_m, db):
 def test_get_id_list(pic_m, db):
     pic_m.side_effect = simulation_image_process
 
-    # First we remove all data
-    imgs_ids = [x[0] for x in db.query(models.Image.id).all()]
-    for image_id in imgs_ids:
-        crud.image.remove(db, id=image_id)
-
     image_db_1 = crud.image.create(db, obj_in=ImageCreate(content=b"useless"))
     image_db_2 = crud.image.create(db, obj_in=ImageCreate(content=b"useless"))
     image_db_3 = crud.image.create(db, obj_in=ImageCreate(content=b"useless"))

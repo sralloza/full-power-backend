@@ -3,11 +3,12 @@ from unittest import mock
 
 import pytest
 
-from app import crud
+from app import crud, models
+from app.core.health_data import problem_text
 from app.schemas.bot import DFResponse
 from app.schemas.conversation import Conversation, ConversationCreate
-from app import models
-from app.core.health_data import problem_text
+from app.schemas.health_data import HealthDataCreate
+from app.tests.utils.user import get_normal_user_id
 
 langs = list(problem_text.keys())
 
@@ -51,6 +52,11 @@ class TestProcessMsg:
     @pytest.mark.parametrize("lang", langs)
     def test_process_msg(self, df_res, lang, client, db, normal_user_token_headers):
         self.get_df_res_m.return_value = df_res.copy()
+        if df_res.is_end:
+            crud.health_data.create(
+                db, obj_in=HealthDataCreate(user_id=get_normal_user_id(db))
+            )
+
         response = client.post(
             f"/bot/process-msg?lang={lang}",
             json={"msg": "this is the user message"},
@@ -86,16 +92,6 @@ class TestProcessMsg:
 
     @pytest.mark.parametrize("lang", langs)
     def test_error(self, db, client, normal_user_token_headers, lang):
-        # First we remove all data
-        hd_ids = [x[0] for x in db.query(models.HealthData.id).all()]
-        conv_ids = [x[0] for x in db.query(models.Conversation.id).all()]
-
-        for hd_id in hd_ids:
-            crud.health_data.remove(db, id=hd_id)
-
-        for conv_id in conv_ids:
-            crud.conversation.remove(db, id=conv_id)
-
         assert len(crud.health_data.get_multi(db)) == 0
         assert len(crud.conversation.get_multi(db)) == 0
 

@@ -97,11 +97,6 @@ def test_update_file(db: Session, client: TestClient, superuser_token_headers):
 def test_remove_multiple_files(
     db: Session, client: TestClient, superuser_token_headers
 ):
-    # First we remove all data
-    file_ids = [x[0] for x in db.query(crud.file.model.id).all()]
-    for file_id in file_ids:
-        crud.file.remove(db, id=file_id)
-
     response_1 = client.delete(
         "/files/multiple", json=[{"name": "vitamines.sdfsdf", "lang": "ch"}]
     )

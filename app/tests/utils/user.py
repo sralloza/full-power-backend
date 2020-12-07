@@ -92,3 +92,7 @@ def get_normal_user_token_headers(client: TestClient) -> Dict[str, str]:
         username=settings.username_test_user,
         password=settings.username_test_password,
     )
+
+
+def get_normal_user_id(db: Session) -> int:
+    return crud.user.get_by_username(db, username=settings.username_test_user).id

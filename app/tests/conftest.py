@@ -14,7 +14,7 @@ from app.tests.utils.user import (
 )
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture
 def db() -> Generator:
     db = SessionLocal()
     init_db(db)
@@ -24,17 +24,18 @@ def db() -> Generator:
     os.remove("testing-database.db")
 
 
-@pytest.fixture(scope="module")
-def client() -> Generator:
+@pytest.fixture
+def client(db) -> Generator:
+    db.execute("SELECT 1")
     with TestClient(app) as c:
         yield c
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def superuser_token_headers(client: TestClient) -> Dict[str, str]:
     return get_superuser_token_headers(client)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def normal_user_token_headers(client: TestClient) -> Dict[str, str]:
     return get_normal_user_token_headers(client)

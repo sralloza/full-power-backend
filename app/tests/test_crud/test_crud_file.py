@@ -19,11 +19,6 @@ def fci(content, name, title, lang="es"):
 
 
 def test_get_db_file_list(db: Session):
-    # First we remove all data
-    file_ids = [x[0] for x in db.query(models.File.id).all()]
-    for file_id in file_ids:  # noqa
-        crud.file.remove(db, id=file_id)
-
     crud.file.create(db, obj_in=fci("content", "health.test.act", "a"))
     crud.file.create(db, obj_in=fci("content", "health.test.understand", "b"))
     crud.file.create(db, obj_in=fci("content", "vitamins.test", "c"))
@@ -38,11 +33,6 @@ def test_get_db_file_list(db: Session):
 
 
 def test_get_or_404(db: Session):
-    # First we remove all data
-    file_ids = [x[0] for x in db.query(models.File.id).all()]
-    for file_id in file_ids:
-        crud.file.remove(db, id=file_id)
-
     with pytest.raises(HTTPException) as exc:
         crud.file.get_or_404_by_name(db, name="health.something.act", lang="es")
     assert exc.value.status_code == 404

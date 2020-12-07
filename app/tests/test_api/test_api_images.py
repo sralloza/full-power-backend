@@ -30,11 +30,6 @@ def test_get_image(pic_m, client: TestClient, db: Session):
 def test_get_image_id_list(pic_m, client: TestClient, db: Session):
     pic_m.side_effect = simulation_image_process
 
-    # First we remove all data
-    imgs_ids = [x[0] for x in db.query(models.Image.id).all()]
-    for image_id in imgs_ids:
-        crud.image.remove(db, id=image_id)
-
     ids = []
     for _ in range(10):
         ids.append(crud.image.create(db, obj_in=ImageCreate(content=b"invalid")).id)
@@ -64,11 +59,6 @@ def test_remove_image_list(
     pic_m, client: TestClient, db: Session, superuser_token_headers
 ):
     pic_m.side_effect = simulation_image_process
-
-    # First we remove all data
-    imgs_ids = [x[0] for x in db.query(models.Image.id).all()]
-    for image_id in imgs_ids:
-        crud.image.remove(db, id=image_id)
 
     ids = []
     for _ in range(10):
