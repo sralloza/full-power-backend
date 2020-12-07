@@ -17,12 +17,16 @@ from app.schemas.user import User, UserCreateAdmin, UserCreateBasic
 router = APIRouter()
 
 
-@router.post("/login", response_model=Token)
+@router.post(
+    "/login",
+    response_model=Token,
+    responses={401: {"description": "Incorrect username of password"}},
+    summary="Grants access to users",
+)
 def login_post(
     *, db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()
 ):
     """Login endpoint."""
-
     user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
@@ -36,38 +40,27 @@ def login_post(
         data={"sub": user.username, "scopes": user.scopes},
         expires_delta=access_token_expires,
     )
-    return {
-        "access_token": access_token,
-        "token_type": "bearer",
-        "expires_minutes": access_token_expires.seconds // 60,
-        "scopes": user.scopes,
-    }
+    return Token(access_token=access_token, scopes=user.scopes)
 
 
 @router.post(
     "/register",
     response_model=User,
     responses={400: {"description": "Username already registered"}},
+    summary="Register new user",
 )
 def register_basic_user(*, db: Session = Depends(get_db), user: UserCreateBasic):
     """Register endpoint."""
-
     real_user = UserCreateAdmin(**user.dict(), is_admin=False)
     return crud.user.create(db, obj_in=real_user)
 
 
-@router.post("/refresh", response_model=Token)
+@router.post("/refresh", response_model=Token, summary="Update token")
 def refresh_post(user=Depends(get_current_user)):
-    """Login endpoint."""
-
+    """Endpoint to create a new valid token."""
     access_token_expires = timedelta(minutes=settings.token_expire_minutes)
     access_token = create_access_token(
         data={"sub": user.username, "scopes": user.scopes},
         expires_delta=access_token_expires,
     )
-    return {
-        "access_token": access_token,
-        "token_type": "bearer",
-        "expires_minutes": access_token_expires.seconds // 60,
-        "scopes": user.scopes,
-    }
+    return Token(access_token=access_token, scopes=user.scopes)

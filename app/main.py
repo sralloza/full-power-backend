@@ -5,9 +5,6 @@ from logging import getLogger
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.db.base_class import Base
-from app.db.session import engine
-
 from . import __version__, api
 from .core.config import settings
 from .utils import catch_errors
@@ -15,7 +12,8 @@ from .utils import catch_errors
 logger = getLogger(__name__)
 
 
-def create_app():
+def create_app()->FastAPI:
+    """Creates the FastAPI app."""
     fastapi_kwargs = dict(
         title="Health Bot API",
         description="Backend for Health Bot",
@@ -23,7 +21,7 @@ def create_app():
     )
 
     if settings.production:
-        fastapi_kwargs.update(openapi_url=None)
+        fastapi_kwargs.update(dict(openapi_url=None))
 
     app = FastAPI(**fastapi_kwargs)
     app.include_router(api.router)

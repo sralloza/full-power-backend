@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- CRUD routes for managing files.
+- CRUD routes for managing images.
+- Cover every schema with tests.
+
+### Changed
+
+- Improve documentation.
+- Improve CRUD pattern.
+- Improve schemas.
+- Remove testing database before each unit test.
+- Pin requirements versions
+
+### Fixed
+
+- Check for username validity before registering a new user.
+
 ## [0.7.1] - 2020-11-30
 
 ### Fixed

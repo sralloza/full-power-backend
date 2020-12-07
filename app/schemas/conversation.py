@@ -21,11 +21,14 @@ class ConversationBase(BaseModel):
     bot_msg: str
     intent: str
     user_id: int
-    display_type: Optional[DisplayType]
 
 
 class ConversationCreate(ConversationBase):
     pass
+
+
+class ConversationCreateInner(ConversationCreate):
+    display_type: DisplayType
 
 
 class ConversationUpdate(BaseModel):
@@ -36,6 +39,7 @@ class ConversationUpdate(BaseModel):
 
 
 class ConversationInDB(ConversationBase):
+    display_type: DisplayType
     id: int
 
     class Config:  # pylint: disable=missing-class-docstring

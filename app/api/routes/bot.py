@@ -20,7 +20,12 @@ router = APIRouter()
 logger = getLogger(__name__)
 
 
-@router.post("/process-msg", response_model=ConversationCreate)
+@router.post(
+    "/process-msg",
+    response_model=ConversationCreate,
+    responses={500: {"description": "HealthData was not saved before processing"}},
+    summary="Process user message",
+)
 def bot_message_post(
     *,
     db=Depends(get_db),
@@ -30,7 +35,6 @@ def bot_message_post(
     response: Response,
 ):
     """Sends a message to the bot and returns the response back."""
-
     health_data = None
     message = input_pack.msg
     logger.debug("User's message: %r", message)
@@ -53,8 +57,10 @@ def bot_message_post(
         try:
             filled_hd = crud.health_data.get(db, id=pending_hd.id)
             assert filled_hd is not None
-        except (AssertionError, AttributeError):
-            raise HTTPException(500, "HealthData was not saved before processing")
+        except (AssertionError, AttributeError) as exc:
+            raise HTTPException(
+                500, "HealthData was not saved before processing"
+            ) from exc
 
         result = process_health_data(filled_hd)
         problem_explanation = detect_main_problem(result, lang=lang)

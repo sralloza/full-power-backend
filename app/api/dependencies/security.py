@@ -1,3 +1,5 @@
+"""Security dependencies."""
+
 from fastapi import Depends, HTTPException, status
 from fastapi.security.oauth2 import OAuth2PasswordBearer, SecurityScopes
 from jose import ExpiredSignatureError, JWTError, jwt
@@ -24,9 +26,7 @@ def get_current_user(
     """Returns the current user, given the token present in the header.
 
     Returns 401 on any error.
-
     """
-
     if sec_scopes.scopes:
         authenticate_value = f'Bearer scope="{sec_scopes.scope_str}"'
     else:
@@ -42,7 +42,7 @@ def get_current_user(
         payload = jwt.decode(
             token, settings.server_secret, algorithms=[settings.encryption_algorithm]
         )
-        username: str = payload.get("sub")
+        username = payload.get("sub")
 
         if username is None:
             credentials_exception.headers["X-Login-Error"] = "No username in token"

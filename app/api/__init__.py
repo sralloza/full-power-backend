@@ -1,3 +1,5 @@
+"""The api router."""
+
 from fastapi.routing import APIRouter
 
 from . import routes

@@ -1,6 +1,5 @@
 """Routes for managing users (most of them require admin access, except /me)."""
 
-from http import HTTPStatus
 from typing import List
 
 from fastapi import APIRouter, Depends
@@ -51,10 +50,12 @@ def users_get_one(*, db: Session = Depends(get_db), user_id: int):
 
 
 @router.delete(
-    "/{user_id}", responses={404: {"description": "User not found"}}, status_code=204
+    "/{user_id}",
+    responses={404: {"description": "User not found"}},
+    status_code=204,
+    response_class=Response,
 )
 def users_delete(*, db: Session = Depends(get_db), user_id: int):
     """Deletes a user."""
 
     crud.user.remove(db, id=user_id)
-    return Response(status_code=HTTPStatus.NO_CONTENT.value)
