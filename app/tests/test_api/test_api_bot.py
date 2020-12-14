@@ -3,10 +3,15 @@ from unittest import mock
 
 import pytest
 
-from app import crud, models
+from app import crud
 from app.core.health_data import problem_text
 from app.schemas.bot import DFResponse
-from app.schemas.conversation import Conversation, ConversationCreate
+from app.schemas.conversation import (
+    Conversation,
+    ConversationCreate,
+    ConversationCreateResult,
+    DisplayType,
+)
 from app.schemas.health_data import HealthDataCreate
 from app.tests.utils.user import get_normal_user_id
 
@@ -63,7 +68,7 @@ class TestProcessMsg:
             headers=normal_user_token_headers,
         )
         assert response.status_code == 200
-        conv = ConversationCreate(**response.json())
+        conv = ConversationCreateResult(**response.json())
 
         assert conv.user_msg == "this is the user message"
         if not df_res.is_end:
@@ -71,13 +76,17 @@ class TestProcessMsg:
         else:
             assert conv.bot_msg == "this is the bot message. <problem>"
         assert conv.intent == "this is the intent"
+        assert conv.display_type == DisplayType.default
+
         self.get_df_res_m.assert_called_once_with(mock.ANY, conv.user_msg, lang)
 
         convs_db = crud.conversation.get_multi(db)
         assert len(convs_db) >= 1
         conv_db = convs_db[-1]
 
-        assert conv == ConversationCreate.parse_obj(Conversation.from_orm(conv_db))
+        assert conv == ConversationCreateResult.parse_obj(
+            Conversation.from_orm(conv_db)
+        )
 
         if df_res.is_end:
             assert response.headers["health-data-result"] == dumps(
