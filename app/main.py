@@ -12,7 +12,7 @@ from .utils import catch_errors
 logger = getLogger(__name__)
 
 
-def create_app()->FastAPI:
+def create_app() -> FastAPI:
     """Creates the FastAPI app."""
     fastapi_kwargs = dict(
         title="Health Bot API",
