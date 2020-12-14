@@ -2,6 +2,7 @@ from app.schemas.conversation import (
     Conversation,
     ConversationCreate,
     ConversationCreateInner,
+    ConversationCreateResult,
     ConversationInDB,
     ConversationUpdate,
     DisplayType,
@@ -29,8 +30,8 @@ def test_conversation_create():
     assert fields["user_id"].type_ == int
 
 
-def test_conversation_create_inner():
-    fields = ConversationCreateInner.__fields__
+def test_conversation_create_result():
+    fields = ConversationCreateResult.__fields__
     assert set(fields) == {"user_msg", "bot_msg", "intent", "user_id", "display_type"}
 
     assert fields["user_msg"].required is True
@@ -43,6 +44,15 @@ def test_conversation_create_inner():
     assert fields["user_id"].type_ == int
     assert fields["display_type"].required is True
     assert fields["display_type"].type_ == DisplayType
+
+    assert ConversationCreateResult.__config__.orm_mode is True
+
+
+def test_conversation_create_inner():
+    fields = ConversationCreateInner.__fields__
+    assert set(fields) == set(ConversationCreateResult.__fields__)
+
+    assert ConversationCreateInner.__config__.orm_mode is True
 
 
 def test_conversation_update():

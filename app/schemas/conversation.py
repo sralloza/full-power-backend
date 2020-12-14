@@ -27,8 +27,15 @@ class ConversationCreate(ConversationBase):
     pass
 
 
-class ConversationCreateInner(ConversationCreate):
+class ConversationCreateResult(ConversationCreate):
     display_type: DisplayType
+
+    class Config:  # pylint: disable=missing-class-docstring
+        orm_mode = True
+
+
+class ConversationCreateInner(ConversationCreateResult):
+    pass
 
 
 class ConversationUpdate(BaseModel):
