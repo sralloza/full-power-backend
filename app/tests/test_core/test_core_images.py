@@ -22,7 +22,7 @@ def test_process_image_content(image_path):
         with pytest.raises(HTTPException) as exc:
             process_image_content(image_content)
 
-        assert exc.value.status_code == 400
+        assert exc.value.status_code == 415
         if is_valid == "type":
             assert exc.value.detail == "Image type could not be identified"
         else:  # Mimetype error
