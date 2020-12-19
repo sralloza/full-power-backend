@@ -40,7 +40,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         obj_in_data = obj_in.dict()
         if "id" in obj_in_data and self.get(db, id=obj_in_data["id"]):
             detail = f"{self.model.__name__} with id={obj_in_data['id']} already exists"
-            raise HTTPException(400, detail)
+            raise HTTPException(409, detail)
 
         db_obj = self.model(**obj_in_data)
         db.add(db_obj)

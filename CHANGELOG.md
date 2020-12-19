@@ -7,11 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Return `409` instead of `400` in case of id conflict creating models.
+
 ## [0.8.1] - 2020-12-14
 
 ### Fixed
 
-- `display_type` not showing in `POST /process/process-msg` ([#35](https://github.com/BelinguoAG/full-power-backend/issues/35)).
+- `display_type` not showing in `POST /process/process-msg` (#35).
 
 ## [0.8.0] - 2020-12-07
 

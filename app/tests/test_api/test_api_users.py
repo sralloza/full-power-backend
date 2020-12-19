@@ -53,8 +53,8 @@ def test_create_user_existing_username(
     response = client.post(
         "/users", headers=superuser_token_headers, json=user_in.dict()
     )
-    assert response.status_code == 400
-    assert response.json()["detail"] == "Username already registered"
+    assert response.status_code == 409
+    assert response.json()["detail"] == f"User {username!r} is already registered"
 
 
 def test_get_existing_user(
@@ -79,7 +79,7 @@ def test_get_nonexisting_user(client: TestClient, superuser_token_headers: dict)
     assert response.status_code == 404
 
     error = response.json()
-    assert error["detail"] == "User not found"
+    assert error["detail"] == "User with id=165468321231323 does not exist"
 
 
 def test_retrieve_users(client: TestClient, superuser_token_headers: dict, db: Session):

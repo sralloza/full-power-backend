@@ -30,7 +30,7 @@ class CRUDFile(CRUDBase[File, FileCreate, FileUpdateInner]):
             name = obj_in.name
             lang = obj_in.lang
             detail = f"File with name={name} and lang={lang} already exists"
-            raise HTTPException(400, detail) from exc
+            raise HTTPException(409, detail) from exc
 
     def update(self, db: Session, *, db_obj: File, obj_in: FileUpdate) -> File:
         update_dict = obj_in.dict(exclude_unset=True)
