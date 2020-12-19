@@ -15,7 +15,7 @@ def test_health_data_post(client: TestClient, db: Session, superuser_token_heade
     response = client.post(
         "/health-data", json=health_data_in.dict(), headers=superuser_token_headers
     )
-    assert response.status_code == 200
+    assert response.status_code == 201
 
     health_data_created = HealthData.parse_obj(response.json())
     assert health_data_created.id

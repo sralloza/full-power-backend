@@ -2,7 +2,7 @@
 
 from typing import List
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm.session import Session
 from starlette.responses import Response
 
@@ -13,7 +13,12 @@ from app.schemas.conversation import Conversation, ConversationCreate
 router = APIRouter()
 
 
-@router.post("", response_model=Conversation, summary="Create simple conversation")
+@router.post(
+    "",
+    response_model=Conversation,
+    status_code=status.HTTP_201_CREATED,
+    summary="Create simple conversation",
+)
 def conversation_create_post(
     *, db: Session = Depends(get_db), conversation: ConversationCreate
 ):
@@ -56,7 +61,7 @@ def conversations_get_from_all_users(
     "/{conversation_id}",
     response_class=Response,
     responses={404: {"description": "Conversation not found"}},
-    status_code=204,
+    status_code=status.HTTP_204_NO_CONTENT,
     summary="Remove a conversation",
 )
 def conversation_delete(*, db: Session = Depends(get_db), conversation_id: int):

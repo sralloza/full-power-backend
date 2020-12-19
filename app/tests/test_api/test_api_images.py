@@ -48,7 +48,7 @@ def test_create_image(pic_m, client: TestClient, superuser_token_headers):
     assert response_1.status_code == 401
 
     response_2 = client.post("/images", files=file, headers=superuser_token_headers)
-    assert response_2.status_code == 200
+    assert response_2.status_code == 201
 
     image_result = ImageCreateResult(**response_2.json())
     assert image_result.dict() == response_2.json()

@@ -34,7 +34,7 @@ def test_create_user_admin(
         headers=superuser_token_headers,
         json=data,
     )
-    assert response.status_code == 200
+    assert response.status_code == 201
     created_user = response.json()
     user = crud.user.get_by_username(db, username=username)
     assert user

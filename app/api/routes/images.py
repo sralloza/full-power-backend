@@ -35,6 +35,7 @@ def get_image_id_list(*, db: Session = Depends(get_db), skip=0, limit=100):
     dependencies=[Security(get_current_user, scopes=["admin"])],
     response_model=ImageCreateResult,
     responses={415: {"description": "Image type or mime type could not be identified"}},
+    status_code=201,
     summary="Create image",
 )
 def create_image(*, db: Session = Depends(get_db), image_content: bytes = File(...)):

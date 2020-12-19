@@ -47,6 +47,7 @@ def login_post(
     "/register",
     response_model=User,
     responses={409: {"description": "Username already registered"}},
+    status_code=201,
     summary="Register new user",
 )
 def register_basic_user(*, db: Session = Depends(get_db), user: UserCreateBasic):

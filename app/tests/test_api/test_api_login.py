@@ -78,7 +78,7 @@ def test_register_basic_user(client: TestClient, db: Session):
     payload = {"username": username, "password": password}
     response = client.post("/register", json=payload)
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     user = User(**response.json())
     assert user
 

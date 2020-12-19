@@ -18,7 +18,7 @@ def test_conversation_post(client: TestClient, db: Session, superuser_token_head
     response = client.post(
         "/conversations", json=conversation_in.dict(), headers=superuser_token_headers
     )
-    assert response.status_code == 200
+    assert response.status_code == 201
 
     conversation_created = Conversation.parse_obj(response.json())
     assert conversation_created.id

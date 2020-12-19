@@ -53,7 +53,7 @@ def test_create_file(db: Session, client: TestClient, superuser_token_headers):
     response_2 = client.post(
         "/files?lang=ch", data=file_in.json(), headers=superuser_token_headers
     )
-    assert response_2.status_code == 200
+    assert response_2.status_code == 201
     assert response_2.json()["name"] == "vitamins.power"
     assert response_2.json()["lang"] == "ch"
     assert response_2.json()["title"] == "c"

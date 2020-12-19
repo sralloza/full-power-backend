@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Return `409` instead of `400` in case of id conflict creating models.
 - Make `POST /image` return `415` if image processing fails. ([#38](https://github.com/BelinguoAG/full-power-backend/issues/38))
+- Return `201` instead of `200` on model creation.
 
 ## [0.8.1] - 2020-12-14
 

@@ -17,6 +17,7 @@ router = APIRouter()
     "",
     response_model=User,
     responses={409: {"description": "Username already registered"}},
+    status_code=201
 )
 def users_create_post(*, db: Session = Depends(get_db), user: UserCreateAdmin):
     """Creates a new user (can be admin, unlike in /register)."""
