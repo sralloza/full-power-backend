@@ -40,12 +40,14 @@ def conversation_get_by_id(*, db: Session = Depends(get_db), conv_id: int):
 @router.get(
     "/user/{user_id}",
     response_model=List[Conversation],
+    responses={404: {"description": "User not found"}},
     summary="Get conversations from user",
 )
 def conversation_get_from_user(
     *, db: Session = Depends(get_db), user_id: int, skip: int = 0, limit: int = 100
 ):
     """Returns a list of conversations linked to a user."""
+    crud.user.get_or_404(db, id=user_id)
     return crud.conversation.get_user(db, user_id=user_id, skip=skip, limit=limit)
 
 

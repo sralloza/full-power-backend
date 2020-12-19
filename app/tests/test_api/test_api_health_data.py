@@ -1,3 +1,4 @@
+from app.tests.utils.user import create_random_user
 from typing import List
 
 from pydantic import parse_obj_as
@@ -28,6 +29,14 @@ def test_health_data_get_from_user(
     client: TestClient, db: Session, superuser_token_headers: dict
 ):
     user_id = random_int()
+    response_1 = client.get(
+        f"/health-data/user/{user_id}", headers=superuser_token_headers
+    )
+    assert response_1.status_code == 404
+    assert response_1.json()["detail"] == f"User with id={user_id} does not exist"
+
+    user = create_random_user(db)
+    user_id = user.id
 
     def get_health_datas():
         return gen_health_data_create(user_id, True)

@@ -1,10 +1,12 @@
 from typing import List
+
 from pydantic import parse_obj_as
 from sqlalchemy.orm import Session
 from starlette.testclient import TestClient
 
 from app import crud
 from app.schemas.conversation import Conversation, ConversationCreate
+from app.tests.utils.user import create_random_user
 from app.tests.utils.utils import random_int, random_lower_string
 
 
@@ -55,6 +57,14 @@ def test_conversation_get_from_user(
     client: TestClient, db: Session, superuser_token_headers: dict
 ):
     user_id = random_int()
+    response_1 = client.get(
+        f"/conversations/user/{user_id}", headers=superuser_token_headers
+    )
+    assert response_1.status_code == 404
+    assert response_1.json()["detail"] == f"User with id={user_id} does not exist"
+
+    user = create_random_user(db)
+    user_id = user.id
 
     def get_conv():
         return ConversationCreate(
@@ -71,11 +81,11 @@ def test_conversation_get_from_user(
         conv_db = crud.conversation.create(db, obj_in=conv)
         saved.append(Conversation.from_orm(conv_db))
 
-    response = client.get(
+    response_2 = client.get(
         f"/conversations/user/{user_id}", headers=superuser_token_headers
     )
-    assert response.status_code == 200
-    real_convs = parse_obj_as(List[Conversation], response.json())
+    assert response_2.status_code == 200
+    real_convs = parse_obj_as(List[Conversation], response_2.json())
     assert real_convs == saved
 
 

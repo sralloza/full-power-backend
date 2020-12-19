@@ -24,9 +24,9 @@ def user_authentication_headers(
     return headers
 
 
-def create_random_user(db: Session) -> User:
-    username = random_lower_string()
-    password = random_lower_string()
+def create_random_user(db: Session, username: str = None, password: str = None) -> User:
+    username = username or random_lower_string()
+    password = password or random_lower_string()
     user_in = UserCreateAdmin(username=username, password=password, is_admin=False)
     user = crud.user.create(db=db, obj_in=user_in)
     return user
