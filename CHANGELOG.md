@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add new setting: `problem_ratio_threshold`
+
+### Changed
+
+- When processing a complete HealthData, now it identifies real problems using the setting `problem_ratio_threshold` and explains them in the returned string.
+
 ## [0.8.1] - 2020-12-14
 
 ### Fixed
