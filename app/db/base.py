@@ -1,2 +1,2 @@
-from app.db.base_class import Base  # noqa
-from app.models import Conversation, User  # noqa
+from app.db.base_class import *  # noqa
+from app.models import *  # noqa
