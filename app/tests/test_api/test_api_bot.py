@@ -2,20 +2,16 @@ from json import dumps
 from unittest import mock
 
 import pytest
+from pydantic import BaseModel, confloat
 
 from app import crud
-from app.core.health_data import problem_text
+from app.core.health_data import hdprocessor
 from app.schemas.bot import DFResponse
-from app.schemas.conversation import (
-    Conversation,
-    ConversationCreate,
-    ConversationCreateResult,
-    DisplayType,
-)
+from app.schemas.conversation import Conversation, ConversationCreateResult, DisplayType
 from app.schemas.health_data import HealthDataCreate
 from app.tests.utils.user import get_normal_user_id
 
-langs = list(problem_text.keys())
+langs = list(hdprocessor.problem_result_text.dict().keys())
 
 
 class TestProcessMsg:
@@ -45,11 +41,18 @@ class TestProcessMsg:
 
     @pytest.fixture(autouse=True)
     def mocks(self):
+        class TempModel(BaseModel):
+            problem: confloat(ge=0, le=1)
+
         self.get_df_res_m = mock.patch("app.api.routes.bot.get_df_response").start()
-        self.phd_m = mock.patch("app.api.routes.bot.process_health_data").start()
-        self.phd_m.return_value = {"problem": 1.0}
-        self.dmp_m = mock.patch("app.api.routes.bot.detect_main_problem").start()
-        self.dmp_m.return_value = "<problem>"
+        self.phd_m = mock.patch(
+            "app.api.routes.bot.hdprocessor.process_health_data"
+        ).start()
+        self.phd_m.return_value = TempModel(problem=1.0)
+        self.irp_m = mock.patch(
+            "app.api.routes.bot.hdprocessor.identify_real_problems"
+        ).start()
+        self.irp_m.return_value = "<problem>"
         yield
         mock.patch.stopall()
 
@@ -89,15 +92,14 @@ class TestProcessMsg:
         )
 
         if df_res.is_end:
-            assert response.headers["health-data-result"] == dumps(
-                self.phd_m.return_value
+            assert (response.headers["health-data-result"] == self.phd_m.return_value.json()
             )
             self.phd_m.assert_called_once_with(mock.ANY)
-            self.dmp_m.assert_called_once_with(self.phd_m.return_value, lang=lang)
+            self.irp_m.assert_called_once_with(self.phd_m.return_value, lang=lang)
         else:
             assert "health-data-result" not in response.headers
             self.phd_m.assert_not_called()
-            self.dmp_m.assert_not_called()
+            self.irp_m.assert_not_called()
 
     @pytest.mark.parametrize("lang", langs)
     def test_error(self, db, client, normal_user_token_headers, lang):
