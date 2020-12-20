@@ -1,15 +1,68 @@
-from itertools import product
+from copy import deepcopy
+from pathlib import Path
+from typing import List
 from unittest import mock
 
 import numpy as np
 import pytest
 from fastapi import HTTPException
+from pydantic.main import BaseModel
+from pydantic.tools import parse_file_as, parse_obj_as
 
-from app.core.health_data import coefficients, detect_main_problem
-from app.core.health_data import problem_names as columns_out
-from app.core.health_data import problem_text, process_health_data
-from app.schemas.health_data import HealthDataCreate
+from app.core.config import settings
+from app.core.health_data import hdprocessor
+from app.schemas.health_data import (
+    HealthDataCreate,
+    HealthDataProccessResult,
+    ProblemResultI18n,
+    ProblemsI18n,
+    QuestionCoefficients,
+)
 from app.tests.utils.utils import random_int
+
+
+def test_hdprocessor_attrs():
+    from app.core.health_data import _HealthDataProcessor
+
+    assert isinstance(hdprocessor, _HealthDataProcessor)
+    assert hasattr(hdprocessor, "problem_result_text")
+    assert hasattr(hdprocessor, "question_coeffs")
+    assert hasattr(hdprocessor, "problem_translation")
+    assert hasattr(hdprocessor, "sums")
+
+
+def test_get_problem_result_text():
+    problem_result_text = hdprocessor._get_problem_result_text()
+    assert isinstance(problem_result_text, ProblemResultI18n)
+    assert hdprocessor.problem_result_text == problem_result_text
+
+
+def test_get_question_coeffs():
+    question_coeffs = hdprocessor._get_question_coeffs()
+    for coeff in question_coeffs:
+        assert isinstance(coeff, QuestionCoefficients)
+    assert hdprocessor.question_coeffs == question_coeffs
+
+
+def test_get_problem_translation():
+    problem_translation = hdprocessor._get_problem_translation()
+    assert isinstance(problem_translation, ProblemsI18n)
+    assert hdprocessor.problem_translation == problem_translation
+
+
+def test_sum_coefficients():
+    new_hdprocessor = deepcopy(hdprocessor)
+    unparsed_data = [
+        {"vitamines": 7, "sleep": 3, "diet": 6, "stress": 8, "question_id": "#1"},
+        {"vitamines": 3, "sleep": 8, "diet": 10, "stress": 1, "question_id": "#2"},
+        {"vitamines": 7, "sleep": 7, "diet": 9, "stress": 3, "question_id": "#3"},
+    ]
+    coeffs = parse_obj_as(List[QuestionCoefficients], unparsed_data)
+    new_hdprocessor.question_coeffs = coeffs
+
+    expected = {"vitamines": 68, "sleep": 72, "diet": 100, "stress": 48}
+    assert new_hdprocessor._sum_coefficients() == expected
+
 
 test_process_data_in = (
     "0 4 4 3 4 2 2 0 3 2 4 0 0 4 4 3 2 1 3",
@@ -24,22 +77,8 @@ test_process_data_out = (
     (0.58333, 0.33333, 0.50000, 0.79167),
 )
 
-problems = (
-    "Tu principal problema es vitaminas",
-    "Your main problem is vitamines",
-    "votre problème principal est vitamines",
-    "Tu principal problema es dormir",
-    "Your main problem is sleep",
-    "votre problème principal est sommeil",
-    "Tu principal problema es alimentación",
-    "Your main problem is diet",
-    "votre problème principal est alimentation",
-    "Tu principal problema es estrés",
-    "Your main problem is stress",
-    "votre problème principal est stress",
-)
-columns_in = list(coefficients.keys())
-langs = list(problem_text.keys())
+columns_in = [x.question_id for x in hdprocessor.question_coeffs]
+langs = list(hdprocessor.problem_result_text.dict().keys())
 
 
 @pytest.fixture
@@ -57,7 +96,7 @@ def health_data_in(request):
 
 @pytest.fixture
 def data_out(request):
-    return {k: request.param[i] for i, k in enumerate(columns_out)}
+    return {k: request.param[i] for i, k in enumerate(hdprocessor.problem_names)}
 
 
 @pytest.mark.parametrize(
@@ -66,8 +105,8 @@ def data_out(request):
     indirect=True,
 )
 def test_process_health_data(health_data_in, data_out):
-    result = process_health_data(health_data_in)
-    result = {key: round(value, 5) for key, value in result.items()}
+    result = hdprocessor.process_health_data(health_data_in)
+    result = {key: round(value, 5) for key, value in result}
     assert result == data_out
 
 
@@ -75,7 +114,7 @@ def test_process_health_data_error(caplog):
     caplog.set_level(10)
     health_data = HealthDataCreate(user_id=2)
     with pytest.raises(HTTPException) as exc_info:
-        process_health_data(health_data)
+        hdprocessor.process_health_data(health_data)
 
     exc = exc_info.value
     assert exc.status_code == 500
@@ -86,14 +125,18 @@ def test_process_health_data_error(caplog):
     ]
 
 
-detect_main_problem_data = list(
-    zip(list(product(test_process_data_out, langs)), problems)
-)
-detect_main_problem_data = ((*x[0], x[1]) for x in detect_main_problem_data)
+class IRPTestData(BaseModel):
+    result: HealthDataProccessResult
+    report: str
+    lang: str
 
 
-@pytest.mark.parametrize(
-    "data_out, lang, problem", detect_main_problem_data, indirect=["data_out"]
-)
-def test_detect_main_problem(data_out, problem, lang):
-    assert detect_main_problem(data_out, lang) == problem
+irp_test_data_path = Path(__file__).parent.parent / "test_data/problems_data.json"
+identify_problems_data = parse_file_as(List[IRPTestData], irp_test_data_path)
+
+
+@pytest.mark.parametrize("test_data", identify_problems_data)
+def test_identify_real_problems(test_data: IRPTestData):
+    assert settings.problem_ratio_threshold == 0.75
+    real = hdprocessor.identify_real_problems(test_data.result, test_data.lang)
+    assert real == test_data.report
