@@ -205,3 +205,4 @@ $RECYCLE.BIN/
 
 logs/
 !scripts/
+!app/**/*.json
