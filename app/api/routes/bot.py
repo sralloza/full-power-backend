@@ -1,7 +1,6 @@
 """Routes for manage bot conversations."""
 
 from datetime import datetime
-from json import dumps
 from logging import getLogger
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
@@ -10,7 +9,7 @@ from app import crud
 from app.api.dependencies.database import get_db
 from app.api.dependencies.security import get_current_user
 from app.core.bot import get_df_response
-from app.core.health_data import detect_main_problem, process_health_data
+from app.core.health_data import hdprocessor
 from app.models import User
 from app.schemas.bot import Msg
 from app.schemas.conversation import ConversationCreate, ConversationCreateResult
@@ -62,10 +61,10 @@ def bot_message_post(
                 500, "HealthData was not saved before processing"
             ) from exc
 
-        result = process_health_data(filled_hd)
-        problem_explanation = detect_main_problem(result, lang=lang)
+        result = hdprocessor.process_health_data(filled_hd)
+        problem_explanation = hdprocessor.identify_real_problems(result, lang=lang)
         df_resp.bot_msg = f"{df_resp.bot_msg}. {problem_explanation}"
-        response.headers["health-data-result"] = dumps(result)
+        response.headers["health-data-result"] = result.json()
 
     conversation = ConversationCreate(
         user_msg=message, user_id=user.id, **df_resp.dict()

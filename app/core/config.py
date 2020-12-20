@@ -6,7 +6,7 @@ import secrets
 from enum import Enum
 from pathlib import Path
 
-from pydantic import BaseSettings, FilePath
+from pydantic import BaseSettings, FilePath, confloat
 
 
 class ValidLoggingLevel(Enum):
@@ -49,6 +49,8 @@ class Settings(BaseSettings):
 
     username_test_user: str = "the_Test"
     username_test_password: str = "the_TestPassword"
+
+    problem_ratio_threshold: confloat(ge=0, le=1) = 0.75
 
 
 settings = Settings()
