@@ -30,7 +30,7 @@ def health_data_create_post(
     "/user/{user_id}",
     response_model=List[HealthData],
     summary="Get health data results from a user",
-    responses={404:{"description": "User not found"}}
+    responses={404: {"description": "User not found"}},
 )
 def health_data_get_from_user(
     *, db: Session = Depends(get_db), user_id: int, skip: int = 0, limit: int = 100

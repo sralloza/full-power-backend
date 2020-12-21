@@ -27,14 +27,14 @@ def conversation_create_post(
 
 
 @router.get(
-    "/{conv_id}",
+    "/{conversation_id}",
     response_model=Conversation,
     responses={404: {"description": "Conversation not found"}},
     summary="Get conversation by id",
 )
-def conversation_get_by_id(*, db: Session = Depends(get_db), conv_id: int):
+def conversation_get_by_id(*, db: Session = Depends(get_db), conversation_id: int):
     """Finds the conversation by id or returns 404 if it wasn't found."""
-    return crud.conversation.get_or_404(db, id=conv_id)
+    return crud.conversation.get_or_404(db, id=conversation_id)
 
 
 @router.get(

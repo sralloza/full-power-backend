@@ -17,14 +17,20 @@ router = APIRouter()
     "",
     response_model=User,
     responses={409: {"description": "Username already registered"}},
-    status_code=201
+    status_code=201,
+    summary="Create new user",
 )
 def users_create_post(*, db: Session = Depends(get_db), user: UserCreateAdmin):
     """Creates a new user (can be admin, unlike in /register)."""
     return crud.user.create(db, obj_in=user)
 
 
-@router.get("", response_model=List[User])
+@router.get(
+    "",
+    response_model=List[User],
+    responses={409: {"description": "Username already registered"}},
+    summary="List all users",
+)
 def users_list_all(*, db: Session = Depends(get_db), skip: int = 0, limit: int = 100):
     """Returns all users."""
 
@@ -36,6 +42,7 @@ def users_list_all(*, db: Session = Depends(get_db), skip: int = 0, limit: int =
     "/{user_id}",
     response_model=User,
     responses={404: {"description": "User not found"}},
+    summary="Get user by id",
 )
 def users_get_one(*, db: Session = Depends(get_db), user_id: int):
     """Returns a user by its id."""
@@ -45,9 +52,10 @@ def users_get_one(*, db: Session = Depends(get_db), user_id: int):
 
 @router.delete(
     "/{user_id}",
+    response_class=Response,
     responses={404: {"description": "User not found"}},
     status_code=204,
-    response_class=Response,
+    summary="Delete user",
 )
 def users_delete(*, db: Session = Depends(get_db), user_id: int):
     """Deletes a user."""
