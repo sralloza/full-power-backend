@@ -53,7 +53,7 @@ def test_create_file(db: Session, client: TestClient, superuser_token_headers):
     response_2 = client.post(
         "/files?lang=ch", data=file_in.json(), headers=superuser_token_headers
     )
-    assert response_2.status_code == 200
+    assert response_2.status_code == 201
     assert response_2.json()["name"] == "vitamins.power"
     assert response_2.json()["lang"] == "ch"
     assert response_2.json()["title"] == "c"
@@ -64,6 +64,13 @@ def test_create_file(db: Session, client: TestClient, superuser_token_headers):
     assert file_db.lang == "ch"
     assert file_db.content == "vits power"
     assert file_db.title == "c"
+
+    response_3 = client.post(
+        "/files?lang=ch", data=file_in.json(), headers=superuser_token_headers
+    )
+    assert response_3.status_code == 409
+    error = f"File with name=vitamins.power and lang=ch already exists"
+    assert response_3.json()["detail"] == error
 
 
 def test_update_file(db: Session, client: TestClient, superuser_token_headers):

@@ -23,7 +23,7 @@ UserUpdateAlias = Union[UserUpdateAdmin, UserUpdateBasic]
 class CRUDUser(CRUDBase[User, UserCreateAdminInner, UserUpdateInner]):
     def create(self, db: Session, *, obj_in: UserCreateAdmin) -> User:
         if self.get_by_username(db, username=obj_in.username):
-            raise HTTPException(400, f"User {obj_in.username!r} is already registered")
+            raise HTTPException(409, f"User {obj_in.username!r} is already registered")
 
         obj_dict = obj_in.dict()
         obj_dict["hashed_password"] = get_password_hash(obj_dict.pop("password"))

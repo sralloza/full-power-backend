@@ -78,7 +78,7 @@ def test_register_basic_user(client: TestClient, db: Session):
     payload = {"username": username, "password": password}
     response = client.post("/register", json=payload)
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     user = User(**response.json())
     assert user
 
@@ -88,7 +88,7 @@ def test_register_basic_user(client: TestClient, db: Session):
     assert user.username == username
 
     response_2 = client.post("/register", json=payload)
-    assert response_2.status_code == 400
+    assert response_2.status_code == 409
     assert response_2.json()["detail"] == f"User {username!r} is already registered"
 
 

@@ -66,7 +66,7 @@ def test_create_already_exists(db: Session):
     with pytest.raises(HTTPException) as exc:
         crud.file.create(db, obj_in=fci("content", "vitamins.k", "d", "en"))
 
-    assert exc.value.status_code == 400
+    assert exc.value.status_code == 409
     assert exc.value.detail == "File with name=vitamins.k and lang=en already exists"
 
 

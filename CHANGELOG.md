@@ -14,12 +14,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - When processing a complete HealthData, now it identifies real problems using the setting `problem_ratio_threshold` and explains them in the returned string.
+- Return `409` instead of `400` in case of id conflict creating models.
+- Make `POST /image` return `415` if image processing fails. ([#38](https://github.com/BelinguoAG/full-power-backend/issues/38))
+- Return `201` instead of `200` on model creation.
+- Return `404` in endpoints which returns a user attribute if the user does not exist.
 
 ## [0.8.1] - 2020-12-14
 
 ### Fixed
 
-- `display_type` not showing in `POST /process/process-msg` ([#35](https://github.com/BelinguoAG/full-power-backend/issues/35)).
+- `display_type` not showing in `POST /process/process-msg`. ([#35](https://github.com/BelinguoAG/full-power-backend/issues/35))
 
 ## [0.8.0] - 2020-12-07
 

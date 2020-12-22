@@ -2,7 +2,7 @@
 
 from typing import List
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm.session import Session
 from starlette.responses import Response
 
@@ -13,7 +13,12 @@ from app.schemas.health_data import HealthData, HealthDataCreate
 router = APIRouter()
 
 
-@router.post("", response_model=HealthData, summary="Create health data results")
+@router.post(
+    "",
+    response_model=HealthData,
+    status_code=status.HTTP_201_CREATED,
+    summary="Create health data results",
+)
 def health_data_create_post(
     *, db: Session = Depends(get_db), health_data: HealthDataCreate
 ):
@@ -25,11 +30,13 @@ def health_data_create_post(
     "/user/{user_id}",
     response_model=List[HealthData],
     summary="Get health data results from a user",
+    responses={404: {"description": "User not found"}},
 )
 def health_data_get_from_user(
     *, db: Session = Depends(get_db), user_id: int, skip: int = 0, limit: int = 100
 ):
     """Get health data results from a user given its id."""
+    crud.user.get_or_404(db, id=user_id)
     return crud.health_data.get_user(db, user_id=user_id, skip=skip, limit=limit)
 
 

@@ -20,7 +20,7 @@ def test_create_user(db: Session):
     with pytest.raises(HTTPException) as exc:
         crud.user.create(db, obj_in=user_in)
 
-    assert exc.value.status_code == 400
+    assert exc.value.status_code == 409
     assert exc.value.detail == f"User {username!r} is already registered"
 
 
