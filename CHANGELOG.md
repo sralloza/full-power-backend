@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0] - 2020-12-22
+
 ### Added
 
 - Add new setting: `problem_ratio_threshold`
@@ -145,7 +147,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First version
 
-[unreleased]: https://github.com/BelinguoAG/full-power-backend/compare/v0.8.1...HEAD
+[unreleased]: https://github.com/BelinguoAG/full-power-backend/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/BelinguoAG/full-power-backend/compare/v0.8.1...v0.9.0
 [0.8.1]: https://github.com/BelinguoAG/full-power-backend/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/BelinguoAG/full-power-backend/compare/v0.7.1...v0.8.0
 [0.7.1]: https://github.com/BelinguoAG/full-power-backend/compare/v0.7.0...v0.7.1
