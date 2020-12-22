@@ -92,7 +92,8 @@ class TestProcessMsg:
         )
 
         if df_res.is_end:
-            assert (response.headers["health-data-result"] == self.phd_m.return_value.json()
+            assert (
+                response.headers["health-data-result"] == self.phd_m.return_value.json()
             )
             self.phd_m.assert_called_once_with(mock.ANY)
             self.irp_m.assert_called_once_with(self.phd_m.return_value, lang=lang)
