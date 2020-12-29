@@ -1,5 +1,6 @@
-from app.api.dependencies.utils import get_limits
 from inspect import signature
+
+from app.api.dependencies.utils import get_limits
 
 
 def test_get_limits():
