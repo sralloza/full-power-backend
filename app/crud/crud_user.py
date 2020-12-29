@@ -1,8 +1,9 @@
 """Manages database connections involving users."""
 import logging
-from typing import Union
+from typing import Optional, Union
 
 from fastapi import HTTPException
+from sqlalchemy import func
 from sqlalchemy.orm.session import Session
 
 from app.core.security import get_password_hash
@@ -42,10 +43,16 @@ class CRUDUser(CRUDBase[User, UserCreateAdminInner, UserUpdateInner]):
 
         return super().update(db, db_obj=db_obj, obj_in=UserUpdateInner(**obj_dict))
 
-    def get_by_username(self, db: Session, *, username: str) -> User:
+    def get_by_username(self, db: Session, *, username: str) -> Optional[User]:
         """Returns a user given its username."""
 
         return db.query(self.model).filter_by(username=username).first()
+
+    def set_last_login_now(self, db: Session, *, id: int):
+        user = self.get_or_404(db, id=id)
+        user.last_login = func.now()  # type:ignore
+        db.add(user)
+        db.commit()
 
 
 user = CRUDUser(User)
