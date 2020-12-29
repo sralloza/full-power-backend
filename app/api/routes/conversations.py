@@ -2,12 +2,13 @@
 
 from typing import List
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, Depends
 from sqlalchemy.orm.session import Session
 from starlette.responses import Response
 
 from app import crud
 from app.api.dependencies.database import get_db
+from app.api.dependencies.utils import get_limits
 from app.schemas.conversation import Conversation, ConversationCreate
 
 router = APIRouter()
@@ -44,11 +45,11 @@ def conversation_get_by_id(*, db: Session = Depends(get_db), conversation_id: in
     summary="Get conversations from user",
 )
 def conversation_get_from_user(
-    *, db: Session = Depends(get_db), user_id: int, skip: int = 0, limit: int = 100
+    *, db: Session = Depends(get_db), user_id: int, limits: dict = Depends(get_limits)
 ):
     """Returns a list of conversations linked to a user."""
     crud.user.get_or_404(db, id=user_id)
-    return crud.conversation.get_user(db, user_id=user_id, skip=skip, limit=limit)
+    return crud.conversation.get_user(db, user_id=user_id, **limits)
 
 
 @router.get("", response_model=List[Conversation], summary="Get all conversations")

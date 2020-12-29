@@ -2,8 +2,7 @@
 
 from typing import List
 
-from fastapi import APIRouter, Depends
-from fastapi.param_functions import Security
+from fastapi import APIRouter, Depends, Security
 from sqlalchemy.orm.session import Session
 from starlette import status
 from starlette.responses import Response
@@ -11,14 +10,15 @@ from starlette.responses import Response
 from app import crud
 from app.api.dependencies.database import get_db
 from app.api.dependencies.security import get_current_user
+from app.api.dependencies.utils import get_limits
 from app.core.files import get_file_id_from_name
 from app.schemas.file import (
     FileCreate,
     FileCreateInner,
     FileCreateResult,
     FileDelete,
-    FileUpdate,
     FileResult,
+    FileUpdate,
 )
 
 router = APIRouter()
@@ -30,10 +30,13 @@ router = APIRouter()
     summary="List file names for language in the database",
 )
 def list_files(
-    *, db: Session = Depends(get_db), lang: str = "en", skip: int = 0, limit: int = 100
+    *,
+    db: Session = Depends(get_db),
+    lang: str = "en",
+    limits: dict = Depends(get_limits)
 ):
     """Returns a list of the names written in a specific language."""
-    return crud.file.get_db_file_list(db, lang=lang, skip=skip, limit=limit)
+    return crud.file.get_db_file_list(db, lang=lang, **limits)
 
 
 @router.get(
