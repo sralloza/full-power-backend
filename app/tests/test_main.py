@@ -45,12 +45,9 @@ def test_routes():
     routes = [x for x in app.routes if x.name not in ignore_routes]  # type: ignore
 
     for route in routes:
-        if hasattr(route, "summary"):
-            assert route.summary, f"{route.name!r} must have summary"  # type: ignore
-        if hasattr(route, "description"):
-            assert route.description, f"{route.name!r} must have description"  # type: ignore
-        if hasattr(route, "tags"):
-            assert route.tags, f"{route.name!r} must have tags"  # type: ignore
+        assert route.summary, f"{route.name!r} must have summary"  # type: ignore
+        assert route.description, f"{route.name!r} must have description"  # type: ignore
+        assert route.tags, f"{route.name!r} must have tags"  # type: ignore
 
     # GET routes with parameter can raise 404
     group = [x for x in routes if "GET" in x.methods and x.param_convertors]  # type: ignore
@@ -60,7 +57,7 @@ def test_routes():
 
     # POST routes that create objects must return 201
     group = [x for x in routes if "POST" in x.methods and x.param_convertors]  # type: ignore
-    for route in group:
+    for route in group:  # noqa
         assert route.status_code == 201  # type: ignore
 
     # DELETE routes can raise 404 and must return 204
