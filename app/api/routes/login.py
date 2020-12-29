@@ -36,6 +36,7 @@ def login_post(
         )
 
     access_token_expires = timedelta(minutes=settings.token_expire_minutes)
+    crud.user.set_last_login_now(db, id=user.id)
     access_token = create_access_token(
         data={"sub": user.username, "scopes": user.scopes},
         expires_delta=access_token_expires,

@@ -2,7 +2,7 @@
 
 from typing import List
 
-from fastapi import APIRouter, Depends, status, Depends
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm.session import Session
 from starlette.responses import Response
 

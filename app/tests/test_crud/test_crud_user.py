@@ -1,9 +1,13 @@
+from datetime import datetime
+from unittest import mock
+
 import pytest
 from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
 from app import crud
+from app.core.config import settings
 from app.core.security import verify_password
 from app.schemas.user import UserCreateAdmin, UserUpdateAdmin
 from app.tests.utils.utils import random_lower_string
@@ -66,3 +70,16 @@ def test_update_user(db: Session):
     user_db = crud.user.update(db, db_obj=user, obj_in=UserUpdateAdmin(username="a"))
 
     assert user_db.username == "a"
+
+
+@mock.patch("app.crud.crud_user.func.now")
+def test_set_last_login_now(func_now_m, db):
+    now = datetime.now()
+    func_now_m.return_value = now
+
+    user = crud.user.get_by_username(db, username=settings.username_test_user)
+    assert user.last_login != now
+
+    crud.user.set_last_login_now(db, id=user.id)
+    user = crud.user.get_by_username(db, username=settings.username_test_user)
+    assert user.last_login == now

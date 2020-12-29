@@ -51,6 +51,7 @@ class Settings(BaseSettings):
     # Testing
     username_test_user: str = "the_Test"
     username_test_password: str = "the_TestPassword"
+
     class Config:
         env_file = Path(__file__).parent.parent.with_name(".env").as_posix()
         env_file_encoding = "utf-8"

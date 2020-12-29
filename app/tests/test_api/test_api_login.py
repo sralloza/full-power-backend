@@ -1,5 +1,7 @@
 import time
+from datetime import datetime
 from typing import Dict
+from unittest import mock
 
 from fastapi.testclient import TestClient
 from sqlalchemy.orm.session import Session
@@ -9,11 +11,17 @@ from app.core.config import settings
 from app.models.user import User
 from app.schemas.token import Token
 from app.schemas.user import UserCreateAdmin
-from app.tests.conftest import client
 from app.tests.utils.utils import random_lower_string
 
 
-def test_get_access_token(client: TestClient):
+@mock.patch("app.crud.crud_user.func.now")
+def test_get_access_token(func_now_m, client: TestClient, db: Session):
+    now = datetime.now()
+    func_now_m.return_value = now
+
+    user = crud.user.get_by_username(db, username=settings.first_superuser)
+    assert user.last_login != now
+
     login_data = {
         "username": settings.first_superuser,
         "password": settings.first_superuser_password,
@@ -24,12 +32,27 @@ def test_get_access_token(client: TestClient):
     assert "access_token" in tokens
     assert tokens["access_token"]
 
+    user = crud.user.get_by_username(db, username=settings.first_superuser)
+    assert user.last_login != now
 
-def test_use_access_token(client: TestClient, superuser_token_headers: Dict[str, str]):
+
+@mock.patch("app.crud.crud_user.func.now")
+def test_use_access_token(
+    func_now_m, db: Session, client: TestClient, superuser_token_headers: Dict[str, str]
+):
+    now = datetime.now()
+    func_now_m.return_value = now
+
+    user = crud.user.get_by_username(db, username=settings.first_superuser)
+    assert user.last_login != now
+
     response = client.get("/me", headers=superuser_token_headers)
     result = response.json()
     assert response.status_code == 200
     assert "username" in result
+
+    user = crud.user.get_by_username(db, username=settings.first_superuser)
+    assert user.last_login != now
 
 
 def test_login_success(client: TestClient, db: Session):

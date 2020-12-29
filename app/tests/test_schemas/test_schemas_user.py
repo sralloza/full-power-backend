@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List
 
 from app.schemas.conversation import Conversation
@@ -90,6 +91,7 @@ def test_user_in_db():
         "id",
         "is_admin",
         "conversations",
+        "last_login",
         "hashed_password",
     }
 
@@ -101,6 +103,8 @@ def test_user_in_db():
     assert fields["is_admin"].type_ == bool
     assert fields["conversations"].required is True
     assert fields["conversations"].outer_type_ == List[Conversation]
+    assert fields["last_login"].required is True
+    assert fields["last_login"].type_ == datetime
     assert fields["hashed_password"].required is True
     assert fields["hashed_password"].type_ == str
 

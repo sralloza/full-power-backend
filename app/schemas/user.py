@@ -1,5 +1,6 @@
 """Data schematics for user endpoints."""
 
+from datetime import datetime
 from typing import List, Optional
 
 from pydantic import BaseModel
@@ -54,6 +55,7 @@ class UserInDBBase(UserBase):
 
 class UserInDB(UserInDBBase):
     hashed_password: str
+    last_login: datetime
     conversations: List[Conversation]
 
 

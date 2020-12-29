@@ -1,7 +1,8 @@
 """Database models."""
 
-from sqlalchemy import Boolean, Column, Integer, String
+from sqlalchemy import Boolean, Column, Integer, String, func
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql.sqltypes import DateTime
 
 from app.db.base_class import Base
 
@@ -17,6 +18,7 @@ class User(Base):
     username = Column(String(50), unique=True, index=True)
     hashed_password = Column(String(200))
     is_admin = Column(Boolean, default=True)
+    last_login = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
     conversations = relationship("Conversation", back_populates="user")
     health_data = relationship("HealthData", back_populates="user")

@@ -69,4 +69,6 @@ def get_current_user(
                 detail=f"Not enough permissions [{scope} required]",
                 headers={"WWW-Authenticate": authenticate_value},
             )
+
+    crud.user.set_last_login_now(db, id=user.id)
     return user
