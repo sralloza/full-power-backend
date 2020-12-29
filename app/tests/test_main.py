@@ -44,14 +44,13 @@ def test_routes():
     app = create_app()
     routes = [x for x in app.routes if x.name not in ignore_routes]  # type: ignore
 
-    no_summary = [x for x in routes if not hasattr(x, "summary")]
-    assert len(no_summary) == 0
-
-    no_description = [x for x in routes if not hasattr(x, "description")]
-    assert len(no_description) == 0
-
-    no_tags = [x for x in routes if not hasattr(x, "tags")]
-    assert len(no_tags) == 0
+    for route in routes:
+        if hasattr(route, "summary"):
+            assert route.summary, f"{route.name!r} must have summary"  # type: ignore
+        if hasattr(route, "description"):
+            assert route.description, f"{route.name!r} must have description"  # type: ignore
+        if hasattr(route, "tags"):
+            assert route.tags, f"{route.name!r} must have tags"  # type: ignore
 
     # GET routes with parameter can raise 404
     group = [x for x in routes if "GET" in x.methods and x.param_convertors]  # type: ignore
