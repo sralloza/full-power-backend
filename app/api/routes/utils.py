@@ -12,11 +12,13 @@ router = APIRouter()
 
 @router.get("/", summary="Get server state")
 def state():
+    """Returns the status of the server."""
     return {"detail": "backend server online"}
 
 
 @router.get("/version", summary="Get server version")
 def get_version():
+    """Returns the version of the server."""
     return {"version": __version__}
 
 

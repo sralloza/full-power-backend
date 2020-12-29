@@ -1,15 +1,10 @@
-from app.schemas.health_data import HealthDataCreate, HealthDataUpdate
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
 from app import crud
-from app.schemas.conversation import ConversationCreate, ConversationUpdate
-from app.tests.utils.utils import (
-    random_constrained_int,
-    random_int,
-    random_lower_string,
-)
+from app.schemas.health_data import HealthDataUpdate
 from app.tests.utils.health_data import gen_health_data_create
+from app.tests.utils.utils import random_constrained_int, random_int
 
 
 def test_create_health_data(db: Session):

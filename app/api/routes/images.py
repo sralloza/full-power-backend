@@ -8,6 +8,7 @@ from sqlalchemy.orm.session import Session
 from app import crud
 from app.api.dependencies.database import get_db
 from app.api.dependencies.security import get_current_user
+from app.api.dependencies.utils import get_limits
 from app.schemas.image import ImageCreate, ImageCreateResult
 
 router = APIRouter()
@@ -25,9 +26,11 @@ def get_image(*, db: Session = Depends(get_db), image_id: int):
 
 
 @router.get("", response_model=List[int], summary="List image ids")
-def get_image_id_list(*, db: Session = Depends(get_db), skip=0, limit=100):
+def get_image_id_list(
+    *, db: Session = Depends(get_db), limits: dict = Depends(get_limits)
+):
     """List image ids."""
-    return crud.image.get_id_list(db, skip=skip, limit=limit)
+    return crud.image.get_id_list(db, **limits)
 
 
 @router.post(

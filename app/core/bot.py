@@ -1,11 +1,10 @@
 """Bot related code."""
 
-from app.schemas.bot import DFResponse
-
 import dialogflow
 from google.protobuf.json_format import MessageToDict
 
 from app.core.config import settings
+from app.schemas.bot import DFResponse
 
 
 def detect_end(df_response: dict):

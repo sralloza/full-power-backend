@@ -6,7 +6,6 @@ from app import crud
 from app.schemas.conversation import ConversationCreate, ConversationUpdate, DisplayType
 from app.tests.utils.utils import random_int, random_lower_string
 
-
 display_type_data = (
     ("a01-energy", DisplayType.five_stars),
     ("a02-restful-sleep", DisplayType.five_stars),

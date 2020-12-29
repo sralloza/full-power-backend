@@ -1,4 +1,3 @@
-from app.tests.utils.user import create_random_user
 from typing import List
 
 from pydantic import parse_obj_as
@@ -8,6 +7,7 @@ from starlette.testclient import TestClient
 from app import crud
 from app.schemas.health_data import HealthData
 from app.tests.utils.health_data import gen_health_data_create
+from app.tests.utils.user import create_random_user
 from app.tests.utils.utils import random_int
 
 

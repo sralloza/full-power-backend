@@ -11,8 +11,8 @@ from app.schemas.health_data import (
     HealthDataUpdate,
     LanguageProblemResult,
     ProblemResultI18n,
-    ProblemTranslation,
     ProblemsI18n,
+    ProblemTranslation,
     QuestionCoefficients,
 )
 
