@@ -31,7 +31,13 @@ def test_doc_disabled():
     assert response_3.status_code == 404
 
 
-ignore_routes = ("openapi", "swagger_ui_html", "swagger_ui_redirect", "redoc_html")
+ignore_routes = (
+    "openapi",
+    "swagger_ui_html",
+    "swagger_ui_redirect",
+    "redoc_html",
+    "static",
+)
 
 
 def test_routes():

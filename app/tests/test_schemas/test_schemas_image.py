@@ -1,4 +1,6 @@
+import pytest
 from pydantic.error_wrappers import ValidationError
+
 from app.schemas.image import (
     ImageCreate,
     ImageCreateInner,
@@ -6,7 +8,6 @@ from app.schemas.image import (
     ImageInDB,
     ImageUpdate,
 )
-import pytest
 
 
 def test_image_create():

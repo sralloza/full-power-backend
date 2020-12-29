@@ -1,8 +1,10 @@
-from app.schemas.bot import DFResponse
 from unittest import mock
-import pytest
-from app.core.bot import detect_end, get_df_response, parse_df_response
+
 import dialogflow
+import pytest
+
+from app.core.bot import detect_end, get_df_response, parse_df_response
+from app.schemas.bot import DFResponse
 
 
 class TestGetDFResonse:
