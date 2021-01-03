@@ -60,8 +60,8 @@ Settings needed:
 - `LOG_PATH`: absolute path to the log file. The folder and the folder's parents are created at runtime.
 - `LOGGING_LEVEL`: logging level. Must be `DEBUG`, `INFO`, `WARNING`, `ERROR` or `CRITICAL`.
 - `SQLALCHEMY_DATABASE_URL`: path of the database. For sql must be like `mysql+pymysql://<user>:<password>@<host>:<port>/<table>`
-- `FIRST_SUPERUSER`: first admin username.
-- `FIRST_SUPERUSER_PASSWORD`: first admin password
+- `FIRST_SUPERUSER`: first admin username. Seee the [database setup](#database-setup) for more info.
+- `FIRST_SUPERUSER_PASSWORD`: first admin password. Seee the [database setup](#database-setup) for more info.
 
 After setting up the settings, you must setup the database. With the virtualenv on, execute the following commands.
 
@@ -168,8 +168,8 @@ Settings:
 
 - `DIALOGFLOW_PROJECT_ID`: dialogflow's project id.
 - `ENCRYPTION_ALGORITHM`: algorithm use to hash passwords. Default is `HS256`.
-- `FIRST_SUPERUSER_PASSWORD`: first admin password.
-- `FIRST_SUPERUSER`: first admin username.
+- `FIRST_SUPERUSER_PASSWORD`: first admin password. Seee the [database setup](#database-setup) for more info.
+- `FIRST_SUPERUSER`: first admin username. Seee the [database setup](#database-setup) for more info.
 - `GOOGLE_APPLICATION_CREDENTIALS`: path to the google credential's json.
 - `LOG_PATH`: absolute path to the log file. The folder and the folder's parents are created at runtime.
 - `LOGGING_LEVEL`: logging level. Must be `DEBUG`, `INFO`, `WARNING`, `ERROR` or `CRITICAL`.
