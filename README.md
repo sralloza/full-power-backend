@@ -38,6 +38,9 @@ virtualenv .venv
 source <virtualenv-path>/bin/activate
 which python  # check it's using the virtualenv python binary
 
+# Update pip just in case
+python -m pip install --upgrade pip
+
 # Install production dependencies
 python -m pip install -r requirements.txt
 
@@ -63,6 +66,12 @@ Settings needed:
 After setting up the settings, you must setup the database. With the virtualenv on, execute the following commands.
 
 ```shell
+# Install the app to make it importable. Execute next lines in the parent of the app folder.
+# For deploying:
+pip install .
+# For development:
+pip install -e .
+
 # Check database connection:
 python scripts/check-db-connection.py
 
@@ -185,7 +194,7 @@ python scripts/check-db-connection.py
 
 ### Permission error: 'c++' installing grpcio
 
-It's caused by an old version of `pip`. Update `pip` using `pip install --upgrade pip` and try to install `grpcio` again.
+It's caused by an old version of `pip`. Update `pip` using `python -m pip install --upgrade pip` and try to install `grpcio` again.
 
 ### After the user logs in and get the token, server always returns 401
 
