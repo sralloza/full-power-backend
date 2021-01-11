@@ -2,16 +2,20 @@
 
 from typing import List
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response, Security
 from sqlalchemy.orm.session import Session
-from starlette.responses import Response
 
 from app import crud
 from app.api.dependencies.database import get_db
+from app.api.dependencies.security import get_current_user
 from app.api.dependencies.utils import get_limits
 from app.schemas.user import User, UserCreateAdmin
 
-router = APIRouter()
+router = APIRouter(
+    dependencies=[Security(get_current_user, scopes=["admin"])],
+    prefix="/users",
+    tags=["users"],
+)
 
 
 @router.post(

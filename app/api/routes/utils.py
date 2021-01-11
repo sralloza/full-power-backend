@@ -7,7 +7,7 @@ from app.api.dependencies.security import get_current_user
 from app.core.config import Settings, settings
 from app.schemas.user import User
 
-router = APIRouter()
+router = APIRouter(tags=["utils"])
 
 
 @router.get("/", summary="Get server state")
