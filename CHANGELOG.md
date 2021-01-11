@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improve `requirements` management.
 - Bump `fastapi` version to `0.63.0`.
+- Improve [README](README.md) instructions.
 
 ### Added
 
