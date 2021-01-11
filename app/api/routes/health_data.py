@@ -2,16 +2,21 @@
 
 from typing import List
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Security, status
 from sqlalchemy.orm.session import Session
 from starlette.responses import Response
 
 from app import crud
 from app.api.dependencies.database import get_db
+from app.api.dependencies.security import get_current_user
 from app.api.dependencies.utils import get_limits
 from app.schemas.health_data import HealthData, HealthDataCreate
 
-router = APIRouter()
+router = APIRouter(
+    dependencies=[Security(get_current_user, scopes=["admin"])],
+    prefix="/health-data",
+    tags=["health-data"],
+)
 
 
 @router.post(
