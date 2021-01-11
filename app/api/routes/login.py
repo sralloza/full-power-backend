@@ -14,7 +14,7 @@ from app.core.security import authenticate_user, create_access_token
 from app.schemas.token import Token
 from app.schemas.user import User, UserCreateAdmin, UserCreateBasic
 
-router = APIRouter()
+router = APIRouter(tags=["security"])
 
 
 @router.post(

@@ -21,7 +21,7 @@ from app.schemas.file import (
     FileUpdate,
 )
 
-router = APIRouter()
+router = APIRouter(prefix="/files", tags=["files"])
 
 
 @router.get(

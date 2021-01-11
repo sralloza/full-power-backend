@@ -39,10 +39,10 @@ source <virtualenv-path>/bin/activate
 which python  # check it's using the virtualenv python binary
 
 # Install production dependencies
-python -m pip install -r requirements.txt
+python -m pip install -r --upgrade requirements.txt
 
 # If you want to develop it, install development dependencies
-python -m pip install -r requirements-dev.txt
+python -m pip install -r --upgrade requirements-dev.txt
 ```
 
 ### Initial Configuration
@@ -76,10 +76,10 @@ To develop the backend, first install the dependencies.
 
 ```shell
 # Install production dependencies
-python -m pip install -r requirements.txt
+python -m pip install -r --upgrade requirements.txt
 
 # If you want to develop it, install development dependencies
-python -m pip install -r requirements-dev.txt
+python -m pip install -r --upgrade requirements-dev.txt
 ```
 
 Now, it's time to setup the database. Read about it [here](#database-setup).
@@ -131,7 +131,7 @@ To deploy this app using ASGI you should use a linux server. FastAPI's docs reco
 
 ```shell
 # Install dependencies
-pip install -r requirements.txt
+pip install -r --upgrade requirements.txt
 
 # Run server
 gunicorn -k uvicorn.workers.UvicornWorker -w 2 -b :<port> app:app --reload --log-level <log-level> --access-logfile "/absolute/path/to/access.log" --error-logfile "/absolute/path/to/error.log"
