@@ -6,7 +6,7 @@ from zipfile import ZipFile
 
 import pandas as pd
 
-df = pd.read_csv("questions.csv", delimiter=";")
+df = pd.read_excel("questions.xlsx")
 df.set_index(["variable", "lang"], inplace=True)
 filename = Path(__file__).parent.with_name("BackendTest.zip")
 
