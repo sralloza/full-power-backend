@@ -1,6 +1,7 @@
-import sys
 from datetime import datetime
 from pathlib import Path
+
+import typer
 
 
 class ChangelogEditor:
@@ -41,6 +42,11 @@ class ChangelogEditor:
         Path("CHANGELOG.md").write_text("\n".join(self.lines) + "\n", "utf8")
 
 
-changelog = ChangelogEditor()
-changelog.release(sys.argv[1])
-changelog.write()
+def release(new_version: str):
+    changelog = ChangelogEditor()
+    changelog.release(new_version)
+    changelog.write()
+
+
+if __name__ == "__main__":
+    typer.run(release)
