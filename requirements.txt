@@ -12,4 +12,5 @@ python-jose==3.*
 python-multipart==0.0.5
 SQLAlchemy==1.*
 tenacity==6.*
+typer==0.3.2
 uvicorn[standard]==0.13.3
