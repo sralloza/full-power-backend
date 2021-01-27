@@ -4,5 +4,6 @@ pandas
 pylint
 pytest
 pytest-env
+typer-cli
 werkzeug
 xlrd==1.*
