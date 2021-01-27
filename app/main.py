@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from . import __version__, api
 from .core.config import settings
-from .utils import catch_errors
+from .utils.server import catch_errors
 
 logger = getLogger(__name__)
 
