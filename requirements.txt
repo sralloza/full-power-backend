@@ -14,3 +14,5 @@ SQLAlchemy==1.*
 tenacity==6.*
 typer==0.3.2
 uvicorn[standard]==0.13.3
+mkdocs-material==6.*
+markdown-include==0.6.0
