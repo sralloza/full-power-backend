@@ -8,12 +8,14 @@ from zipfile import ZipFile
 import pandas as pd
 import typer
 
+app = typer.Typer(add_completion=False)
+
 LANGS_SUPPORTED = {"es", "en", "fr"}
 
 
 def get_dataframe(excel_path: Path) -> pd.DataFrame:
     df = pd.read_excel(excel_path.as_posix())
-    if set(df.colums) != {"lang", "question", "variable"}:
+    if set(df.columns) != {"lang", "question", "variable"}:
         typer.secho("Invalid columns in excel", fg="bright_red")
         raise typer.Exit()
 
@@ -36,9 +38,16 @@ def get_filenames(zip_path) -> List[str]:
     return files
 
 
+@app.command()
 def main(
-    zip_path: Path = typer.Argument("BackendTest.zip", exists=True),
-    excel_path: Path = typer.Argument("questions.xlsx", exists=True),
+    zip_path: Path = typer.Argument(
+        "BackendTest.zip",
+        exists=True,
+        help="Zip file containing the dialogflow settings",
+    ),
+    excel_path: Path = typer.Argument(
+        "questions.xlsx", exists=True, help="Excel with new questions"
+    ),
 ):
     """Update the dialogflow zipfile settings with new questions from an excel file."""
     df = get_dataframe(excel_path)
@@ -110,4 +119,4 @@ def main(
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

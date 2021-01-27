@@ -1,7 +1,11 @@
+import shutil
+import subprocess
 from datetime import datetime
 from pathlib import Path
 
 import typer
+
+app = typer.Typer(add_completion=False)
 
 
 class ChangelogEditor:
@@ -42,11 +46,28 @@ class ChangelogEditor:
         Path("CHANGELOG.md").write_text("\n".join(self.lines) + "\n", "utf8")
 
 
-def release(new_version: str):
+def create_commit():
+    try:
+        subprocess.run(["git", "add", "CHANGELOG.md"], check=True, shell=True)
+        r = subprocess.run(["git", "commit", "-m", "docs: release new version in changelog"], check=True, shell=True)
+    except subprocess.CalledProcessError as exc:
+        typer.secho("Error using git", fg="bright_red")
+        raise typer.Abort()
+
+
+@app.command()
+def release(
+    new_version: str, commit: bool = typer.Option(False, "--git", "-c", help="Commits the result")
+):
+    """Releases a new version in the changelog."""
+
     changelog = ChangelogEditor()
     changelog.release(new_version)
     changelog.write()
 
+    if commit:
+        create_commit()
+
 
 if __name__ == "__main__":
-    typer.run(release)
+    app()

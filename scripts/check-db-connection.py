@@ -1,37 +1,29 @@
-import logging
+import traceback
 
-from tenacity import after_log, before_log, retry, stop_after_attempt, wait_fixed
+import typer
 
 from app.db.session import SessionLocal
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-max_tries = 60 * 5  # 5 minutes
-wait_seconds = 1
+app = typer.Typer(add_completion=False)
 
 
-@retry(
-    stop=stop_after_attempt(max_tries),
-    wait=wait_fixed(wait_seconds),
-    before=before_log(logger, logging.INFO),
-    after=after_log(logger, logging.WARN),
-)
 def init() -> None:
     try:
         db = SessionLocal()
-        # Try to create session to check if DB is awake
         db.execute("SELECT 1")
-    except Exception as e:
-        logger.error(e)
-        raise e
+    except:
+        tb = traceback.format_exc()
+        typer.secho(f"Error connecting to database:\n\n{tb}", fg="bright_red")
+        raise typer.Abort()
 
 
-def main() -> None:
-    logger.info("Initializing service")
+@app.command()
+def main():
+    """Checks the connection to the database."""
+    typer.echo("Setting up connection to database...")
     init()
-    logger.info("Service finished initializing")
+    typer.secho("Connection success", fg="bright_green")
 
 
 if __name__ == "__main__":
-    main()
+    app()
