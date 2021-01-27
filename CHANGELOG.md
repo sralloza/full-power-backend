@@ -2,23 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on <a href="https://keepachangelog.com/en/1.0.0/" class="external-link" target="_blank">Keep a Changelog</a>,
+and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class="external-link" taget="_blank">Semantic Versioning</a>.
 
 ## [Unreleased]
-
-### Changed
-
-- Improve `requirements` management.
-- Bump `fastapi` version to `0.63.0`.
-- Improve [README](README.md) instructions.
 
 ### Added
 
 - Add attribute `user.last_login`.
+- Add docs page.
 
 ### Changed
 
+- Script `update-questions` needs an excel file, not a csv one.
+- Improve scripts using `typer`.
+- Improve `requirements` management.
+- Bump `fastapi` version to `0.63.0`.
 - **Internal** refactoring.
 
 ## [0.9.0] - 2020-12-22
@@ -78,7 +77,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Setup github actions (CI) and codecov as coverage analyser.
-- Add badges to [readme](README.md).
+- Add badges to readme.
 
 ### Changed
 
