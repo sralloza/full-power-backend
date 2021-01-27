@@ -7,7 +7,7 @@ from pydantic import BaseModel, confloat
 from app import crud
 from app.core.health_data import hdprocessor
 from app.schemas.bot import DFResponse
-from app.schemas.conversation import Conversation, ConversationCreateResult, DisplayType
+from app.schemas.conversation import Conversation, ConversationOut, DisplayType
 from app.schemas.health_data import HealthDataCreate
 from app.tests.utils.user import get_normal_user_id
 
@@ -71,13 +71,16 @@ class TestProcessMsg:
             headers=normal_user_token_headers,
         )
         assert response.status_code == 200
-        conv = ConversationCreateResult(**response.json())
+        conv = ConversationOut(**response.json())
 
         assert conv.user_msg == "this is the user message"
         if not df_res.is_end:
-            assert conv.bot_msg == "this is the bot message"
+            assert conv.bot_msg == ["this is the bot message"]
+            response.json()["bot_msg"] == "this is the bot message"
         else:
-            assert conv.bot_msg == "this is the bot message. <problem>"
+            assert conv.bot_msg == ["this is the bot message. <problem>"]
+            response.json()["bot_msg"] == "this is the bot message. <problem>"
+
         assert conv.intent == "this is the intent"
         assert conv.display_type == DisplayType.default
 
@@ -87,9 +90,7 @@ class TestProcessMsg:
         assert len(convs_db) >= 1
         conv_db = convs_db[-1]
 
-        assert conv == ConversationCreateResult.parse_obj(
-            Conversation.from_orm(conv_db)
-        )
+        assert conv == ConversationOut.parse_obj(Conversation.from_orm(conv_db))
 
         if df_res.is_end:
             assert (
