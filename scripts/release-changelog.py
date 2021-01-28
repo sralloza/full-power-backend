@@ -46,18 +46,38 @@ class ChangelogEditor:
         Path("CHANGELOG.md").write_text("\n".join(self.lines) + "\n", "utf8")
 
 
+def catch_subprocess_errors(func):
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except subprocess.CalledProcessError:
+            typer.secho("Error using git", fg="bright_red")
+            raise typer.Abort()
+
+    return wrapper
+
+
+@catch_subprocess_errors
 def create_commit():
-    try:
-        subprocess.run(["git", "add", "CHANGELOG.md"], check=True, shell=True)
-        r = subprocess.run(["git", "commit", "-m", "docs: release new version in changelog"], check=True, shell=True)
-    except subprocess.CalledProcessError as exc:
-        typer.secho("Error using git", fg="bright_red")
+    r = subprocess.run(["git", "status"], check=True, shell=True, capture_output=True)
+    if "no changes added to commit" not in r.stdout.decode("utf8"):
+        typer.secho(
+            "There are staged files, can't create changelog commit",
+            fg="bright_red",
+        )
         raise typer.Abort()
+    subprocess.run(["git", "add", "CHANGELOG.md"], check=True, shell=True)
+    subprocess.run(
+        ["git", "commit", "-m", "docs: release new version in changelog"],
+        check=True,
+        shell=True,
+    )
 
 
 @app.command()
 def release(
-    new_version: str, commit: bool = typer.Option(False, "--git", "-c", help="Commits the result")
+    new_version: str,
+    commit: bool = typer.Option(False, "--git", "-c", help="Commits the result"),
 ):
     """Releases a new version in the changelog."""
 
