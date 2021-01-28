@@ -27,31 +27,37 @@ It's very recomended to create a virtual environment to separate python proyects
 !!! note "o2switch"
     If you are deploying the backend on o2switch, you don't have to create a virtual environment, it's already created. Read [o2switch deploy instructions](deploy/deploy-o2switch.md).
 
-<div class="termy">
-
-```python
-// Make sure virtualenv is installed
-$ python -m pip install --upgrade virtualenv
----> 100%
-
-// Create a virtualenv named ".venv"
-$ virtualenv .venv
-
-// Activate the virtualenv
-$ source .venv/bin/activate
-
-// Check it's using the virtual python binary
-$ which python
-```
-
-</div>
-
-!!! warning "Windows"
-    If you are using windows, the last two commands won't work. Use these instead:
-
+=== "Linux, macOS"
     <div class="termy">
 
-    ```shell
+    ```python
+    // Make sure virtualenv is installed
+    $ python -m pip install --upgrade virtualenv
+    ---> 100%
+
+    // Create a virtualenv named ".venv"
+    $ virtualenv .venv
+
+    // Activate the virtualenv
+    $ source .venv/bin/activate
+
+    // Check it's using the virtual python binary
+    $ which python
+    ```
+
+    </div>
+
+=== "Windows"
+    <div class="termy">
+
+    ```python
+    // Make sure virtualenv is installed
+    $ python -m pip install --upgrade virtualenv
+    ---> 100%
+
+    // Create a virtualenv named ".venv"
+    $ virtualenv .venv
+
     // Activate the virtualenv
     $ call .venv/scripts/activate.bat
 
