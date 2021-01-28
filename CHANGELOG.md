@@ -11,6 +11,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 
 - Add attribute `user.last_login`.
 - Add docs page.
+- Add script `create-scripts-docs`.
 
 ### Changed
 
