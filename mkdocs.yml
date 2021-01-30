@@ -16,6 +16,7 @@ nav:
   - Scripts:
       - Scripts intro: scripts/scripts.md
       - check-db-connection: scripts/check-db-connection.md
+      - clean-after-pr: scripts/clean-after-pr.md
       - create-first-admin: scripts/create-first-admin.md
       - create-scripts-docs: scripts/create-scripts-docs.md
       - release-changelog: scripts/release-changelog.md
