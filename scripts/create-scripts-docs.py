@@ -1,10 +1,14 @@
-import subprocess
 import re
+import subprocess
+from io import StringIO
 from pathlib import Path
 
+import click
 import typer
+from ruamel.yaml import YAML
 
 app = typer.Typer(add_completion=False)
+yaml_path = Path(__file__).parent.parent / "mkdocs.yml"
 
 
 def check_script_name(script_name: str):
@@ -13,14 +17,7 @@ def check_script_name(script_name: str):
     return script_name
 
 
-@app.command()
-def main(
-    script_name: str = typer.Argument(
-        None, help="Name of the script without extension", callback=check_script_name
-    )
-):
-    """Updates the docs for a script."""
-
+def update_docs(script_name: str):
     script_path = f"scripts/{script_name}.py"
     args = ["typer", script_path, "utils", "docs", "--name", script_name]
 
@@ -34,6 +31,67 @@ def main(
     parsed_md = parsed_md.replace(f"$ {script_name}", f"$ {script_path}")
     md_path = Path(__file__).parent.parent.joinpath(f"docs/scripts/{script_name}.md")
     md_path.write_text(parsed_md, encoding="utf8")
+
+
+def check_yaml_file():
+    if not yaml_path.is_file():
+        raise click.ClickException(
+            "mkdocs.yml does not exist [%r]" % yaml_path.as_posix()
+        )
+
+
+def update_yaml(script_name: str):
+    yaml = YAML(typ="rt")
+    yaml.indent(mapping=2, sequence=4, offset=2)
+
+    with yaml_path.open(encoding="utf8") as fh:
+        mkdocs_data = yaml.load(fh)
+
+    if "nav" not in mkdocs_data:
+        mkdocs_data["nav"] = list()
+
+    nav = mkdocs_data["nav"]
+    for item in nav:
+        if list(item.keys())[0] == "Scripts":
+            scripts_nav = item["Scripts"]
+            break
+    else:
+        nav.append({"Scripts": []})
+        scripts_nav = nav[0]["Scripts"]
+
+    if scripts_nav and "intro" in list(scripts_nav[0].keys())[0].lower():
+        intro = scripts_nav.pop(0)
+    else:
+        intro = None
+
+    known_scripts = list(list(x.keys())[0] for x in scripts_nav)
+
+    if script_name not in known_scripts:
+        scripts_nav.append({script_name: f"scripts/{script_name}.md"})
+
+    scripts_nav.sort(key=lambda x: list(x.keys())[0])
+
+    if intro:
+        scripts_nav.insert(0, intro)
+
+    buffer = StringIO()
+    yaml.dump(mkdocs_data, buffer)
+
+    yaml_str = buffer.getvalue()
+    yaml_str = yaml_str.replace("%21", "!")
+    yaml_path.write_text(yaml_str, encoding="utf8")
+
+
+@app.command()
+def main(
+    script_name: str = typer.Argument(
+        None, help="Name of the script without extension", callback=check_script_name
+    )
+):
+    """Updates the docs for a script."""
+    check_yaml_file()
+    update_docs(script_name)
+    update_yaml(script_name)
 
 
 if __name__ == "__main__":
