@@ -1,4 +1,3 @@
-import shutil
 import subprocess
 from datetime import datetime
 from pathlib import Path
@@ -74,12 +73,28 @@ def create_commit():
     )
 
 
+@catch_subprocess_errors
+def add_tag(tag: str):
+    subprocess.run(["git", "tag", "-a", f"v{tag}", "-m"], check=True, shell=True)
+    subprocess.run(["git", "push", "origin", f"v{tag}"], check=True, shell=True)
+
+
 @app.command()
 def release(
     new_version: str,
-    commit: bool = typer.Option(False, "--git", "-c", help="Commits the result"),
+    commit: bool = typer.Option(
+        True, " /--no-commit", " /--nc", help="Commits the result"
+    ),
+    tag: bool = typer.Option(True, " /--nt", help="Create tag"),
+    offline: bool = typer.Option(False, "--offline", help="Disables commit and tag"),
 ):
     """Releases a new version in the changelog."""
+
+    if offline:
+        tag = commit = False
+
+    if not commit:
+        tag = False
 
     changelog = ChangelogEditor()
     changelog.release(new_version)
@@ -87,6 +102,9 @@ def release(
 
     if commit:
         create_commit()
+
+    if tag:
+        add_tag(new_version)
 
 
 if __name__ == "__main__":
