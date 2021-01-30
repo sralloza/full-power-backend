@@ -45,6 +45,9 @@ class Settings(BaseSettings):
     logging_level: ValidLoggingLevel = ValidLoggingLevel.INFO
     max_logs: int = 30
 
+    # Bot generics
+    bot_split_char: str = "~"
+
     # HealthData parsing
     problem_ratio_threshold: confloat(ge=0, le=1) = 0.75
 

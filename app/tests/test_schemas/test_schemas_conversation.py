@@ -1,9 +1,12 @@
+from typing import List
+
 from app.schemas.conversation import (
     Conversation,
     ConversationCreate,
     ConversationCreateInner,
     ConversationCreateResult,
     ConversationInDB,
+    ConversationOut,
     ConversationUpdate,
     DisplayType,
 )
@@ -28,6 +31,34 @@ def test_conversation_create():
     assert fields["intent"].type_ == str
     assert fields["user_id"].required is True
     assert fields["user_id"].type_ == int
+
+
+def test_conversation_out():
+    fields = ConversationOut.__fields__
+    assert set(fields) == {"user_msg", "bot_msg", "intent", "user_id", "display_type"}
+
+    assert fields["user_msg"].required is True
+    assert fields["user_msg"].type_ == str
+    assert fields["bot_msg"].required is True
+    assert fields["bot_msg"].outer_type_ == List[str]
+    assert fields["intent"].required is True
+    assert fields["intent"].type_ == str
+    assert fields["user_id"].required is True
+    assert fields["user_id"].type_ == int
+    assert fields["display_type"].required is True
+    assert fields["display_type"].type_ == DisplayType
+
+    assert ConversationCreateResult.__config__.orm_mode is True
+
+    # Test validator
+    conv = ConversationOut(
+        user_msg="u",
+        bot_msg="hi\nthere~everybody",
+        intent="x",
+        user_id=1,
+        display_type="default",
+    )
+    assert conv.bot_msg == ["hi", "there", "everybody"]
 
 
 def test_conversation_create_result():
