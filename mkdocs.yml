@@ -5,10 +5,8 @@ theme:
     primary: blue
   favicon: images/favicon.png
   logo: images/favicon.png
-  fetures:
+  features:
     - navigation.instant
-    - navigation.sections
-    - navigation.expand
 
 nav:
   - Backend: index.md
@@ -16,20 +14,20 @@ nav:
   - Settings: settings.md
   - Database: database.md
   - Scripts:
-    - Scripts intro: scripts/scripts.md
-    - check-db-connection: scripts/check-db-connection.md
-    - create-first-admin: scripts/create-first-admin.md
-    - create-scripts-docs: scripts/create-scripts-docs.md
-    - release-changelog: scripts/release-changelog.md
-    - update-questions: scripts/update-questions.md
+      - Scripts intro: scripts/scripts.md
+      - check-db-connection: scripts/check-db-connection.md
+      - create-first-admin: scripts/create-first-admin.md
+      - create-scripts-docs: scripts/create-scripts-docs.md
+      - release-changelog: scripts/release-changelog.md
+      - update-questions: scripts/update-questions.md
   - Deploy:
-    - Generic deploy: deploy/generic.md
-    - O2Switch deploy: deploy/deploy-o2switch.md
+      - Generic deploy: deploy/generic.md
+      - O2Switch deploy: deploy/deploy-o2switch.md
   - Develop: develop.md
   - Troubleshoot: troubleshoot.md
   - Technical:
-    - Technical intro: technical/index.md
-    - HealthData algorithm: technical/hd-algorithm.md
+      - Technical intro: technical/index.md
+      - HealthData algorithm: technical/hd-algorithm.md
   - Build the docs: build-docs.md
   - Changelog: changelog.md
   - Contributing: contributing.md
@@ -38,15 +36,15 @@ repo_url: https://github.com/BelinguoAG/full-power-backend
 repo_name: full-power-backend
 
 extra_css:
-    - css/termynal.css
-    - css/custom.css
+  - css/termynal.css
+  - css/custom.css
 extra_javascript:
-    - js/termynal.js
-    - js/config.js
-    - js/custom.js
-    - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
-    - https://polyfill.io/v3/polyfill.min.js?features=es6
-    - https://unpkg.com/mermaid@8.4.6/dist/mermaid.min.js
+  - js/termynal.js
+  - js/config.js
+  - js/custom.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://unpkg.com/mermaid@8.4.6/dist/mermaid.min.js
 markdown_extensions:
   - toc:
       permalink: true
