@@ -15,7 +15,7 @@ This script will:
 
 <div class="termy">
 ```console
-$ scripts/clean-after-pr.py [OPTIONS]
+$ python scripts/clean-after-pr.py [OPTIONS]
 ```
 </div>
 
