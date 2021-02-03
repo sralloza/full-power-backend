@@ -2,6 +2,7 @@ import re
 import subprocess
 from io import StringIO
 from pathlib import Path
+from typing import Generator
 
 import click
 import typer
@@ -12,6 +13,8 @@ yaml_path = Path(__file__).parent.parent / "mkdocs.yml"
 
 
 def check_script_name(script_name: str):
+    if script_name is None:
+        return None
     if not Path(__file__).with_name(script_name + ".py").is_file():
         raise typer.BadParameter(f"Script 'scripts/{script_name}.py doesn't exist")
     return script_name
@@ -28,7 +31,7 @@ def update_docs(script_name: str):
         r'<div class="termy">\n\g<0>\n</div>',
         original_md,
     )
-    parsed_md = parsed_md.replace(f"$ {script_name}", f"$ {script_path}")
+    parsed_md = parsed_md.replace(f"$ {script_name}", f"$ python {script_path}")
     md_path = Path(__file__).parent.parent.joinpath(f"docs/scripts/{script_name}.md")
     md_path.write_text(parsed_md, encoding="utf8")
 
@@ -38,6 +41,12 @@ def check_yaml_file():
         raise click.ClickException(
             "mkdocs.yml does not exist [%r]" % yaml_path.as_posix()
         )
+
+
+def get_all_scripts() -> Generator[Path, None, None]:
+    for file in Path(__file__).parent.iterdir():
+        if file.suffix == ".py":
+            yield file
 
 
 def update_yaml(script_name: str):
@@ -85,13 +94,24 @@ def update_yaml(script_name: str):
 @app.command()
 def main(
     script_name: str = typer.Argument(
-        None, help="Name of the script without extension", callback=check_script_name
+        None,
+        help="Name of the script without extension. If not passed,"
+        " it will create the docs for all the scripts.",
+        callback=check_script_name,
     )
 ):
     """Updates the docs for a script."""
+    if script_name is None:
+        scripts = list(get_all_scripts())
+        typer.echo("Updating all scripts")
+    else:
+        scripts = [Path(script_name)]
+
     check_yaml_file()
-    update_docs(script_name)
-    update_yaml(script_name)
+
+    for script in scripts:
+        update_docs(script.stem)
+        update_yaml(script.stem)
 
 
 if __name__ == "__main__":

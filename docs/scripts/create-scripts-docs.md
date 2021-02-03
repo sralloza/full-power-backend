@@ -6,13 +6,13 @@ Updates the docs for a script.
 
 <div class="termy">
 ```console
-$ scripts/create-scripts-docs.py [OPTIONS] [SCRIPT_NAME]
+$ python scripts/create-scripts-docs.py [OPTIONS] [SCRIPT_NAME]
 ```
 </div>
 
 **Arguments**:
 
-* `[SCRIPT_NAME]`: Name of the script without extension
+* `[SCRIPT_NAME]`: Name of the script without extension. If not passed, it will create the docs for all the scripts.
 
 **Options**:
 
