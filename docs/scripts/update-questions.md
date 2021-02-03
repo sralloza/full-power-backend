@@ -2,6 +2,11 @@
 
 Update the dialogflow zipfile settings with new questions from an excel file.
 
+It also checks the validity of the excel file, like:
+
+* The excel's columns must be "variable", "lang" and "question".
+* For each `variable`, there must be a question for each lang supported.
+
 **Usage**:
 
 <div class="termy">

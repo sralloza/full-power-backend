@@ -49,7 +49,14 @@ def main(
         "questions.xlsx", exists=True, help="Excel with new questions"
     ),
 ):
-    """Update the dialogflow zipfile settings with new questions from an excel file."""
+    """Update the dialogflow zipfile settings with new questions from an excel file.
+
+    It also checks the validity of the excel file, like:
+
+    * The excel's columns must be "variable", "lang" and "question".
+    * For each `variable`, there must be a question for each lang supported.
+    """
+
     df = get_dataframe(excel_path)
 
     # Get the filename list

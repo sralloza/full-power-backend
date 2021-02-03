@@ -88,7 +88,15 @@ def release(
     tag: bool = typer.Option(True, " /--nt", help="Create tag"),
     offline: bool = typer.Option(False, "--offline", help="Disables commit and tag"),
 ):
-    """Releases a new version in the changelog."""
+    """Releases a new version in the changelog.
+
+    Notes:
+
+    * Use `--no-commit` or `--nc` to disable the autocommit.
+    * Use `--nt` to disable the tag creation.
+
+    If the autocommit is disabled, the autotag will be disabled too, regardless of the `offline` option.
+    """
 
     if offline:
         tag = commit = False
