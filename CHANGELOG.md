@@ -9,16 +9,25 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 
 ### Added
 
-- Add attribute `user.last_login`.
 - Add docs page.
-- Add script `create-scripts-docs`.
 
 ### Changed
 
 - Script `update-questions` needs an excel file, not a csv one.
 - Improve scripts using `typer`.
-- Improve `requirements` management.
+
+## [0.10.0] - 2021-01-30
+
+### Added
+
+- Add attribute `user.last_login`.
+- Add script `create-scripts-docs`.
+
+### Changed
+
 - Bump `fastapi` version to `0.63.0`.
+- Improve `requirements` management.
+- Endpoint `/bot/process-msg` returns a list of the bot's messages in the `bot_msg` attribute.
 - **Internal** refactoring.
 
 ## [0.9.0] - 2020-12-22
@@ -161,7 +170,8 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 
 - First version
 
-[unreleased]: https://github.com/BelinguoAG/full-power-backend/compare/v0.9.0...HEAD
+[unreleased]: https://github.com/BelinguoAG/full-power-backend/compare/v0.10.0...HEAD
+[0.10.0]: https://github.com/BelinguoAG/full-power-backend/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/BelinguoAG/full-power-backend/compare/v0.8.1...v0.9.0
 [0.8.1]: https://github.com/BelinguoAG/full-power-backend/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/BelinguoAG/full-power-backend/compare/v0.7.1...v0.8.0

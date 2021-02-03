@@ -12,7 +12,7 @@ from app.core.bot import get_df_response
 from app.core.health_data import hdprocessor
 from app.models import User
 from app.schemas.bot import Msg
-from app.schemas.conversation import ConversationCreate, ConversationCreateResult
+from app.schemas.conversation import ConversationCreate, ConversationOut
 from app.schemas.health_data import HealthDataCreate, HealthDataUpdate
 
 router = APIRouter(
@@ -23,7 +23,7 @@ logger = getLogger(__name__)
 
 @router.post(
     "/process-msg",
-    response_model=ConversationCreateResult,
+    response_model=ConversationOut,
     responses={500: {"description": "HealthData was not saved before processing"}},
     summary="Process user message",
 )
@@ -71,4 +71,5 @@ def bot_message_post(
     conversation = ConversationCreate(
         user_msg=message, user_id=user.id, **df_resp.dict()
     )
-    return crud.conversation.create(db, obj_in=conversation)
+    x = crud.conversation.create(db, obj_in=conversation)
+    return x
