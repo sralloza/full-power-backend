@@ -10,7 +10,7 @@ To create the script docs you need to install typer-cli (listed in `requirements
     It's highly recommended to use the script.
 
 !!! danger
-    Some scripts need more editing. For example, [create-first-admin](create-scripts-docs.md) has two links in the options description to the settings. Executing the command **won't** keep or create those links.
+    Some scripts need more editing.
 
 First create the script docs with the following command:
 

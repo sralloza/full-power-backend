@@ -36,12 +36,12 @@ def main(
     username: str = typer.Option(
         settings.first_superuser,
         help="username of the admin",
-        show_default="settings.first_superuser",  # type: ignore
+        show_default="[settings.first_superuser](../settings.md#database)",  # type: ignore
     ),
     password: str = typer.Option(
         settings.first_superuser_password,
         help="password of the admin",
-        show_default="settings.first_superuser_password",  # type: ignore
+        show_default="[settings.first_superuser_password](../settings.md#database)",  # type: ignore
     ),
 ):
     """Creates an admin. If not provided, username and password are taken from settings."""
