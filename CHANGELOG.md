@@ -2,21 +2,31 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on <a href="https://keepachangelog.com/en/1.0.0/" class="external-link" target="_blank">Keep a Changelog</a>,
+and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class="external-link" taget="_blank">Semantic Versioning</a>.
 
 ## [Unreleased]
+
+### Added
+
+- Add docs page.
+
+### Changed
+
+- Script `update-questions` needs an excel file, not a csv one.
+- Improve scripts using `typer`.
 
 ## [0.10.0] - 2021-01-30
 
 ### Added
 
 - Add attribute `user.last_login`.
+- Add script `create-scripts-docs`.
 
 ### Changed
 
-- Improve `requirements` management.
 - Bump `fastapi` version to `0.63.0`.
+- Improve `requirements` management.
 - Endpoint `/bot/process-msg` returns a list of the bot's messages in the `bot_msg` attribute.
 - **Internal** refactoring.
 
