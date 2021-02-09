@@ -29,6 +29,7 @@ nav:
   - Technical:
       - Technical intro: technical/index.md
       - HealthData algorithm: technical/hd-algorithm.md
+      - HealthData algorithm examples: technical/hd-algorithm-examples.md
   - Build the docs: build-docs.md
   - Changelog: changelog.md
   - Contributing: contributing.md
