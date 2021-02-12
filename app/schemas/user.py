@@ -46,18 +46,16 @@ class UserUpdateInner(UserBase):
 
 
 class UserInDBBase(UserBase):
-    id: int
     is_admin: bool
 
     class Config:
         orm_mode = True
 
+class UserPublic(UserInDBBase):
+    pass
+
 
 class UserInDB(UserInDBBase):
+    id: int
     hashed_password: str
     last_login: datetime
-    conversations: List[Conversation]
-
-
-class User(UserInDBBase):
-    pass

@@ -5,7 +5,8 @@ from fastapi import APIRouter, Depends, Security
 from app import __version__
 from app.api.dependencies.security import get_current_user
 from app.core.config import Settings, settings
-from app.schemas.user import User
+from app.models import User
+from app.schemas.user import UserPublic
 
 router = APIRouter(tags=["utils"])
 
@@ -34,7 +35,7 @@ def get_settings():
     return settings
 
 
-@router.get("/me", response_model=User, summary="Get logged user")
+@router.get("/me", response_model=UserPublic, summary="Get logged user")
 def users_get_current_user(current_user: User = Depends(get_current_user)):
     """Returns the current user."""
 

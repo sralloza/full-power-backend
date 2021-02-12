@@ -3,11 +3,11 @@ from typing import List
 
 from app.schemas.conversation import Conversation
 from app.schemas.user import (
-    User,
     UserCreateAdmin,
     UserCreateAdminInner,
     UserCreateBasic,
     UserInDB,
+    UserPublic,
     UserUpdateAdmin,
     UserUpdateBasic,
     UserUpdateInner,
@@ -90,7 +90,7 @@ def test_user_in_db():
         "username",
         "id",
         "is_admin",
-        "conversations",
+        # "conversations",
         "last_login",
         "hashed_password",
     }
@@ -101,8 +101,8 @@ def test_user_in_db():
     assert fields["id"].type_ == int
     assert fields["is_admin"].required is True
     assert fields["is_admin"].type_ == bool
-    assert fields["conversations"].required is True
-    assert fields["conversations"].outer_type_ == List[Conversation]
+    # assert fields["conversations"].required is True
+    # assert fields["conversations"].outer_type_ == List[Conversation]
     assert fields["last_login"].required is True
     assert fields["last_login"].type_ == datetime
     assert fields["hashed_password"].required is True
@@ -111,14 +111,12 @@ def test_user_in_db():
     assert UserInDB.__config__.orm_mode is True
 
 
-def test_user():
-    fields = User.__fields__
-    assert set(fields.keys()) == {"username", "id", "is_admin"}
+def test_user_public():
+    fields = UserPublic.__fields__
+    assert set(fields.keys()) == {"username", "is_admin"}
 
     assert fields["username"].required is True
     assert fields["username"].type_ == str
-    assert fields["id"].required is True
-    assert fields["id"].type_ == int
     assert fields["is_admin"].required is True
     assert fields["is_admin"].type_ == bool
 

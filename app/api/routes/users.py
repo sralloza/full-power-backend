@@ -9,7 +9,7 @@ from app import crud
 from app.api.dependencies.database import get_db
 from app.api.dependencies.security import get_current_user
 from app.api.dependencies.utils import get_limits
-from app.schemas.user import User, UserCreateAdmin
+from app.schemas.user import UserInDB, UserCreateAdmin
 
 router = APIRouter(
     dependencies=[Security(get_current_user, scopes=["admin"])],
@@ -20,7 +20,7 @@ router = APIRouter(
 
 @router.post(
     "",
-    response_model=User,
+    response_model=UserInDB,
     responses={409: {"description": "Username already registered"}},
     status_code=201,
     summary="Create new user",
@@ -32,7 +32,7 @@ def users_create_post(*, db: Session = Depends(get_db), user: UserCreateAdmin):
 
 @router.get(
     "",
-    response_model=List[User],
+    response_model=List[UserInDB],
     responses={409: {"description": "Username already registered"}},
     summary="List all users",
 )
@@ -47,7 +47,7 @@ def users_list_all(
 
 @router.get(
     "/{user_id}",
-    response_model=User,
+    response_model=UserInDB,
     responses={404: {"description": "User not found"}},
     summary="Get user by id",
 )
