@@ -5,7 +5,7 @@ from pydantic import parse_obj_as
 from sqlalchemy.orm import Session
 
 from app import crud
-from app.schemas.user import User, UserCreateAdmin
+from app.schemas.user import UserInDB, UserPublic, UserCreateAdmin
 from app.tests.utils.utils import random_lower_string
 
 
@@ -97,11 +97,11 @@ def test_retrieve_users(client: TestClient, superuser_token_headers: dict, db: S
     )
     user_db_2 = crud.user.create(db, obj_in=user_in_2)
 
-    users = {User.from_orm(x) for x in [user_db_1, user_db_2]}
+    users = {UserInDB.from_orm(x) for x in [user_db_1, user_db_2]}
 
     response = client.get("/users", headers=superuser_token_headers)
     assert response.status_code == 200
-    all_users = parse_obj_as(Set[User], response.json())
+    all_users = parse_obj_as(Set[UserInDB], response.json())
 
     assert users.issubset(all_users)
 

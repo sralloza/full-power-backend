@@ -12,7 +12,7 @@ from app.api.dependencies.security import get_current_user
 from app.core.config import settings
 from app.core.security import authenticate_user, create_access_token
 from app.schemas.token import Token
-from app.schemas.user import User, UserCreateAdmin, UserCreateBasic
+from app.schemas.user import UserPublic, UserCreateAdmin, UserCreateBasic
 
 router = APIRouter(tags=["security"])
 
@@ -46,7 +46,7 @@ def login_post(
 
 @router.post(
     "/register",
-    response_model=User,
+    response_model=UserPublic,
     responses={409: {"description": "Username already registered"}},
     status_code=201,
     summary="Register new user",

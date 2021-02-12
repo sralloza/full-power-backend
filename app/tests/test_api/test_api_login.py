@@ -10,7 +10,7 @@ from app import crud
 from app.core.config import settings
 from app.models.user import User
 from app.schemas.token import Token
-from app.schemas.user import UserCreateAdmin
+from app.schemas.user import UserCreateAdmin, UserPublic
 from app.tests.utils.utils import random_lower_string
 
 
@@ -102,7 +102,7 @@ def test_register_basic_user(client: TestClient, db: Session):
     response = client.post("/register", json=payload)
 
     assert response.status_code == 201
-    user = User(**response.json())
+    user = UserPublic(**response.json())
     assert user
 
     db_user = crud.user.get_by_username(db, username=username)
