@@ -7,6 +7,10 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 
 ## [Unreleased]
 
+### Fixed
+
+- Script `release-changelog` fails creating a tag.
+
 ## [0.11.0] - 2021-02-12
 
 ### Added
