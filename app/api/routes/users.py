@@ -9,7 +9,7 @@ from app import crud
 from app.api.dependencies.database import get_db
 from app.api.dependencies.security import get_current_user
 from app.api.dependencies.utils import get_limits
-from app.schemas.user import UserInDB, UserCreateAdmin
+from app.schemas.user import UserCreateAdmin, UserInDB
 
 router = APIRouter(
     dependencies=[Security(get_current_user, scopes=["admin"])],

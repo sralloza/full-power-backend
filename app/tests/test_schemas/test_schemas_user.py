@@ -62,7 +62,13 @@ def test_user_update_basic():
 
 def test_user_update_admin():
     fields = UserUpdateAdmin.__fields__
-    assert set(fields.keys()) == {"username", "password", "is_admin", "accepted_disclaimer", "survey_filled"}
+    assert set(fields.keys()) == {
+        "username",
+        "password",
+        "is_admin",
+        "accepted_disclaimer",
+        "survey_filled",
+    }
 
     assert fields["username"].required is False
     assert fields["username"].type_ == str
@@ -78,7 +84,13 @@ def test_user_update_admin():
 
 def test_user_update_inner():
     fields = UserUpdateInner.__fields__
-    assert set(fields.keys()) == {"username", "is_admin", "hashed_password", "accepted_disclaimer", "survey_filled"}
+    assert set(fields.keys()) == {
+        "username",
+        "is_admin",
+        "hashed_password",
+        "accepted_disclaimer",
+        "survey_filled",
+    }
 
     assert fields["username"].required is False
     assert fields["username"].type_ == str
@@ -101,7 +113,7 @@ def test_user_in_db():
         "last_login",
         "hashed_password",
         "accepted_disclaimer",
-        "survey_filled"
+        "survey_filled",
     }
 
     assert fields["username"].required is True
@@ -124,7 +136,12 @@ def test_user_in_db():
 
 def test_user_public():
     fields = UserPublic.__fields__
-    assert set(fields.keys()) == {"username", "is_admin", "accepted_disclaimer", "survey_filled"}
+    assert set(fields.keys()) == {
+        "username",
+        "is_admin",
+        "accepted_disclaimer",
+        "survey_filled",
+    }
 
     assert fields["username"].required is True
     assert fields["username"].type_ == str

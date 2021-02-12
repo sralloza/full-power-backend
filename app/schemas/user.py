@@ -35,11 +35,11 @@ class UserUpdateBasic(UserBase):
     password: Optional[str]
 
 
-
 class UserUpdateAdmin(UserUpdateBasic):
     is_admin: bool = False
     survey_filled: Optional[bool]
     accepted_disclaimer: Optional[bool]
+
 
 class UserUpdateInner(UserBase):
     username: Optional[str]
