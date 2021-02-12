@@ -67,7 +67,13 @@ def test_login_success(client: TestClient, db: Session):
     assert token
     assert token.token_type == "Bearer"
 
-    assert response.headers["X-Current-User"] == UserPublic(username=username, is_admin=False).json()
+    user = UserPublic(
+        username=username,
+        is_admin=False,
+        survey_filled=False,
+        accepted_disclaimer=False,
+    )
+    assert response.headers["X-Current-User"] == user.json()
 
 
 def test_login_wrong_username(client: TestClient):
@@ -99,6 +105,7 @@ def test_login_wrong_password(client: TestClient, db: Session):
     assert error["detail"] == "Incorrect username or password"
 
     assert "X-Current-User" not in response.headers
+
 
 def test_register_basic_user(client: TestClient, db: Session):
     username = random_lower_string()

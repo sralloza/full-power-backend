@@ -62,7 +62,7 @@ def test_user_update_basic():
 
 def test_user_update_admin():
     fields = UserUpdateAdmin.__fields__
-    assert set(fields.keys()) == {"username", "password", "is_admin"}
+    assert set(fields.keys()) == {"username", "password", "is_admin", "accepted_disclaimer", "survey_filled"}
 
     assert fields["username"].required is False
     assert fields["username"].type_ == str
@@ -70,11 +70,15 @@ def test_user_update_admin():
     assert fields["password"].type_ == str
     assert fields["is_admin"].required is False
     assert fields["is_admin"].type_ == bool
+    assert fields["accepted_disclaimer"].required is False
+    assert fields["accepted_disclaimer"].type_ == bool
+    assert fields["survey_filled"].required is False
+    assert fields["survey_filled"].type_ == bool
 
 
 def test_user_update_inner():
     fields = UserUpdateInner.__fields__
-    assert set(fields.keys()) == {"username", "is_admin", "hashed_password"}
+    assert set(fields.keys()) == {"username", "is_admin", "hashed_password", "accepted_disclaimer", "survey_filled"}
 
     assert fields["username"].required is False
     assert fields["username"].type_ == str
@@ -82,6 +86,10 @@ def test_user_update_inner():
     assert fields["hashed_password"].type_ == str
     assert fields["is_admin"].required is False
     assert fields["is_admin"].type_ == bool
+    assert fields["accepted_disclaimer"].required is False
+    assert fields["accepted_disclaimer"].type_ == bool
+    assert fields["survey_filled"].required is False
+    assert fields["survey_filled"].type_ == bool
 
 
 def test_user_in_db():
@@ -90,9 +98,10 @@ def test_user_in_db():
         "username",
         "id",
         "is_admin",
-        # "conversations",
         "last_login",
         "hashed_password",
+        "accepted_disclaimer",
+        "survey_filled"
     }
 
     assert fields["username"].required is True
@@ -101,8 +110,10 @@ def test_user_in_db():
     assert fields["id"].type_ == int
     assert fields["is_admin"].required is True
     assert fields["is_admin"].type_ == bool
-    # assert fields["conversations"].required is True
-    # assert fields["conversations"].outer_type_ == List[Conversation]
+    assert fields["accepted_disclaimer"].required is True
+    assert fields["accepted_disclaimer"].type_ == bool
+    assert fields["survey_filled"].required is True
+    assert fields["survey_filled"].type_ == bool
     assert fields["last_login"].required is True
     assert fields["last_login"].type_ == datetime
     assert fields["hashed_password"].required is True
@@ -113,11 +124,15 @@ def test_user_in_db():
 
 def test_user_public():
     fields = UserPublic.__fields__
-    assert set(fields.keys()) == {"username", "is_admin"}
+    assert set(fields.keys()) == {"username", "is_admin", "accepted_disclaimer", "survey_filled"}
 
     assert fields["username"].required is True
     assert fields["username"].type_ == str
     assert fields["is_admin"].required is True
     assert fields["is_admin"].type_ == bool
+    assert fields["accepted_disclaimer"].required is True
+    assert fields["accepted_disclaimer"].type_ == bool
+    assert fields["survey_filled"].required is True
+    assert fields["survey_filled"].type_ == bool
 
     assert UserInDB.__config__.orm_mode is True

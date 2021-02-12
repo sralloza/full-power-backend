@@ -31,25 +31,32 @@ class UserCreateAdminInner(UserBase):
 
 
 class UserUpdateBasic(UserBase):
-    username: Optional[str] = None
-    password: Optional[str] = None
+    username: Optional[str]
+    password: Optional[str]
+
 
 
 class UserUpdateAdmin(UserUpdateBasic):
     is_admin: bool = False
-
+    survey_filled: Optional[bool]
+    accepted_disclaimer: Optional[bool]
 
 class UserUpdateInner(UserBase):
-    username: Optional[str] = None
-    is_admin: Optional[bool] = None
-    hashed_password: Optional[str] = None
+    username: Optional[str]
+    is_admin: Optional[bool]
+    hashed_password: Optional[str]
+    survey_filled: Optional[bool]
+    accepted_disclaimer: Optional[bool]
 
 
 class UserInDBBase(UserBase):
     is_admin: bool
+    survey_filled: bool
+    accepted_disclaimer: bool
 
     class Config:
         orm_mode = True
+
 
 class UserPublic(UserInDBBase):
     pass
