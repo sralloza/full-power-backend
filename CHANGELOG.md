@@ -10,11 +10,20 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 ### Added
 
 - Add docs page.
+- Send the contents of `/me` in the HTTP header `X-Current-User` as json in `/login`.
+- Add attribute to **User** model: `accepted_disclaimer`
+- Add attribute to **User** model: `filled_survey`
+- Add endpoint to set **User.accepted_disclaimer**: `/accept-disclaimer`
+- Add endpoint to set **User.filled_survey**: `/survey-filled`
 
 ### Changed
 
 - Script `update-questions` needs an excel file, not a csv one.
 - Improve scripts using `typer`.
+
+### Fixed
+
+- `/me` should not return the `user_id`.
 
 ## [0.10.0] - 2021-01-30
 
