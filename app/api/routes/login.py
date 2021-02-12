@@ -2,7 +2,7 @@
 
 from datetime import timedelta
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from sqlalchemy.orm.session import Session
 
@@ -24,7 +24,10 @@ router = APIRouter(tags=["security"])
     summary="Grants access to users",
 )
 def login_post(
-    *, db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()
+    *,
+    db: Session = Depends(get_db),
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    response: Response
 ):
     """Login endpoint."""
     user = authenticate_user(db, form_data.username, form_data.password)
@@ -41,6 +44,7 @@ def login_post(
         data={"sub": user.username, "scopes": user.scopes},
         expires_delta=access_token_expires,
     )
+    response.headers["X-Current-User"] = UserPublic.from_orm(user).json()
     return Token(access_token=access_token, scopes=user.scopes)
 
 
