@@ -2,7 +2,9 @@ from typing import Dict
 from unittest import mock
 
 from fastapi.testclient import TestClient
+from sqlalchemy.orm import Session
 
+from app import crud
 from app.core.config import Settings, settings
 
 
@@ -52,3 +54,27 @@ def test_get_me_normal_user(
     assert "id" not in current_user
     assert current_user["is_admin"] is False
     assert current_user["username"] == settings.username_test_user
+
+
+def test_accept_disclaimer(db: Session, client: TestClient, normal_user_token_headers):
+    user = crud.user.get_by_username(db, username=settings.username_test_user)
+    assert user.accepted_disclaimer is False
+
+    response = client.post("/accept-disclaimer", headers=normal_user_token_headers)
+    assert response.status_code == 200
+
+    db.commit()  # Fails without this
+    user = crud.user.get_by_username(db, username=settings.username_test_user)
+    assert user.accepted_disclaimer is True
+
+
+def test_survey_filled(db: Session, client: TestClient, normal_user_token_headers):
+    user = crud.user.get_by_username(db, username=settings.username_test_user)
+    assert user.survey_filled is False
+
+    response = client.post("/survey-filled", headers=normal_user_token_headers)
+    assert response.status_code == 200
+
+    db.commit()  # Fails without this
+    user = crud.user.get_by_username(db, username=settings.username_test_user)
+    assert user.survey_filled is True
