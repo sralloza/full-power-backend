@@ -5,7 +5,7 @@ from pydantic import parse_obj_as
 from sqlalchemy.orm import Session
 
 from app import crud
-from app.schemas.user import UserInDB, UserPublic, UserCreateAdmin
+from app.schemas.user import UserCreateAdmin, UserInDB, UserPublic
 from app.tests.utils.utils import random_lower_string
 
 

@@ -1,11 +1,11 @@
 """Routes for utils."""
 
-from starlette.responses import Response
-from app.api.dependencies.database import get_db
 from fastapi import APIRouter, Depends, Security
 from sqlalchemy.orm import Session
+from starlette.responses import Response
 
 from app import __version__, crud
+from app.api.dependencies.database import get_db
 from app.api.dependencies.security import get_current_user
 from app.core.config import Settings, settings
 from app.models import User
@@ -45,8 +45,12 @@ def users_get_current_user(current_user: User = Depends(get_current_user)):
     return current_user
 
 
-@router.post("/accept-disclaimer", response_class=Response, summary="User accepts disclaimer")
-def accept_disclaimer(db: Session = Depends(get_db), *, current_user: User = Depends(get_current_user)):
+@router.post(
+    "/accept-disclaimer", response_class=Response, summary="User accepts disclaimer"
+)
+def accept_disclaimer(
+    db: Session = Depends(get_db), *, current_user: User = Depends(get_current_user)
+):
     """Accepts the disclaimer."""
 
     user = UserUpdateAdmin(accepted_disclaimer=True)
@@ -54,7 +58,9 @@ def accept_disclaimer(db: Session = Depends(get_db), *, current_user: User = Dep
 
 
 @router.post("/survey-filled", response_class=Response, summary="User fills survey")
-def survey_filled(db: Session = Depends(get_db), *, current_user: User = Depends(get_current_user)):
+def survey_filled(
+    db: Session = Depends(get_db), *, current_user: User = Depends(get_current_user)
+):
     """Accepts the disclaimer."""
 
     user = UserUpdateAdmin(survey_filled=True)

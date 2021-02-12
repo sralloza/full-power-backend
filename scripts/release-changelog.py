@@ -75,7 +75,7 @@ def create_commit():
 
 @catch_subprocess_errors
 def add_tag(tag: str):
-    subprocess.run(["git", "tag", "-a", f"v{tag}", "-m"], check=True, shell=True)
+    subprocess.run(["git", "tag", "-a", f"v{tag}", "-m", ""], check=True, shell=True)
     subprocess.run(["git", "push", "origin", f"v{tag}"], check=True, shell=True)
 
 
