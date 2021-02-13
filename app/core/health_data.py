@@ -10,8 +10,6 @@ from app.models.health_data import HealthData
 from app.schemas.health_data import (
     HealthDataCreate,
     HealthDataProccessResult,
-    ProblemResultI18n,
-    ProblemsI18n,
     QuestionCoefficients,
 )
 from app.utils.translate import i18n
@@ -25,28 +23,14 @@ class _HealthDataProcessor:
     problem_names = ("vitamines", "sleep", "diet", "stress")
 
     def __init__(self):
-        self.problem_result_text = self._get_problem_result_text()
         self.question_coeffs = self._get_question_coeffs()
-        self.problem_translation = self._get_problem_translation()
         self.sums = self._sum_coefficients()
-
-    @staticmethod
-    def _get_problem_result_text() -> ProblemResultI18n:
-        return ProblemResultI18n.parse_file(
-            Path(__file__).resolve().parent.parent / "db/files/problem_result_i18n.json"
-        )
 
     @staticmethod
     def _get_question_coeffs() -> List[QuestionCoefficients]:
         return parse_file_as(
             List[QuestionCoefficients],
             Path(__file__).resolve().parent.parent / "db/files/coefficients.json",
-        )
-
-    @staticmethod
-    def _get_problem_translation() -> ProblemsI18n:
-        return ProblemsI18n.parse_file(
-            Path(__file__).resolve().parent.parent / "db/files/problem_names_i18n.json"
         )
 
     def _sum_coefficients(self) -> Dict[str, int]:

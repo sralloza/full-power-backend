@@ -12,8 +12,6 @@ from app.core.health_data import Problem, hdprocessor
 from app.schemas.health_data import (
     HealthDataCreate,
     HealthDataProccessResult,
-    ProblemResultI18n,
-    ProblemsI18n,
     QuestionCoefficients,
 )
 from app.tests.utils.utils import random_int
@@ -23,29 +21,8 @@ def test_hdprocessor_attrs():
     from app.core.health_data import _HealthDataProcessor
 
     assert isinstance(hdprocessor, _HealthDataProcessor)
-    assert hasattr(hdprocessor, "problem_result_text")
     assert hasattr(hdprocessor, "question_coeffs")
-    assert hasattr(hdprocessor, "problem_translation")
     assert hasattr(hdprocessor, "sums")
-
-
-def test_get_problem_result_text():
-    problem_result_text = hdprocessor._get_problem_result_text()
-    assert isinstance(problem_result_text, ProblemResultI18n)
-    assert hdprocessor.problem_result_text == problem_result_text
-
-
-def test_get_question_coeffs():
-    question_coeffs = hdprocessor._get_question_coeffs()
-    for coeff in question_coeffs:
-        assert isinstance(coeff, QuestionCoefficients)
-    assert hdprocessor.question_coeffs == question_coeffs
-
-
-def test_get_problem_translation():
-    problem_translation = hdprocessor._get_problem_translation()
-    assert isinstance(problem_translation, ProblemsI18n)
-    assert hdprocessor.problem_translation == problem_translation
 
 
 def test_sum_coefficients():
@@ -76,7 +53,6 @@ test_process_data_out = (
 )
 
 columns_in = [x.question_id for x in hdprocessor.question_coeffs]
-langs = list(hdprocessor.problem_result_text.dict().keys())
 
 
 @pytest.fixture
@@ -129,7 +105,7 @@ class IRPTestData(BaseModel):
 
     @validator("problems", pre=True)
     def check_problems(cls, v):
-        if isinstance(v, list) and v and isinstance(v[0], str):
+        if isinstance(v, list) and v and isinstance(v[0], str):  # noqa
             return [Problem(*x.split("-")) for x in v]
 
 

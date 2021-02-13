@@ -9,10 +9,6 @@ from app.schemas.health_data import (
     HealthDataInDB,
     HealthDataProccessResult,
     HealthDataUpdate,
-    LanguageProblemResult,
-    ProblemResultI18n,
-    ProblemsI18n,
-    ProblemTranslation,
     QuestionCoefficients,
 )
 
@@ -58,58 +54,6 @@ def test_question_coefficients():
 
     QuestionCoefficients(**{x: 0 for x in fields})
     QuestionCoefficients(**{x: 1 for x in fields})
-
-
-def test_problem_translation():
-    fields = ProblemTranslation.__fields__
-    assert set(fields) == {"es", "en", "fr"}
-
-    assert fields["es"].required is True
-    assert fields["es"].type_ == str
-    assert fields["en"].required is True
-    assert fields["en"].type_ == str
-    assert fields["fr"].required is True
-    assert fields["fr"].type_ == str
-
-
-def test_problems_i18n():
-    fields = ProblemsI18n.__fields__
-    assert set(fields) == {"vitamines", "sleep", "diet", "stress"}
-
-    assert fields["vitamines"].required is True
-    assert fields["vitamines"].type_ == ProblemTranslation
-    assert fields["sleep"].required is True
-    assert fields["sleep"].type_ == ProblemTranslation
-    assert fields["diet"].required is True
-    assert fields["diet"].type_ == ProblemTranslation
-    assert fields["stress"].required is True
-    assert fields["stress"].type_ == ProblemTranslation
-
-
-def test_language_problem_result():
-    fields = LanguageProblemResult.__fields__
-    assert set(fields) == {"null", "plural", "singular", "join"}
-
-    assert fields["null"].required is True
-    assert fields["null"].type_ == str
-    assert fields["plural"].required is True
-    assert fields["plural"].type_ == str
-    assert fields["singular"].required is True
-    assert fields["singular"].type_ == str
-    assert fields["join"].required is True
-    assert fields["join"].type_ == str
-
-
-def test_problem_result_i18n():
-    fields = ProblemResultI18n.__fields__
-    assert set(fields) == {"es", "en", "fr"}
-
-    assert fields["es"].required is True
-    assert fields["es"].type_ == LanguageProblemResult
-    assert fields["en"].required is True
-    assert fields["en"].type_ == LanguageProblemResult
-    assert fields["fr"].required is True
-    assert fields["fr"].type_ == LanguageProblemResult
 
 
 def test_health_data_process_result():

@@ -1,18 +1,15 @@
-from json import dumps
 from unittest import mock
 
 import pytest
 from pydantic import BaseModel, confloat
 
 from app import crud
-from app.core.health_data import hdprocessor
 from app.schemas.bot import DFResponse
 from app.schemas.conversation import Conversation, ConversationOut, DisplayType
 from app.schemas.health_data import HealthDataCreate
 from app.tests.utils.user import get_normal_user_id
 
-langs = list(hdprocessor.problem_result_text.dict().keys())
-
+langs = ("en", "es", "fr")
 
 class TestProcessMsg:
     responses = (
