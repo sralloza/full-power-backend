@@ -67,7 +67,7 @@ def bot_message_post(
         problem_explanation = hdprocessor.gen_report(
             hdprocessor.classify_problems(result), lang=lang
         )
-        df_resp.bot_msg = f"{df_resp.bot_msg}. {problem_explanation}"
+        df_resp.bot_msg = f"{df_resp.bot_msg}.\n{problem_explanation}"
         response.headers["health-data-result"] = result.json()
 
     conversation = ConversationCreate(
