@@ -1,0 +1,21 @@
+es:
+  diet: alimentación
+  sleep: dormir
+  stress: estrés
+  vitamins: vitaminas
+
+  numbers:
+    "1": un
+    "2": dos
+    "3": tres
+    "4": cuatro
+
+  light: leve
+  serious: grave
+
+  explanation:
+    none: No tienes ningún problema
+    one-type: "Tienes %{count} problema%{s} %{prob_type}%{s}: %{problems}"
+    multiple-types-1: "Tienes %{count} problema%{s} %{prob_type}%{s} (%{problems})"
+    multiple-types-2: "%{count} problema%{s} %{prob_type}%{s} (%{problems})"
+  join: "y"

@@ -1,0 +1,20 @@
+en:
+  diet: diet
+  sleep: sleep
+  stress: stress
+  vitamins: vitamins
+
+  light: light
+  serious: serious
+
+  numbers:
+    "1": one
+    "2": two
+    "3": three
+    "4": four
+  explanation:
+    none: You have no problem
+    one-type: "You have %{count} %{prob_type} problem%{s}: %{problems}"
+    multiple-types-1: "You have %{count} %{prob_type} problem%{s} (%{problems})"
+    multiple-types-2: "%{count} %{prob_type} problem%{s} (%{problems})"
+  join: "and"

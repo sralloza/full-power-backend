@@ -141,3 +141,29 @@ classify_problems_test_data = parse_file_as(List[IRPTestData], cp_test_data_path
 def test_classify_problems(test_data: IRPTestData):
     real = hdprocessor.classify_problems(test_data.result)
     assert real == test_data.problems
+
+
+class GenReportTestData(BaseModel):
+    name: str
+    inputs: List[List[str]]
+    outputs: str
+    lang: str
+
+    @validator("inputs", pre=True)
+    def check_inputs(cls, v):
+        if isinstance(v, list) and v and isinstance(v[0], str):
+            return [x.split("-") for x in v]
+        return v
+
+
+gr_test_data_path = Path(__file__).parent.parent / "test_data/gen_report.json"
+gen_report_test_data = parse_file_as(List[GenReportTestData], gr_test_data_path)
+ids = [f"{x.name}-{x.lang}" for x in gen_report_test_data]
+gen_report_test_data = [(x.inputs, x.outputs, x.lang) for x in gen_report_test_data]
+
+
+@pytest.mark.parametrize("inputs, outputs, lang", gen_report_test_data, ids=ids)
+def test_gen_report(inputs, outputs, lang):
+    inputs = [Problem(*x) for x in inputs]
+    real = hdprocessor.gen_report(inputs, lang=lang)
+    assert real == outputs

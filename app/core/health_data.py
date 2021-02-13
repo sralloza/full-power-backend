@@ -83,6 +83,61 @@ class _HealthDataProcessor:
 
         return problems
 
+    def gen_report(self, problems: List[Problem], lang: str):
+        i18n.set("locale", lang)
+
+        if not problems:
+            return i18n.t("problem.explanation.none")
+
+        lights = [x for x in problems if x.severity == "light"]
+        serious = [x for x in problems if x.severity == "serious"]
+
+        if lights and not serious:
+            names = [i18n.t(f"problem.{x.name}") for x in lights]
+            count = i18n.t(f"problem.numbers.{len(lights)}")
+
+            return i18n.t(
+                "problem.explanation.one-type",
+                prob_type=i18n.t("problem.light"),
+                problems=self.advanced_join(names, i18n.t("problem.join")),
+                count=count,
+                s="s" if len(lights) > 1 else "",
+            )
+
+        if serious and not lights:
+            names = [i18n.t(f"problem.{x.name}") for x in serious]
+            count = i18n.t(f"problem.numbers.{len(serious)}")
+
+            return i18n.t(
+                "problem.explanation.one-type",
+                prob_type=i18n.t("problem.serious"),
+                problems=self.advanced_join(names, i18n.t("problem.join")),
+                count=count,
+                s="s" if len(serious) > 1 else "",
+            )
+
+        light_names = [i18n.t(f"problem.{x.name}") for x in lights]
+        light_count = i18n.t(f"problem.numbers.{len(lights)}")
+        serious_names = [i18n.t(f"problem.{x.name}") for x in serious]
+        serious_count = i18n.t(f"problem.numbers.{len(serious)}")
+
+        light_str = i18n.t(
+            "problem.explanation.multiple-types-1",
+            prob_type=i18n.t("problem.light"),
+            problems=self.advanced_join(light_names, i18n.t("problem.join")),
+            count=light_count,
+            s="s" if len(lights) > 1 else "",
+        )
+        serious_str = i18n.t(
+            "problem.explanation.multiple-types-2",
+            prob_type=i18n.t("problem.serious"),
+            problems=self.advanced_join(serious_names, i18n.t("problem.join")),
+            count=serious_count,
+            s="s" if len(serious) > 1 else "",
+        )
+
+        return f"{light_str} {i18n.t('problem.join')} {serious_str}"
+
     @classmethod
     def advanced_join(cls, iterable, join_str):
         if len(iterable) < 2:
