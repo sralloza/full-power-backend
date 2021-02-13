@@ -49,10 +49,11 @@ class TestProcessMsg:
             "app.api.routes.bot.hdprocessor.process_health_data"
         ).start()
         self.phd_m.return_value = TempModel(problem=1.0)
-        self.irp_m = mock.patch(
-            "app.api.routes.bot.hdprocessor.identify_real_problems"
+        self.cp_m = mock.patch(
+            "app.api.routes.bot.hdprocessor.classify_problems"
         ).start()
-        self.irp_m.return_value = "<problem>"
+        self.gr_m = mock.patch("app.api.routes.bot.hdprocessor.gen_report").start()
+        self.gr_m.return_value = "<problem>"
         yield
         mock.patch.stopall()
 
@@ -97,11 +98,13 @@ class TestProcessMsg:
                 response.headers["health-data-result"] == self.phd_m.return_value.json()
             )
             self.phd_m.assert_called_once_with(mock.ANY)
-            self.irp_m.assert_called_once_with(self.phd_m.return_value, lang=lang)
+            self.cp_m.assert_called_once_with(self.phd_m.return_value)
+            self.gr_m.assert_called_once_with(self.cp_m.return_value, lang=lang)
         else:
             assert "health-data-result" not in response.headers
             self.phd_m.assert_not_called()
-            self.irp_m.assert_not_called()
+            self.cp_m.assert_not_called()
+            self.gr_m.assert_not_called()
 
     @pytest.mark.parametrize("lang", langs)
     def test_error(self, db, client, normal_user_token_headers, lang):

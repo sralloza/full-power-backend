@@ -64,12 +64,13 @@ def bot_message_post(
             ) from exc
 
         result = hdprocessor.process_health_data(filled_hd)
-        problem_explanation = hdprocessor.identify_real_problems(result, lang=lang)
+        problem_explanation = hdprocessor.gen_report(
+            hdprocessor.classify_problems(result), lang=lang
+        )
         df_resp.bot_msg = f"{df_resp.bot_msg}. {problem_explanation}"
         response.headers["health-data-result"] = result.json()
 
     conversation = ConversationCreate(
         user_msg=message, user_id=user.id, **df_resp.dict()
     )
-    x = crud.conversation.create(db, obj_in=conversation)
-    return x
+    return crud.conversation.create(db, obj_in=conversation)
