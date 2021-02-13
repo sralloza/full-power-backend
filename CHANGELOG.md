@@ -10,6 +10,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 ### Changed
 
 - Changed Health Data algorithm. Now considers two classes of real problems: `light` and `serious`.
+- Show user's problem report in a new message in the chat.
 
 ### Fixed
 
