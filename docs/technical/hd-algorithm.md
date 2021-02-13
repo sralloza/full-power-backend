@@ -33,7 +33,10 @@ $p = \dfrac{\displaystyle\sum_{i=1}^n (5-R_i) \cdot C_i}{\displaystyle\sum_{i=1}
 - $R_i$: different responses from the user (integer from 0 to 4).
 - $C_i$: coefficients for each response.
 
-Then, $p$ is compared to the setting `problem_ratio_threshold` (see [HealthData parsing in settings](../settings.md#healthdata-parsing)):
+Finally, $p$ is analysed to check if it is really a problem:
 
-- If $p\geq problem \; ratio\; threshold$, the problem is real and the user is notified.
-- If $p< problem \; ratio\; threshold$, the problem is not real and the user is **not** notified.
+- Values below 0.33 means it's not a real problem.
+- Values between 0.33 and 0.66 means it's a **light** problem.
+- Values above 0.66 indicate that the problem is a **serious** problem.
+
+Finally, the user is notified with a description of all the problems.

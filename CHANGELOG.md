@@ -7,9 +7,17 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 
 ## [Unreleased]
 
+### Changed
+
+- Changed Health Data algorithm. Now considers two classes of real problems: `light` and `serious`.
+
 ### Fixed
 
 - Error message in `File.name` validation.
+
+### Removed
+
+- Removed `settings.problem_ratio_threshold`
 
 ## [0.11.1] - 2021-02-12
 
