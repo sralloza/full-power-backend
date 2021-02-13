@@ -7,6 +7,10 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 
 ## [Unreleased]
 
+### Fixed
+
+- Error message in `File.name` validation.
+
 ## [0.11.1] - 2021-02-12
 
 ### Fixed
