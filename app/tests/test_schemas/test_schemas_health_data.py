@@ -37,11 +37,11 @@ questions_fields = {
 
 def test_question_coefficients():
     fields = QuestionCoefficients.__fields__
-    assert set(fields) == {"question_id", "vitamines", "sleep", "diet", "stress"}
+    assert set(fields) == {"question_id", "vitamins", "sleep", "diet", "stress"}
 
     assert fields["question_id"].required is True
     assert fields["question_id"].type_ == str
-    assert issubclass(fields["vitamines"].type_, int)
+    assert issubclass(fields["vitamins"].type_, int)
     assert fields["sleep"].required is True
     assert issubclass(fields["sleep"].type_, int)
     assert fields["diet"].required is True
@@ -58,10 +58,10 @@ def test_question_coefficients():
 
 def test_health_data_process_result():
     fields = HealthDataProccessResult.__fields__
-    assert set(fields) == {"vitamines", "sleep", "diet", "stress"}
+    assert set(fields) == {"vitamins", "sleep", "diet", "stress"}
 
-    assert fields["vitamines"].required is True
-    assert issubclass(fields["vitamines"].type_, float)
+    assert fields["vitamins"].required is True
+    assert issubclass(fields["vitamins"].type_, float)
     assert fields["sleep"].required is True
     assert issubclass(fields["sleep"].type_, float)
     assert fields["diet"].required is True

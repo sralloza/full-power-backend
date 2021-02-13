@@ -20,7 +20,7 @@ Problem = namedtuple("Problem", "name severity")
 
 
 class _HealthDataProcessor:
-    problem_names = ("vitamines", "sleep", "diet", "stress")
+    problem_names = ("vitamins", "sleep", "diet", "stress")
 
     def __init__(self):
         self.question_coeffs = self._get_question_coeffs()

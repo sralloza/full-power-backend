@@ -28,14 +28,14 @@ def test_hdprocessor_attrs():
 def test_sum_coefficients():
     new_hdprocessor = deepcopy(hdprocessor)
     unparsed_data = [
-        {"vitamines": 7, "sleep": 3, "diet": 6, "stress": 8, "question_id": "#1"},
-        {"vitamines": 3, "sleep": 8, "diet": 10, "stress": 1, "question_id": "#2"},
-        {"vitamines": 7, "sleep": 7, "diet": 9, "stress": 3, "question_id": "#3"},
+        {"vitamins": 7, "sleep": 3, "diet": 6, "stress": 8, "question_id": "#1"},
+        {"vitamins": 3, "sleep": 8, "diet": 10, "stress": 1, "question_id": "#2"},
+        {"vitamins": 7, "sleep": 7, "diet": 9, "stress": 3, "question_id": "#3"},
     ]
     coeffs = parse_obj_as(List[QuestionCoefficients], unparsed_data)
     new_hdprocessor.question_coeffs = coeffs
 
-    expected = {"vitamines": 68, "sleep": 72, "diet": 100, "stress": 48}
+    expected = {"vitamins": 68, "sleep": 72, "diet": 100, "stress": 48}
     assert new_hdprocessor._sum_coefficients() == expected
 
 

@@ -11,6 +11,7 @@ from app.tests.utils.user import get_normal_user_id
 
 langs = ("en", "es", "fr")
 
+
 class TestProcessMsg:
     responses = (
         DFResponse(
@@ -76,7 +77,7 @@ class TestProcessMsg:
             assert conv.bot_msg == ["this is the bot message"]
             response.json()["bot_msg"] == "this is the bot message"
         else:
-            assert conv.bot_msg == ["this is the bot message. <problem>"]
+            assert conv.bot_msg == ["this is the bot message.", "<problem>"]
             response.json()["bot_msg"] == "this is the bot message. <problem>"
 
         assert conv.intent == "this is the intent"

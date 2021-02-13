@@ -1,133 +1,133 @@
 [
   {
     "question_id": "energy",
-    "vitamines": 1,
+    "vitamins": 1,
     "sleep": 0,
     "diet": 0,
     "stress": 0
   },
   {
     "question_id": "restful_sleep",
-    "vitamines": 1,
+    "vitamins": 1,
     "sleep": 2,
     "diet": 0,
     "stress": 0
   },
   {
     "question_id": "fall_asleep_easily",
-    "vitamines": 1,
+    "vitamins": 1,
     "sleep": 1,
     "diet": 0,
     "stress": 0
   },
   {
     "question_id": "deep_sleep",
-    "vitamines": 1,
+    "vitamins": 1,
     "sleep": 1,
     "diet": 0,
     "stress": 0
   },
   {
     "question_id": "enough_sleep",
-    "vitamines": 0,
+    "vitamins": 0,
     "sleep": 1,
     "diet": 0,
     "stress": 0
   },
   {
     "question_id": "energy_morning",
-    "vitamines": 1,
+    "vitamins": 1,
     "sleep": 1,
     "diet": 0,
     "stress": 0
   },
   {
     "question_id": "uniform_mood",
-    "vitamines": 1,
+    "vitamins": 1,
     "sleep": 0,
     "diet": 0,
     "stress": 1
   },
   {
     "question_id": "memory",
-    "vitamines": 1,
+    "vitamins": 1,
     "sleep": 0,
     "diet": 0,
     "stress": 0
   },
   {
     "question_id": "concentration",
-    "vitamines": 1,
+    "vitamins": 1,
     "sleep": 0,
     "diet": 0,
     "stress": 1
   },
   {
     "question_id": "creativity",
-    "vitamines": 1,
+    "vitamins": 1,
     "sleep": 0,
     "diet": 0,
     "stress": 1
   },
   {
     "question_id": "stress",
-    "vitamines": 1,
+    "vitamins": 1,
     "sleep": 0,
     "diet": 0,
     "stress": 2
   },
   {
     "question_id": "cramps",
-    "vitamines": 1,
+    "vitamins": 1,
     "sleep": 0,
     "diet": 0,
     "stress": 0
   },
   {
     "question_id": "dagger",
-    "vitamines": 1,
+    "vitamins": 1,
     "sleep": 0,
     "diet": 0,
     "stress": 1
   },
   {
     "question_id": "pump_strokes",
-    "vitamines": 0,
+    "vitamins": 0,
     "sleep": 0,
     "diet": 1,
     "stress": 0
   },
   {
     "question_id": "uplifts",
-    "vitamines": 0,
+    "vitamins": 0,
     "sleep": 0,
     "diet": 1,
     "stress": 0
   },
   {
     "question_id": "swollen_belly",
-    "vitamines": 0,
+    "vitamins": 0,
     "sleep": 0,
     "diet": 1,
     "stress": 0
   },
   {
     "question_id": "gases",
-    "vitamines": 0,
+    "vitamins": 0,
     "sleep": 0,
     "diet": 1,
     "stress": 0
   },
   {
     "question_id": "bowel_movement",
-    "vitamines": 0,
+    "vitamins": 0,
     "sleep": 0,
     "diet": 1,
     "stress": 0
   },
   {
     "question_id": "sheet_wipe",
-    "vitamines": 0,
+    "vitamins": 0,
     "sleep": 0,
     "diet": 1,
     "stress": 0

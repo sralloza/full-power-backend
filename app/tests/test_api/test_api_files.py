@@ -105,7 +105,7 @@ def test_remove_multiple_files(
     db: Session, client: TestClient, superuser_token_headers
 ):
     response_1 = client.delete(
-        "/files/multiple", json=[{"name": "vitamines.sdfsdf", "lang": "ch"}]
+        "/files/multiple", json=[{"name": "vitamins.sdfsdf", "lang": "ch"}]
     )
     assert response_1.status_code == 401
 
