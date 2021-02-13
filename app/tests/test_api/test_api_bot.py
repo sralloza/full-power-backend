@@ -11,6 +11,7 @@ from app.tests.utils.user import get_normal_user_id
 
 langs = ("en", "es", "fr")
 
+
 class TestProcessMsg:
     responses = (
         DFResponse(
