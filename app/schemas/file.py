@@ -14,7 +14,7 @@ class FileBase(BaseModel):
         primary, secondary = value.split(".", 1)
         if primary not in ["health", "vitamins"]:
             raise ValueError(
-                f"Primary key must be 'health' or 'vitamines', not {primary!r}"
+                f"Primary key must be 'health' or 'vitamins', not {primary!r}"
             )
 
         if primary == "vitamins" and secondary.count(".") != 0:

@@ -15,7 +15,7 @@ from app.schemas.file import (
 
 invalid_name_test_data = (
     ("invalid-key", "Must contain at least one dot"),
-    ("invalid.key", "Primary key must be 'health' or 'vitamines'"),
+    ("invalid.key", "Primary key must be 'health' or 'vitamins'"),
     ("vitamins.invalid.key", "Vitamin's secondary key can't contain dots"),
     ("health.invalid", "Health's secondary key must contain excactly one dot"),
     ("health.invalid.key", "Health type must be 'act' or 'understand'"),
