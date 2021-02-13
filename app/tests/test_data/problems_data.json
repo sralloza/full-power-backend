@@ -1,77 +1,22 @@
 [
   {
     "result": { "vitamines": 0.6, "sleep": 0.4, "diet": 0.2, "stress": 0 },
-    "report": "No tienes ningún problema",
-    "lang": "es"
-  },
-  {
-    "result": { "vitamines": 0.6, "sleep": 0.4, "diet": 0.2, "stress": 0 },
-    "report": "You don't have any problem",
-    "lang": "en"
-  },
-  {
-    "result": { "vitamines": 0.6, "sleep": 0.4, "diet": 0.2, "stress": 0 },
-    "report": "Tu n'as aucun problème",
-    "lang": "fr"
+    "problems": ["vitamines-light", "sleep-light"]
   },
   {
     "result": { "vitamines": 1, "sleep": 0.4, "diet": 0.2, "stress": 0 },
-    "report": "Tu principal problema es vitaminas",
-    "lang": "es"
-  },
-  {
-    "result": { "vitamines": 1, "sleep": 0.4, "diet": 0.2, "stress": 0 },
-    "report": "Your main problem is vitamines",
-    "lang": "en"
-  },
-  {
-    "result": { "vitamines": 1, "sleep": 0.4, "diet": 0.2, "stress": 0 },
-    "report": "Votre problème principal est vitamines",
-    "lang": "fr"
+    "problems": ["vitamines-serious", "sleep-light"]
   },
   {
     "result": { "vitamines": 1, "sleep": 0.75, "diet": 0.2, "stress": 0 },
-    "report": "Tienes varios problemas importantes: vitaminas y dormir",
-    "lang": "es"
-  },
-  {
-    "result": { "vitamines": 1, "sleep": 0.75, "diet": 0.2, "stress": 0 },
-    "report": "You have several important problems: vitamines and sleep",
-    "lang": "en"
-  },
-  {
-    "result": { "vitamines": 1, "sleep": 0.75, "diet": 0.2, "stress": 0 },
-    "report": "Vous avez plusieurs problèmes importants: vitamines et sommeil",
-    "lang": "fr"
+    "problems": ["vitamines-serious", "sleep-serious"]
   },
   {
     "result": { "vitamines": 1, "sleep": 0.75, "diet": 0.8, "stress": 0 },
-    "report": "Tienes varios problemas importantes: vitaminas, dormir y alimentación",
-    "lang": "es"
+    "problems": ["vitamines-serious", "sleep-serious", "diet-serious"]
   },
   {
-    "result": { "vitamines": 1, "sleep": 0.75, "diet": 0.8, "stress": 0 },
-    "report": "You have several important problems: vitamines, sleep and diet",
-    "lang": "en"
-  },
-  {
-    "result": { "vitamines": 1, "sleep": 0.75, "diet": 0.8, "stress": 0 },
-    "report": "Vous avez plusieurs problèmes importants: vitamines, sommeil et alimentation",
-    "lang": "fr"
-  },
-  {
-    "result": { "vitamines": 1, "sleep": 0.75, "diet": 0.8, "stress": 1 },
-    "report": "Tienes varios problemas importantes: vitaminas, dormir, alimentación y estrés",
-    "lang": "es"
-  },
-  {
-    "result": { "vitamines": 1, "sleep": 0.75, "diet": 0.8, "stress": 1 },
-    "report": "You have several important problems: vitamines, sleep, diet and stress",
-    "lang": "en"
-  },
-  {
-    "result": { "vitamines": 1, "sleep": 0.75, "diet": 0.8, "stress": 1 },
-    "report": "Vous avez plusieurs problèmes importants: vitamines, sommeil, alimentation et stress",
-    "lang": "fr"
+    "result": { "vitamines": 0.4, "sleep": 0.2, "diet": 0.5, "stress": 1 },
+    "problems": ["vitamines-light", "diet-light", "stress-serious"]
   }
 ]

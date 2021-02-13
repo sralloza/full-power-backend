@@ -48,9 +48,6 @@ class Settings(BaseSettings):
     # Bot generics
     bot_split_char: str = "~"
 
-    # HealthData parsing
-    problem_ratio_threshold: confloat(ge=0, le=1) = 0.75
-
     # Testing
     username_test_user: str = "the_Test"
     username_test_password: str = "the_TestPassword"

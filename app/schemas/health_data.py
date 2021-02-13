@@ -12,32 +12,6 @@ class QuestionCoefficients(BaseModel):
     stress: conint(ge=0)
 
 
-class ProblemTranslation(BaseModel):
-    es: str
-    en: str
-    fr: str
-
-
-class ProblemsI18n(BaseModel):
-    vitamines: ProblemTranslation
-    sleep: ProblemTranslation
-    diet: ProblemTranslation
-    stress: ProblemTranslation
-
-
-class LanguageProblemResult(BaseModel):
-    null: str
-    plural: str
-    singular: str
-    join: str
-
-
-class ProblemResultI18n(BaseModel):
-    es: LanguageProblemResult
-    en: LanguageProblemResult
-    fr: LanguageProblemResult
-
-
 class HealthDataProccessResult(BaseModel):
     vitamines: confloat(ge=0, le=1)
     sleep: confloat(ge=0, le=1)

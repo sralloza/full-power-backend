@@ -1,50 +1,36 @@
 import logging
+from collections import namedtuple
 from pathlib import Path
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Union
 
 from fastapi import HTTPException
 from pydantic import parse_file_as
 
-from app.core.config import settings
 from app.models.health_data import HealthData
 from app.schemas.health_data import (
     HealthDataCreate,
     HealthDataProccessResult,
-    ProblemResultI18n,
-    ProblemsI18n,
     QuestionCoefficients,
 )
+from app.utils.translate import i18n
 
 HealthDataLike = Union[HealthData, HealthDataCreate]
 logger = logging.getLogger(__name__)
+Problem = namedtuple("Problem", "name severity")
 
 
 class _HealthDataProcessor:
     problem_names = ("vitamines", "sleep", "diet", "stress")
 
     def __init__(self):
-        self.problem_result_text = self._get_problem_result_text()
         self.question_coeffs = self._get_question_coeffs()
-        self.problem_translation = self._get_problem_translation()
         self.sums = self._sum_coefficients()
-
-    @staticmethod
-    def _get_problem_result_text() -> ProblemResultI18n:
-        return ProblemResultI18n.parse_file(
-            Path(__file__).resolve().parent.parent / "db/files/problem_result_i18n.json"
-        )
 
     @staticmethod
     def _get_question_coeffs() -> List[QuestionCoefficients]:
         return parse_file_as(
             List[QuestionCoefficients],
             Path(__file__).resolve().parent.parent / "db/files/coefficients.json",
-        )
-
-    @staticmethod
-    def _get_problem_translation() -> ProblemsI18n:
-        return ProblemsI18n.parse_file(
-            Path(__file__).resolve().parent.parent / "db/files/problem_names_i18n.json"
         )
 
     def _sum_coefficients(self) -> Dict[str, int]:
@@ -71,29 +57,76 @@ class _HealthDataProcessor:
         problems = {k: v / self.sums[k] for k, v in problems.items()}
         return HealthDataProccessResult.parse_obj(problems)
 
-    def identify_real_problems(
-        self, hd_result: HealthDataProccessResult, lang: str
-    ) -> str:
-        real_problems = []
+    def classify_problems(self, hd_result: HealthDataProccessResult) -> List[Problem]:
+        problems = []
         for problem, severity in hd_result:  # noqa
-            if severity >= settings.problem_ratio_threshold:
-                real_problems.append(problem)
+            if 0.333333 <= severity < 0.666666:
+                problems.append(Problem(problem, "light"))
+            elif severity >= 0.666666:
+                problems.append(Problem(problem, "serious"))
 
-        if len(real_problems) == 0:
-            return self.problem_result_text.dict()[lang]["null"]
+        return problems
 
-        if len(real_problems) == 1:
-            problem_name = real_problems[0]
-            template = self.problem_result_text.dict()[lang]["singular"]
-            return template % self.problem_translation.dict()[problem_name][lang]
+    def gen_report(self, problems: List[Problem], lang: str):
+        i18n.set("locale", lang)
 
-        template = self.problem_result_text.dict()[lang]["plural"]
-        problems = [self.problem_translation.dict()[x][lang] for x in real_problems]
-        return template % self.join_problems(problems, lang)
+        if not problems:
+            return i18n.t("problem.explanation.none")
 
-    def join_problems(self, problems: List[str], lang: str):
-        last_part = f" {self.problem_result_text.dict()[lang]['join']} {problems[-1]}"
-        return ", ".join(problems[:-1]) + last_part
+        lights = [x for x in problems if x.severity == "light"]
+        serious = [x for x in problems if x.severity == "serious"]
+
+        if lights and not serious:
+            names = [i18n.t(f"problem.{x.name}") for x in lights]
+            count = i18n.t(f"problem.numbers.{len(lights)}")
+
+            return i18n.t(
+                "problem.explanation.one-type",
+                prob_type=i18n.t("problem.light"),
+                problems=self.advanced_join(names, i18n.t("problem.join")),
+                count=count,
+                s="s" if len(lights) > 1 else "",
+            )
+
+        if serious and not lights:
+            names = [i18n.t(f"problem.{x.name}") for x in serious]
+            count = i18n.t(f"problem.numbers.{len(serious)}")
+
+            return i18n.t(
+                "problem.explanation.one-type",
+                prob_type=i18n.t("problem.serious"),
+                problems=self.advanced_join(names, i18n.t("problem.join")),
+                count=count,
+                s="s" if len(serious) > 1 else "",
+            )
+
+        light_names = [i18n.t(f"problem.{x.name}") for x in lights]
+        light_count = i18n.t(f"problem.numbers.{len(lights)}")
+        serious_names = [i18n.t(f"problem.{x.name}") for x in serious]
+        serious_count = i18n.t(f"problem.numbers.{len(serious)}")
+
+        light_str = i18n.t(
+            "problem.explanation.multiple-types-1",
+            prob_type=i18n.t("problem.light"),
+            problems=self.advanced_join(light_names, i18n.t("problem.join")),
+            count=light_count,
+            s="s" if len(lights) > 1 else "",
+        )
+        serious_str = i18n.t(
+            "problem.explanation.multiple-types-2",
+            prob_type=i18n.t("problem.serious"),
+            problems=self.advanced_join(serious_names, i18n.t("problem.join")),
+            count=serious_count,
+            s="s" if len(serious) > 1 else "",
+        )
+
+        return f"{light_str} {i18n.t('problem.join')} {serious_str}"
+
+    @classmethod
+    def advanced_join(cls, iterable, join_str):
+        if len(iterable) < 2:
+            return f" {join_str} ".join(iterable)
+        return ", ".join(iterable[:-1]) + f" {join_str} {iterable[-1]}"
 
 
 hdprocessor = _HealthDataProcessor()

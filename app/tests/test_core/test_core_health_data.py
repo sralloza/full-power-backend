@@ -6,16 +6,12 @@ from unittest import mock
 import numpy as np
 import pytest
 from fastapi import HTTPException
-from pydantic.main import BaseModel
-from pydantic.tools import parse_file_as, parse_obj_as
+from pydantic import BaseModel, parse_file_as, parse_obj_as, validator
 
-from app.core.config import settings
-from app.core.health_data import hdprocessor
+from app.core.health_data import Problem, hdprocessor
 from app.schemas.health_data import (
     HealthDataCreate,
     HealthDataProccessResult,
-    ProblemResultI18n,
-    ProblemsI18n,
     QuestionCoefficients,
 )
 from app.tests.utils.utils import random_int
@@ -25,29 +21,8 @@ def test_hdprocessor_attrs():
     from app.core.health_data import _HealthDataProcessor
 
     assert isinstance(hdprocessor, _HealthDataProcessor)
-    assert hasattr(hdprocessor, "problem_result_text")
     assert hasattr(hdprocessor, "question_coeffs")
-    assert hasattr(hdprocessor, "problem_translation")
     assert hasattr(hdprocessor, "sums")
-
-
-def test_get_problem_result_text():
-    problem_result_text = hdprocessor._get_problem_result_text()
-    assert isinstance(problem_result_text, ProblemResultI18n)
-    assert hdprocessor.problem_result_text == problem_result_text
-
-
-def test_get_question_coeffs():
-    question_coeffs = hdprocessor._get_question_coeffs()
-    for coeff in question_coeffs:
-        assert isinstance(coeff, QuestionCoefficients)
-    assert hdprocessor.question_coeffs == question_coeffs
-
-
-def test_get_problem_translation():
-    problem_translation = hdprocessor._get_problem_translation()
-    assert isinstance(problem_translation, ProblemsI18n)
-    assert hdprocessor.problem_translation == problem_translation
 
 
 def test_sum_coefficients():
@@ -78,7 +53,6 @@ test_process_data_out = (
 )
 
 columns_in = [x.question_id for x in hdprocessor.question_coeffs]
-langs = list(hdprocessor.problem_result_text.dict().keys())
 
 
 @pytest.fixture
@@ -127,16 +101,45 @@ def test_process_health_data_error(caplog):
 
 class IRPTestData(BaseModel):
     result: HealthDataProccessResult
-    report: str
+    problems: List[Problem]
+
+    @validator("problems", pre=True)
+    def check_problems(cls, v):
+        if isinstance(v, list) and v and isinstance(v[0], str):  # noqa
+            return [Problem(*x.split("-")) for x in v]
+
+
+cp_test_data_path = Path(__file__).parent.parent / "test_data/problems_data.json"
+classify_problems_test_data = parse_file_as(List[IRPTestData], cp_test_data_path)
+
+
+@pytest.mark.parametrize("test_data", classify_problems_test_data)
+def test_classify_problems(test_data: IRPTestData):
+    real = hdprocessor.classify_problems(test_data.result)
+    assert real == test_data.problems
+
+
+class GenReportTestData(BaseModel):
+    name: str
+    inputs: List[List[str]]
+    outputs: str
     lang: str
 
+    @validator("inputs", pre=True)
+    def check_inputs(cls, v):
+        if isinstance(v, list) and v and isinstance(v[0], str):
+            return [x.split("-") for x in v]
+        return v
 
-irp_test_data_path = Path(__file__).parent.parent / "test_data/problems_data.json"
-identify_problems_data = parse_file_as(List[IRPTestData], irp_test_data_path)
+
+gr_test_data_path = Path(__file__).parent.parent / "test_data/gen_report.json"
+gen_report_test_data = parse_file_as(List[GenReportTestData], gr_test_data_path)
+ids = [f"{x.name}-{x.lang}" for x in gen_report_test_data]
+gen_report_test_data = [(x.inputs, x.outputs, x.lang) for x in gen_report_test_data]
 
 
-@pytest.mark.parametrize("test_data", identify_problems_data)
-def test_identify_real_problems(test_data: IRPTestData):
-    assert settings.problem_ratio_threshold == 0.75
-    real = hdprocessor.identify_real_problems(test_data.result, test_data.lang)
-    assert real == test_data.report
+@pytest.mark.parametrize("inputs, outputs, lang", gen_report_test_data, ids=ids)
+def test_gen_report(inputs, outputs, lang):
+    inputs = [Problem(*x) for x in inputs]
+    real = hdprocessor.gen_report(inputs, lang=lang)
+    assert real == outputs

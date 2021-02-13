@@ -1,0 +1,272 @@
+[
+  {
+    "name": "0-0",
+    "inputs": [],
+    "outputs": "You have no problem",
+    "lang": "en"
+  },
+  {
+    "name": "1-0",
+    "inputs": ["sleep-light"],
+    "outputs": "You have one light problem: sleep",
+    "lang": "en"
+  },
+  {
+    "name": "2-0",
+    "inputs": ["diet-light", "vitamins-light"],
+    "outputs": "You have two light problems: diet and vitamins",
+    "lang": "en"
+  },
+  {
+    "name": "3-0",
+    "inputs": ["vitamins-light", "diet-light", "stress-light"],
+    "outputs": "You have three light problems: vitamins, diet and stress",
+    "lang": "en"
+  },
+  {
+    "name": "4-0",
+    "inputs": ["vitamins-light", "diet-light", "stress-light", "sleep-light"],
+    "outputs": "You have four light problems: vitamins, diet, stress and sleep",
+    "lang": "en"
+  },
+  {
+    "name": "0-1",
+    "inputs": ["sleep-serious"],
+    "outputs": "You have one serious problem: sleep",
+    "lang": "en"
+  },
+  {
+    "name": "0-2",
+    "inputs": ["diet-serious", "vitamins-serious"],
+    "outputs": "You have two serious problems: diet and vitamins",
+    "lang": "en"
+  },
+  {
+    "name": "0-3",
+    "inputs": ["vitamins-serious", "diet-serious", "stress-serious"],
+    "outputs": "You have three serious problems: vitamins, diet and stress",
+    "lang": "en"
+  },
+  {
+    "name": "0-4",
+    "inputs": ["vitamins-serious", "diet-serious", "stress-serious", "sleep-serious"],
+    "outputs": "You have four serious problems: vitamins, diet, stress and sleep",
+    "lang": "en"
+  },
+  {
+    "name": "1-1",
+    "inputs": ["vitamins-light", "sleep-serious"],
+    "outputs": "You have one light problem (vitamins) and one serious problem (sleep)",
+    "lang": "en"
+  },
+  {
+    "name": "2-1",
+    "inputs": ["vitamins-light", "diet-light", "sleep-serious"],
+    "outputs": "You have two light problems (vitamins and diet) and one serious problem (sleep)",
+    "lang": "en"
+  },
+  {
+    "name": "1-2",
+    "inputs": ["vitamins-light", "diet-serious", "sleep-serious"],
+    "outputs": "You have one light problem (vitamins) and two serious problems (diet and sleep)",
+    "lang": "en"
+  },
+  {
+    "name": "2-2",
+    "inputs": ["vitamins-light", "diet-light", "stress-serious", "sleep-serious"],
+    "outputs": "You have two light problems (vitamins and diet) and two serious problems (stress and sleep)",
+    "lang": "en"
+  },
+  {
+      "name": "3-1",
+      "inputs": ["stress-light", "diet-light", "sleep-light", "vitamins-serious"],
+      "outputs": "You have three light problems (stress, diet and sleep) and one serious problem (vitamins)",
+      "lang": "en"
+  },
+  {
+      "name": "1-3",
+      "inputs": ["stress-light", "diet-serious", "sleep-serious", "vitamins-serious"],
+      "outputs": "You have one light problem (stress) and three serious problems (diet, sleep and vitamins)",
+      "lang": "en"
+  },
+  {
+    "name": "0-0",
+    "inputs": [],
+    "outputs": "No tienes ningún problema",
+    "lang": "es"
+  },
+  {
+    "name": "1-0",
+    "inputs": ["sleep-light"],
+    "outputs": "Tienes un problema leve: dormir",
+    "lang": "es"
+  },
+  {
+    "name": "2-0",
+    "inputs": ["diet-light", "vitamins-light"],
+    "outputs": "Tienes dos problemas leves: alimentación y vitaminas",
+    "lang": "es"
+  },
+  {
+    "name": "3-0",
+    "inputs": ["vitamins-light", "diet-light", "stress-light"],
+    "outputs": "Tienes tres problemas leves: vitaminas, alimentación y estrés",
+    "lang": "es"
+  },
+  {
+    "name": "4-0",
+    "inputs": ["vitamins-light", "diet-light", "stress-light", "sleep-light"],
+    "outputs": "Tienes cuatro problemas leves: vitaminas, alimentación, estrés y dormir",
+    "lang": "es"
+  },
+  {
+    "name": "0-1",
+    "inputs": ["sleep-serious"],
+    "outputs": "Tienes un problema grave: dormir",
+    "lang": "es"
+  },
+  {
+    "name": "0-2",
+    "inputs": ["diet-serious", "vitamins-serious"],
+    "outputs": "Tienes dos problemas graves: alimentación y vitaminas",
+    "lang": "es"
+  },
+  {
+    "name": "0-3",
+    "inputs": ["vitamins-serious", "diet-serious", "stress-serious"],
+    "outputs": "Tienes tres problemas graves: vitaminas, alimentación y estrés",
+    "lang": "es"
+  },
+  {
+    "name": "0-4",
+    "inputs": ["vitamins-serious", "diet-serious", "stress-serious", "sleep-serious"],
+    "outputs": "Tienes cuatro problemas graves: vitaminas, alimentación, estrés y dormir",
+    "lang": "es"
+  },
+  {
+    "name": "1-1",
+    "inputs": ["vitamins-light", "sleep-serious"],
+    "outputs": "Tienes un problema leve (vitaminas) y un problema grave (dormir)",
+    "lang": "es"
+  },
+  {
+    "name": "2-1",
+    "inputs": ["vitamins-light", "diet-light", "sleep-serious"],
+    "outputs": "Tienes dos problemas leves (vitaminas y alimentación) y un problema grave (dormir)",
+    "lang": "es"
+  },
+  {
+    "name": "1-2",
+    "inputs": ["vitamins-light", "diet-serious", "sleep-serious"],
+    "outputs": "Tienes un problema leve (vitaminas) y dos problemas graves (alimentación y dormir)",
+    "lang": "es"
+  },
+  {
+    "name": "2-2",
+    "inputs": ["vitamins-light", "diet-light", "stress-serious", "sleep-serious"],
+    "outputs": "Tienes dos problemas leves (vitaminas y alimentación) y dos problemas graves (estrés y dormir)",
+    "lang": "es"
+  },
+  {
+      "name": "3-1",
+      "inputs": ["stress-light", "diet-light", "sleep-light", "vitamins-serious"],
+      "outputs": "Tienes tres problemas leves (estrés, alimentación y dormir) y un problema grave (vitaminas)",
+      "lang": "es"
+  },
+  {
+      "name": "1-3",
+      "inputs": ["stress-light", "diet-serious", "sleep-serious", "vitamins-serious"],
+      "outputs": "Tienes un problema leve (estrés) y tres problemas graves (alimentación, dormir y vitaminas)",
+      "lang": "es"
+  },
+  {
+    "name": "0-0",
+    "inputs": [],
+    "outputs": "Tu n'as aucun problème",
+    "lang": "fr"
+  },
+  {
+    "name": "1-0",
+    "inputs": ["sleep-light"],
+    "outputs": "Vous avez un problème léger: sommeil",
+    "lang": "fr"
+  },
+  {
+    "name": "2-0",
+    "inputs": ["diet-light", "vitamins-light"],
+    "outputs": "Vous avez deux problèmes légers: alimentation et vitamines",
+    "lang": "fr"
+  },
+  {
+    "name": "3-0",
+    "inputs": ["vitamins-light", "diet-light", "stress-light"],
+    "outputs": "Vous avez trois problèmes légers: vitamines, alimentation et stress",
+    "lang": "fr"
+  },
+  {
+    "name": "4-0",
+    "inputs": ["vitamins-light", "diet-light", "stress-light", "sleep-light"],
+    "outputs": "Vous avez quatre problèmes légers: vitamines, alimentation, stress et sommeil",
+    "lang": "fr"
+  },
+  {
+    "name": "0-1",
+    "inputs": ["sleep-serious"],
+    "outputs": "Vous avez un problème grave: sommeil",
+    "lang": "fr"
+  },
+  {
+    "name": "0-2",
+    "inputs": ["diet-serious", "vitamins-serious"],
+    "outputs": "Vous avez deux problèmes graves: alimentation et vitamines",
+    "lang": "fr"
+  },
+  {
+    "name": "0-3",
+    "inputs": ["vitamins-serious", "diet-serious", "stress-serious"],
+    "outputs": "Vous avez trois problèmes graves: vitamines, alimentation et stress",
+    "lang": "fr"
+  },
+  {
+    "name": "0-4",
+    "inputs": ["vitamins-serious", "diet-serious", "stress-serious", "sleep-serious"],
+    "outputs": "Vous avez quatre problèmes graves: vitamines, alimentation, stress et sommeil",
+    "lang": "fr"
+  },
+  {
+    "name": "1-1",
+    "inputs": ["vitamins-light", "sleep-serious"],
+    "outputs": "Vouz avez un problème léger (vitamines) et un problème grave (sommeil)",
+    "lang": "fr"
+  },
+  {
+    "name": "2-1",
+    "inputs": ["vitamins-light", "diet-light", "sleep-serious"],
+    "outputs": "Vouz avez deux problèmes légers (vitamines et alimentation) et un problème grave (sommeil)",
+    "lang": "fr"
+  },
+  {
+    "name": "1-2",
+    "inputs": ["vitamins-light", "diet-serious", "sleep-serious"],
+    "outputs": "Vouz avez un problème léger (vitamines) et deux problèmes graves (alimentation et sommeil)",
+    "lang": "fr"
+  },
+  {
+    "name": "2-2",
+    "inputs": ["vitamins-light", "diet-light", "stress-serious", "sleep-serious"],
+    "outputs": "Vouz avez deux problèmes légers (vitamines et alimentation) et deux problèmes graves (stress et sommeil)",
+    "lang": "fr"
+  },
+  {
+      "name": "3-1",
+      "inputs": ["stress-light", "diet-light", "sleep-light", "vitamins-serious"],
+      "outputs": "Vouz avez trois problèmes légers (stress, alimentation et sommeil) et un problème grave (vitamines)",
+      "lang": "fr"
+  },
+  {
+      "name": "1-3",
+      "inputs": ["stress-light", "diet-serious", "sleep-serious", "vitamins-serious"],
+      "outputs": "Vouz avez un problème léger (stress) et trois problèmes graves (alimentation, sommeil et vitamines)",
+      "lang": "fr"
+  }
+]
