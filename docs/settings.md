@@ -47,10 +47,6 @@ Here is a list of all the settings clasified by category.
 !!! warning
     This setting must be in sync with the questions excel and the chatbot's questions.
 
-## HealthData parsing
-
-- `problem_ratio_threshold`: threshold to classify a problem as a problem. Must be a number between 0 and 1. Defaults to `0.75`.
-
 ## Testing
 
 - `username_test_user`: test user's username. It's only used during tests. Defaults to `the_Test`.
