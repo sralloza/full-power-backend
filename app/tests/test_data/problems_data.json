@@ -1,22 +1,22 @@
 [
   {
-    "result": { "vitamines": 0.6, "sleep": 0.4, "diet": 0.2, "stress": 0 },
-    "problems": ["vitamines-light", "sleep-light"]
+    "result": { "vitamins": 0.6, "sleep": 0.4, "diet": 0.2, "stress": 0 },
+    "problems": ["vitamins-light", "sleep-light"]
   },
   {
-    "result": { "vitamines": 1, "sleep": 0.4, "diet": 0.2, "stress": 0 },
-    "problems": ["vitamines-serious", "sleep-light"]
+    "result": { "vitamins": 1, "sleep": 0.4, "diet": 0.2, "stress": 0 },
+    "problems": ["vitamins-serious", "sleep-light"]
   },
   {
-    "result": { "vitamines": 1, "sleep": 0.75, "diet": 0.2, "stress": 0 },
-    "problems": ["vitamines-serious", "sleep-serious"]
+    "result": { "vitamins": 1, "sleep": 0.75, "diet": 0.2, "stress": 0 },
+    "problems": ["vitamins-serious", "sleep-serious"]
   },
   {
-    "result": { "vitamines": 1, "sleep": 0.75, "diet": 0.8, "stress": 0 },
-    "problems": ["vitamines-serious", "sleep-serious", "diet-serious"]
+    "result": { "vitamins": 1, "sleep": 0.75, "diet": 0.8, "stress": 0 },
+    "problems": ["vitamins-serious", "sleep-serious", "diet-serious"]
   },
   {
-    "result": { "vitamines": 0.4, "sleep": 0.2, "diet": 0.5, "stress": 1 },
-    "problems": ["vitamines-light", "diet-light", "stress-serious"]
+    "result": { "vitamins": 0.4, "sleep": 0.2, "diet": 0.5, "stress": 1 },
+    "problems": ["vitamins-light", "diet-light", "stress-serious"]
   }
 ]

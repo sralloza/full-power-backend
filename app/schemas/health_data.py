@@ -6,14 +6,14 @@ from pydantic import BaseModel, confloat, conint
 
 class QuestionCoefficients(BaseModel):
     question_id: str
-    vitamines: conint(ge=0)
+    vitamins: conint(ge=0)
     sleep: conint(ge=0)
     diet: conint(ge=0)
     stress: conint(ge=0)
 
 
 class HealthDataProccessResult(BaseModel):
-    vitamines: confloat(ge=0, le=1)
+    vitamins: confloat(ge=0, le=1)
     sleep: confloat(ge=0, le=1)
     diet: confloat(ge=0, le=1)
     stress: confloat(ge=0, le=1)
