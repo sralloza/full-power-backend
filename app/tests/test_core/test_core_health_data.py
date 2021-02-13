@@ -6,11 +6,9 @@ from unittest import mock
 import numpy as np
 import pytest
 from fastapi import HTTPException
-from pydantic.main import BaseModel
-from pydantic.tools import parse_file_as, parse_obj_as
+from pydantic import BaseModel, parse_file_as, parse_obj_as, validator
 
-from app.core.config import settings
-from app.core.health_data import hdprocessor
+from app.core.health_data import Problem, hdprocessor
 from app.schemas.health_data import (
     HealthDataCreate,
     HealthDataProccessResult,
@@ -127,16 +125,19 @@ def test_process_health_data_error(caplog):
 
 class IRPTestData(BaseModel):
     result: HealthDataProccessResult
-    report: str
-    lang: str
+    problems: List[Problem]
+
+    @validator("problems", pre=True)
+    def check_problems(cls, v):
+        if isinstance(v, list) and v and isinstance(v[0], str):
+            return [Problem(*x.split("-")) for x in v]
 
 
-irp_test_data_path = Path(__file__).parent.parent / "test_data/problems_data.json"
-identify_problems_data = parse_file_as(List[IRPTestData], irp_test_data_path)
+cp_test_data_path = Path(__file__).parent.parent / "test_data/problems_data.json"
+classify_problems_test_data = parse_file_as(List[IRPTestData], cp_test_data_path)
 
 
-@pytest.mark.parametrize("test_data", identify_problems_data)
-def test_identify_real_problems(test_data: IRPTestData):
-    assert settings.problem_ratio_threshold == 0.75
-    real = hdprocessor.identify_real_problems(test_data.result, test_data.lang)
-    assert real == test_data.report
+@pytest.mark.parametrize("test_data", classify_problems_test_data)
+def test_classify_problems(test_data: IRPTestData):
+    real = hdprocessor.classify_problems(test_data.result)
+    assert real == test_data.problems

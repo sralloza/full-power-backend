@@ -1,11 +1,11 @@
 import logging
+from collections import namedtuple
 from pathlib import Path
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Union
 
 from fastapi import HTTPException
 from pydantic import parse_file_as
 
-from app.core.config import settings
 from app.models.health_data import HealthData
 from app.schemas.health_data import (
     HealthDataCreate,
@@ -14,9 +14,11 @@ from app.schemas.health_data import (
     ProblemsI18n,
     QuestionCoefficients,
 )
+from app.utils.translate import i18n
 
 HealthDataLike = Union[HealthData, HealthDataCreate]
 logger = logging.getLogger(__name__)
+Problem = namedtuple("Problem", "name severity")
 
 
 class _HealthDataProcessor:
@@ -71,29 +73,21 @@ class _HealthDataProcessor:
         problems = {k: v / self.sums[k] for k, v in problems.items()}
         return HealthDataProccessResult.parse_obj(problems)
 
-    def identify_real_problems(
-        self, hd_result: HealthDataProccessResult, lang: str
-    ) -> str:
-        real_problems = []
+    def classify_problems(self, hd_result: HealthDataProccessResult) -> List[Problem]:
+        problems = []
         for problem, severity in hd_result:  # noqa
-            if severity >= settings.problem_ratio_threshold:
-                real_problems.append(problem)
+            if 0.333333 <= severity < 0.666666:
+                problems.append(Problem(problem, "light"))
+            elif severity >= 0.666666:
+                problems.append(Problem(problem, "serious"))
 
-        if len(real_problems) == 0:
-            return self.problem_result_text.dict()[lang]["null"]
+        return problems
 
-        if len(real_problems) == 1:
-            problem_name = real_problems[0]
-            template = self.problem_result_text.dict()[lang]["singular"]
-            return template % self.problem_translation.dict()[problem_name][lang]
-
-        template = self.problem_result_text.dict()[lang]["plural"]
-        problems = [self.problem_translation.dict()[x][lang] for x in real_problems]
-        return template % self.join_problems(problems, lang)
-
-    def join_problems(self, problems: List[str], lang: str):
-        last_part = f" {self.problem_result_text.dict()[lang]['join']} {problems[-1]}"
-        return ", ".join(problems[:-1]) + last_part
+    @classmethod
+    def advanced_join(cls, iterable, join_str):
+        if len(iterable) < 2:
+            return f" {join_str} ".join(iterable)
+        return ", ".join(iterable[:-1]) + f" {join_str} {iterable[-1]}"
 
 
 hdprocessor = _HealthDataProcessor()
