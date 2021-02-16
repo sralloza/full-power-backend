@@ -1,0 +1,13 @@
+en:
+  sleep:
+    length: "5"
+    notif1: Do you manage to get up at the same time during the week, even on weekends?
+    notif2: Have you managed to sleep full nights this week?
+    notif3: Did you manage to stop looking at screens 1 hour before going to bed?
+    notif4: Have you optimized your bedroom for sleep?
+    notif5: Do you manage to have a practice to reduce your stress before bed?
+  generic:
+    length: "3"
+    notif1: Remember to use Full Power to increase your full potential!
+    notif2: Do you want to learn something about health?
+    notif3: Hey there! Do you want to come back?

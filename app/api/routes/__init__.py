@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter
 
-from . import bot, conversations, files, health_data, images, login, users, utils
+from . import bot, conversations, files, health_data, images, login, users, utils, notifications
 
 router = APIRouter()
 
@@ -14,3 +14,4 @@ router.include_router(health_data.router)
 router.include_router(users.router)
 router.include_router(images.router)
 router.include_router(files.router)
+router.include_router(notifications.router)
