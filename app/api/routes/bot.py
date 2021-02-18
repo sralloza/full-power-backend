@@ -39,8 +39,8 @@ def bot_message_post(
 
     Includes two headers:
 
-    - **x-problems-parsed** - list of parsed problems
-    - **x-health-data-result** - result of the health data algorithm
+    - **X-Problems-Parsed** - list of parsed problems
+    - **X-Health-Data-Result** - result of the health data algorithm
     """
 
     health_data = None
@@ -74,8 +74,8 @@ def bot_message_post(
         problems = hdprocessor.classify_problems(result)
         problem_explanation = hdprocessor.gen_report(problems, lang=lang)
         df_resp.bot_msg = f"{df_resp.bot_msg}.\n{problem_explanation}"
-        response.headers["x-problems-parsed"] = problems.json()
-        response.headers["x-health-data-result"] = result.json()
+        response.headers["X-Problems-Parsed"] = problems.json()
+        response.headers["X-Health-Data-Result"] = result.json()
 
     conversation = ConversationCreate(
         user_msg=message, user_id=user.id, **df_resp.dict()
