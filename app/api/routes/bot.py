@@ -35,7 +35,14 @@ def bot_message_post(
     lang: str = Query("en"),
     response: Response,
 ):
-    """Sends a message to the bot and returns the response back."""
+    """Sends a message to the bot and returns the response back.
+
+    Includes two headers:
+
+    - **x-problems-parsed** - list of parsed problems
+    - **x-health-data-result** - result of the health data algorithm
+    """
+
     health_data = None
     message = input_pack.msg
     logger.debug("User's message: %r", message)
@@ -64,11 +71,11 @@ def bot_message_post(
             ) from exc
 
         result = hdprocessor.process_health_data(filled_hd)
-        problem_explanation = hdprocessor.gen_report(
-            hdprocessor.classify_problems(result), lang=lang
-        )
+        problems = hdprocessor.classify_problems(result)
+        problem_explanation = hdprocessor.gen_report(problems, lang=lang)
         df_resp.bot_msg = f"{df_resp.bot_msg}.\n{problem_explanation}"
-        response.headers["health-data-result"] = result.json()
+        response.headers["x-problems-parsed"] = problems.json()
+        response.headers["x-health-data-result"] = result.json()
 
     conversation = ConversationCreate(
         user_msg=message, user_id=user.id, **df_resp.dict()

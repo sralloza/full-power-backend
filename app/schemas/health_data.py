@@ -1,8 +1,23 @@
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
 
 from pydantic import BaseModel, confloat, conint
+from typing_extensions import Literal
 
+
+class ClassifiedProblem(BaseModel):
+    name: str
+    severity: Literal["light", "serious"]
+
+
+class ClassifiedProblemList(BaseModel):
+    __root__: List[ClassifiedProblem]
+
+    def __iter__(self):
+        return iter(self.__root__)
+
+    def __getitem__(self, item):
+        return self.__root__[item]
 
 class QuestionCoefficients(BaseModel):
     question_id: str
