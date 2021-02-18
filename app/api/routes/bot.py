@@ -73,7 +73,7 @@ def bot_message_post(
         result = hdprocessor.process_health_data(filled_hd)
         problems = hdprocessor.classify_problems(result)
         problem_explanation = hdprocessor.gen_report(problems, lang=lang)
-        df_resp.bot_msg = f"{df_resp.bot_msg}.\n{problem_explanation}"
+        df_resp.bot_msg = f"{df_resp.bot_msg}\n{problem_explanation}"
         response.headers["X-Problems-Parsed"] = problems.json()
         response.headers["X-Health-Data-Result"] = result.json()
 
