@@ -47,6 +47,8 @@ Here is a list of all the settings clasified by category.
 !!! warning
     This setting must be in sync with the questions excel and the chatbot's questions.
 
+- `bot_question_message_flag`: string to define the messages trigerred by the notification. It will just echo the input message. Defaults to `<NOTIFICATION_QUESTION>`.
+
 ## Testing
 
 - `username_test_user`: test user's username. It's only used during tests. Defaults to `the_Test`.

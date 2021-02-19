@@ -47,6 +47,7 @@ class Settings(BaseSettings):
 
     # Bot generics
     bot_split_char: str = "~"
+    bot_question_message_flag: str = "<NOTIFICATION_QUESTION>"
 
     # Testing
     username_test_user: str = "the_Test"
