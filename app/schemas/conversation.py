@@ -15,6 +15,7 @@ from app.utils.bot import split_bot_msg
 class DisplayType(Enum):
     default = "default"
     five_stars = "five_stars"
+    yes_no = "yes_no"
 
 
 class ConversationBase(BaseModel):

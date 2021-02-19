@@ -1,5 +1,6 @@
 """Routes for manage bot conversations."""
 
+import re
 from datetime import datetime
 from logging import getLogger
 
@@ -9,6 +10,7 @@ from app import crud
 from app.api.dependencies.database import get_db
 from app.api.dependencies.security import get_current_user
 from app.core.bot import get_df_response
+from app.core.config import settings
 from app.core.health_data import hdprocessor
 from app.models import User
 from app.schemas.bot import Msg
@@ -46,6 +48,19 @@ def bot_message_post(
     health_data = None
     message = input_pack.msg
     logger.debug("User's message: %r", message)
+
+    notification_question_match = re.search(settings.bot_question_message_flag, message)
+
+    if notification_question_match:
+        logger.debug("Notification question detected, returning echo")
+        message = re.sub(settings.bot_question_message_flag, "", message)
+        return ConversationOut(
+            display_type="yes_no",
+            bot_msg=message,
+            intent="notification-question-echo",
+            user_msg=message,
+            user_id=user.id,
+        )
 
     df_resp = get_df_response(user.id, message, lang)
     logger.debug("Bot response: %r", df_resp)
