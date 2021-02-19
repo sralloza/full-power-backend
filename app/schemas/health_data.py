@@ -22,6 +22,7 @@ class ClassifiedProblemList(BaseModel):
     def __bool__(self):
         return bool(self.__root__)
 
+
 class QuestionCoefficients(BaseModel):
     question_id: str
     vitamins: conint(ge=0)

@@ -2,7 +2,17 @@
 
 from fastapi import APIRouter
 
-from . import bot, conversations, files, health_data, images, login, users, utils, notifications
+from . import (
+    bot,
+    conversations,
+    files,
+    health_data,
+    images,
+    login,
+    notifications,
+    users,
+    utils,
+)
 
 router = APIRouter()
 

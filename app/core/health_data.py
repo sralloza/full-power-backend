@@ -57,7 +57,9 @@ class _HealthDataProcessor:
         problems = {k: v / self.sums[k] for k, v in problems.items()}
         return HealthDataProccessResult.parse_obj(problems)
 
-    def classify_problems(self, hd_result: HealthDataProccessResult) -> ClassifiedProblemList:
+    def classify_problems(
+        self, hd_result: HealthDataProccessResult
+    ) -> ClassifiedProblemList:
         problems = []
         for problem, severity in hd_result:  # noqa
             if 0.333333 <= severity < 0.666666:
