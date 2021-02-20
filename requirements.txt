@@ -17,4 +17,5 @@ ruamel.yaml==0.16.12
 SQLAlchemy==1.*
 tenacity==6.*
 typer==0.3.2
+typing-extensions==3.*
 uvicorn[standard]==0.13.3
