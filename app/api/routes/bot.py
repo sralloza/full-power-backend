@@ -4,16 +4,16 @@ import re
 from datetime import datetime
 from logging import getLogger
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Response
+from fastapi import APIRouter, Body, Depends, HTTPException, Query, Response
 
 from app import crud
 from app.api.dependencies.database import get_db
 from app.api.dependencies.security import get_current_user
-from app.core.bot import get_df_response
+from app.core.bot import get_df_response, response_to_question
 from app.core.config import settings
 from app.core.health_data import hdprocessor
 from app.models import User
-from app.schemas.bot import Msg
+from app.schemas.bot import QuestionResponse
 from app.schemas.conversation import ConversationCreate, ConversationOut
 from app.schemas.health_data import HealthDataCreate, HealthDataUpdate
 
@@ -26,28 +26,45 @@ logger = getLogger(__name__)
 @router.post(
     "/process-msg",
     response_model=ConversationOut,
-    responses={500: {"description": "HealthData was not saved before processing"}},
+    responses={
+        500: {"description": "HealthData was not saved before processing"},
+        400: {"description": "'msg' and 'question_response' are mutually exlusive"},
+    },
     summary="Process user message",
 )
 def bot_message_post(
     *,
     db=Depends(get_db),
-    input_pack: Msg,
     user: User = Depends(get_current_user),
     lang: str = Query("en"),
     response: Response,
+    msg: str = Body(None),
+    question_response: QuestionResponse = Body(None),
 ):
-    """Sends a message to the bot and returns the response back.
+    """Sends a message to the bot and returns the response back. You need to pass
+    'msg' or 'question_response', but no both.
 
-    Includes two headers:
+    The final intent includes two headers:
 
     - **X-Problems-Parsed** - list of parsed problems
     - **X-Health-Data-Result** - result of the health data algorithm
     """
 
+    if msg and question_response:
+        raise HTTPException(400, "'msg' and 'question_response' are mutually exlusive")
+
     health_data = None
-    message = input_pack.msg
+    message = msg
     logger.debug("User's message: %r", message)
+
+    if question_response:
+        return ConversationOut(
+            display_type="default",
+            bot_msg=response_to_question(question_response),
+            intent="notification-question-response",
+            user_msg=question_response.user_response,
+            user_id=user.id,
+        )
 
     notification_question_match = re.search(settings.bot_question_message_flag, message)
 
