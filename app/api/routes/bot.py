@@ -60,7 +60,7 @@ def bot_message_post(
     if question_response:
         return ConversationOut(
             display_type="default",
-            bot_msg=response_to_question(question_response),
+            bot_msg=response_to_question(question_response, lang),
             intent="notification-question-response",
             user_msg=question_response.user_response,
             user_id=user.id,

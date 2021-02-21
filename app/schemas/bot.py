@@ -15,7 +15,6 @@ class DFResponse(BaseModel):
 class QuestionResponse(BaseModel):
     user_response: bool
     question_id: str
-    _key: str = "response.{problem}.{user_response}.resp{pos}"
 
     @validator("question_id")
     def check_question_id(cls, v, values, config, field):

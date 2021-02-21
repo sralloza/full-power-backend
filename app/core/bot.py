@@ -40,7 +40,8 @@ def parse_df_response(df_response: dict):
     )
 
 
-def response_to_question(question_response: QuestionResponse) -> str:
+def response_to_question(question_response: QuestionResponse, lang: str) -> str:
+    i18n.set("locale", lang)
     problem, pos = question_response.question_id.split(".")
     user_response = str(question_response.user_response).lower()
     key = f"response.{problem}.{user_response}.resp{pos}"
