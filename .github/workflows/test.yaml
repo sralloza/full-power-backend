@@ -30,6 +30,7 @@ jobs:
     - name: Install test dependencies
       run: |
         touch invalid.json
+        pip install numpy
         pip install pytest
         pip install pytest-env
         pip install pytest-cov
