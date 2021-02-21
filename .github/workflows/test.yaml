@@ -27,11 +27,14 @@ jobs:
         pip install wheel
         pip install -r requirements.txt
         pip install -e .
-    - name: Test and generate coverage report
+    - name: Install test dependencies
       run: |
         touch invalid.json
         pip install pytest
+        pip install pytest-env
         pip install pytest-cov
+    - name: Test and generate coverage report
+      run: |
         pytest --cov=./ --cov-report=xml -vvl
       env:
         DIALOGFLOW_PROJECT_ID: dialogflow-project-id
