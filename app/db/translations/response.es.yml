@@ -1,0 +1,13 @@
+es:
+  "true":
+    resp1: Felicidades, continúa así porque la regularidad en la hora de levantarse es indispensable para un sueño de calidad.
+    resp2: ¡Bravo! Persevera en conservar una duración suficiente de sueño cada día, por el contrario, los viejos problemas podrían volver ;-)
+    resp3: Cumplido. Es verdaderamente difícil. Evitando las pantallas duplicas la cantidad de sueño profundo, el más reparador cada noche.
+    resp4: ¡Bien hecho! Bravo. Esos pequeños cambios favorecen enormemente el sueño de calidad.
+    resp5: ¡Súper buena noticia! El estrés es el primer enemigo de un sueño reparador. Continúa anclando este hábito y siendo riguroso durante uno o dos meses más. ¡Será tan automático como lavarte los dientes!
+  "false":
+    resp1: La regularidad en la hora de levantarse es indispensable para un sueño de calidad. Consulta el capítulo del sueño.
+    resp2: Si no duermes el tiempo suficiente, corres el riesgo de agravar tu déficit de sueño. Consulta el capítulo del sueño.
+    resp3: Eh sí, no es nada fácil. Sin embargo, evitando las pantallas duplicas la cantidad de sueño profundo, el más reparador cada noche. Consulta el capítulo del sueño.
+    resp4: Una habitación fresca, oscura y silenciosa permite mejorar enormemente la calidad del sueño. ¿No merece la pena? Consulta el capítulo del sueño.
+    resp5: El estrés es el primer enemigo del sueño reparador. Explora los diferentes métodos para reducir el estrés, si la meditación no es de tu agrado, trata, por ejemplo, de darte un buen baño, de leer, de escuchar música por la noche. Más ideas en el capítulo del sueño.

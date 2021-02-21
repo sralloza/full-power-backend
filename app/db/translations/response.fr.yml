@@ -1,0 +1,14 @@
+fr:
+  sleep:
+    "true":
+      resp1: Félicitions, continuez car la régularité de l’heure du levé est indispensable pour un sommeil de qualité.
+      resp2: Bravo! Persévérez à conserver une durée suffisante de sommeil chaque nuit, sinon les anciens problèmes peuvent revenir ;-)
+      resp3: Compliment... Nous sommes conscients que cela est difficile. En évitant les écrans vous doublez la quantité de sommeil profond, le plus récupérateur chaque nuit...
+      resp4: Ça, s’est fait! Bravo. Ces petits changements favorisent grandement le sommeil de qualité.
+      resp5: Super bonne nouvelle! Le stress est le premier ennemi d’un sommeil récupérateur. Continuez à ancrer cette habitude en étant rigoureux sur cette pratique encore 1 mois ou 2. Cela deviendra aussi automatique que de vous brosser les dents!
+    "false":
+      resp1: La régularité de l’heure du levé est indispensable pour un sommeil de qualité. Consultez le chapitre sommeil.
+      resp2: Si vous ne vous offrez pas un temps de sommeil suffisant, vous risquez de creuser votre déficit de sommeil. Consultez le chapitre sommeil.
+      resp3: Eh oui, ce n’est pas facile. Nous comprenons bien. Toutefois, en évitant les écrans vous doublez la quantité de sommeil profond, le plus récupérateur chaque nuit… Consultez le chapitre sommeil.
+      resp4: Une chambre fraîche, sombre et silencieuse permet d’améliorer grandement la qualité du sommeil. Est-ce que cela ne vaudrait pas le coup? Consultez le chapitre sommeil.
+      resp5: Le stress est le premier ennemi d’un sommeil récupérateur. Explorez les différentes méthodes pour réduire votre stress, si la méditation n’est pas votre tasse de thé, essayez par exemple un bon bain, de la lecture, de la musique ou une bonne balade le soir. Plus d’idées dans le chapitre sommeil.

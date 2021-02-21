@@ -4,7 +4,8 @@ import dialogflow
 from google.protobuf.json_format import MessageToDict
 
 from app.core.config import settings
-from app.schemas.bot import DFResponse
+from app.schemas.bot import DFResponse, QuestionResponse
+from app.utils.translate import i18n
 
 
 def detect_end(df_response: dict):
@@ -37,3 +38,10 @@ def parse_df_response(df_response: dict):
         is_end=detect_end(df_response),
         parameters=df_response.get("parameters", dict()),
     )
+
+
+def response_to_question(question_response: QuestionResponse) -> str:
+    problem, pos = question_response.question_id.split(".")
+    user_response = str(question_response.user_response).lower()
+    key = f"response.{problem}.{user_response}.resp{pos}"
+    return i18n.t(key)
