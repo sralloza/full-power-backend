@@ -31,7 +31,7 @@ def create_app() -> FastAPI:
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
-        expose_headers=["X-Current-User"],
+        expose_headers=["X-Current-User", "X-Problems-Parsed", "X-Health-Data-Result"],
     )
 
     app.add_exception_handler(500, catch_errors)

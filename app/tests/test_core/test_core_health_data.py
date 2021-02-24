@@ -8,8 +8,9 @@ import pytest
 from fastapi import HTTPException
 from pydantic import BaseModel, parse_file_as, parse_obj_as, validator
 
-from app.core.health_data import Problem, hdprocessor
+from app.core.health_data import hdprocessor
 from app.schemas.health_data import (
+    ClassifiedProblemList,
     HealthDataCreate,
     HealthDataProccessResult,
     QuestionCoefficients,
@@ -101,12 +102,7 @@ def test_process_health_data_error(caplog):
 
 class IRPTestData(BaseModel):
     result: HealthDataProccessResult
-    problems: List[Problem]
-
-    @validator("problems", pre=True)
-    def check_problems(cls, v):
-        if isinstance(v, list) and v and isinstance(v[0], str):  # noqa
-            return [Problem(*x.split("-")) for x in v]
+    problems: ClassifiedProblemList
 
 
 cp_test_data_path = Path(__file__).parent.parent / "test_data/problems_data.json"
@@ -121,14 +117,20 @@ def test_classify_problems(test_data: IRPTestData):
 
 class GenReportTestData(BaseModel):
     name: str
-    inputs: List[List[str]]
+    inputs: ClassifiedProblemList
     outputs: str
     lang: str
 
     @validator("inputs", pre=True)
     def check_inputs(cls, v):
         if isinstance(v, list) and v and isinstance(v[0], str):
-            return [x.split("-") for x in v]
+            data = [x.split("-") for x in v]
+            for line in data:
+                assert len(line) == 2
+
+            data = [{"name": x[0], "severity": x[1]} for x in data]
+            return ClassifiedProblemList(__root__=data)
+
         return v
 
 
@@ -140,6 +142,5 @@ gen_report_test_data = [(x.inputs, x.outputs, x.lang) for x in gen_report_test_d
 
 @pytest.mark.parametrize("inputs, outputs, lang", gen_report_test_data, ids=ids)
 def test_gen_report(inputs, outputs, lang):
-    inputs = [Problem(*x) for x in inputs]
     real = hdprocessor.gen_report(inputs, lang=lang)
     assert real == outputs

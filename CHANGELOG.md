@@ -7,6 +7,21 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 
 ## [Unreleased]
 
+### Added
+
+- Add endpoint `/notifications-content/second-survey/{problem}`.
+- Add endpoint `/notifications-content/generic`.
+- Add setting `bot_question_message_flag`.
+- Add support to `python 3.9`.
+
+### Changed
+
+- Add parameter `question_response` to endpoint `/process-msg`.
+- Enable second survey questions (echo).
+- Enable second survey responses.
+- Send header `X-Problems-Parsed` in the last step of `/process-msg` endpoint.
+- Send header `X-Health-Data-Result` in the last step of `/process-msg` endpoint.
+
 ## [0.12.0] - 2021-02-14
 
 ### Changed

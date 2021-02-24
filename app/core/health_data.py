@@ -1,5 +1,4 @@
 import logging
-from collections import namedtuple
 from pathlib import Path
 from typing import Dict, List, Union
 
@@ -8,6 +7,8 @@ from pydantic import parse_file_as
 
 from app.models.health_data import HealthData
 from app.schemas.health_data import (
+    ClassifiedProblem,
+    ClassifiedProblemList,
     HealthDataCreate,
     HealthDataProccessResult,
     QuestionCoefficients,
@@ -16,7 +17,6 @@ from app.utils.translate import i18n
 
 HealthDataLike = Union[HealthData, HealthDataCreate]
 logger = logging.getLogger(__name__)
-Problem = namedtuple("Problem", "name severity")
 
 
 class _HealthDataProcessor:
@@ -57,17 +57,19 @@ class _HealthDataProcessor:
         problems = {k: v / self.sums[k] for k, v in problems.items()}
         return HealthDataProccessResult.parse_obj(problems)
 
-    def classify_problems(self, hd_result: HealthDataProccessResult) -> List[Problem]:
+    def classify_problems(
+        self, hd_result: HealthDataProccessResult
+    ) -> ClassifiedProblemList:
         problems = []
         for problem, severity in hd_result:  # noqa
             if 0.333333 <= severity < 0.666666:
-                problems.append(Problem(problem, "light"))
+                problems.append(ClassifiedProblem(name=problem, severity="light"))
             elif severity >= 0.666666:
-                problems.append(Problem(problem, "serious"))
+                problems.append(ClassifiedProblem(name=problem, severity="serious"))
 
-        return problems
+        return ClassifiedProblemList(__root__=problems)
 
-    def gen_report(self, problems: List[Problem], lang: str):
+    def gen_report(self, problems: ClassifiedProblemList, lang: str):
         i18n.set("locale", lang)
 
         if not problems:

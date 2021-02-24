@@ -1,0 +1,13 @@
+fr:
+  sleep:
+    length: "5"
+    notif1: Arrivez-vous à vous lever à la même heure en semaine, même le WE?
+    notif2: Avez-vous réussi à dormir des nuits complètes cette semaine?
+    notif3: Avez-vous réussi à ne plus regarder d’écran, 1 heure avant de vous coucher?
+    notif4: Avez-vous optimisé votre chambre pour le sommeil?
+    notif5: Arrivez-vous à avoir une pratique pour réduire votre stress avant de vous coucher?
+  generic:
+    length: "3"
+    notif1: Rappelez-vous d'utiliser Full Power pour ameliorer votre pleine puissance!
+    notif2: Est-ce que vous voulez appprendre quelque chose de santé?
+    notif3: Salut! Est-ce que vous voulez retourner?

@@ -1,0 +1,13 @@
+es:
+  sleep:
+    length: "5"
+    notif1: ¿Te levantas a la misma hora todos los días de la semana, incluso en el fin de semana?
+    notif2: ¿Has conseguido dormir noches completas esta semana?
+    notif3: ¿Consigues no mirar la pantalla en la hora antes de acostarte?
+    notif4: ¿Has optimizado tu habitación para el sueño?
+    notif5: En la práctica, ¿consigues reducir el estrés antes de acostarte?
+  generic:
+    length: "3"
+    notif1: ¡Recuerda utilizar Full Power para incrementar tu máximo potencial!
+    notif2: ¿Quieres aprender algo sobre salud?
+    notif3: ¡Ey! ¿Quieres volver a entrar?

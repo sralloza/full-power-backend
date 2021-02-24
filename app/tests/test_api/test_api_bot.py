@@ -4,9 +4,14 @@ import pytest
 from pydantic import BaseModel, confloat
 
 from app import crud
+from app.core.config import settings
 from app.schemas.bot import DFResponse
 from app.schemas.conversation import Conversation, ConversationOut, DisplayType
-from app.schemas.health_data import HealthDataCreate
+from app.schemas.health_data import (
+    ClassifiedProblemList,
+    HealthDataCreate,
+    HealthDataProccessResult,
+)
 from app.tests.utils.user import get_normal_user_id
 
 langs = ("en", "es", "fr")
@@ -39,21 +44,89 @@ class TestProcessMsg:
 
     @pytest.fixture(autouse=True)
     def mocks(self):
-        class TempModel(BaseModel):
-            problem: confloat(ge=0, le=1)
-
+        self.rtq_m = mock.patch("app.api.routes.bot.response_to_question").start()
+        self.rtq_m.return_value = "<question-response>"
         self.get_df_res_m = mock.patch("app.api.routes.bot.get_df_response").start()
         self.phd_m = mock.patch(
             "app.api.routes.bot.hdprocessor.process_health_data"
         ).start()
-        self.phd_m.return_value = TempModel(problem=1.0)
+        self.phd_m.return_value = HealthDataProccessResult(
+            vitamins=0.5,
+            sleep=0.5,
+            diet=0.5,
+            stress=0.5,
+        )
         self.cp_m = mock.patch(
             "app.api.routes.bot.hdprocessor.classify_problems"
         ).start()
+        self.cp_m.return_value = ClassifiedProblemList(
+            __root__=[{"name": "vitamins", "severity": "serious"}]
+        )
         self.gr_m = mock.patch("app.api.routes.bot.hdprocessor.gen_report").start()
         self.gr_m.return_value = "<problem>"
         yield
         mock.patch.stopall()
+
+    def test_no_args(self, client, normal_user_token_headers):
+        response = client.post(
+            f"/bot/process-msg?lang=en", headers=normal_user_token_headers
+        )
+        assert response.status_code == 400
+        detail = response.json()["detail"]
+        assert detail == "You need to pass 'msg' or 'question_response'"
+
+        self.get_df_res_m.assert_not_called()
+
+    def test_both_args(self, client, normal_user_token_headers):
+        response = client.post(
+            f"/bot/process-msg?lang=en",
+            headers=normal_user_token_headers,
+            json={
+                "msg": "this is the user message",
+                "question_response": {"user_response": True, "question_id": "sleep.1"},
+            },
+        )
+        assert response.status_code == 400
+        detail = response.json()["detail"]
+        assert detail == "'msg' and 'question_response' are mutually exlusive"
+
+        self.get_df_res_m.assert_not_called()
+
+    def test_response_to_question(self, client, normal_user_token_headers):
+        response = client.post(
+            f"/bot/process-msg?lang=en",
+            json={
+                "question_response": {"user_response": True, "question_id": "sleep.1"}
+            },
+            headers=normal_user_token_headers,
+        )
+        assert response.status_code == 200
+        data = response.json()
+
+        assert data["display_type"] == "default"
+        assert data["bot_msg"] == ["<question-response>"]
+        assert data["intent"] == "notification-question-response"
+        assert data["user_msg"] == "True"
+
+        self.rtq_m.assert_called_once_with(mock.ANY, "en")
+        self.get_df_res_m.assert_not_called()
+
+    def test_ask_question(self, client, normal_user_token_headers):
+        response = client.post(
+            f"/bot/process-msg?lang=en",
+            json={"msg": settings.bot_question_message_flag + "this is the question"},
+            headers=normal_user_token_headers,
+        )
+        assert response.status_code == 200
+        data = response.json()
+
+        assert data["display_type"] == "yes_no"
+        assert data["bot_msg"] == ["this is the question"]
+        assert data["intent"] == "notification-question-echo"
+        assert data["user_msg"] == "this is the question"
+
+        self.rtq_m.assert_not_called()
+        self.get_df_res_m.assert_not_called()
 
     @pytest.mark.parametrize("df_res", responses)
     @pytest.mark.parametrize("lang", langs)
@@ -77,8 +150,8 @@ class TestProcessMsg:
             assert conv.bot_msg == ["this is the bot message"]
             response.json()["bot_msg"] == "this is the bot message"
         else:
-            assert conv.bot_msg == ["this is the bot message.", "<problem>"]
-            response.json()["bot_msg"] == "this is the bot message. <problem>"
+            assert conv.bot_msg == ["this is the bot message", "<problem>"]
+            response.json()["bot_msg"] == "this is the bot message <problem>"
 
         assert conv.intent == "this is the intent"
         assert conv.display_type == DisplayType.default
@@ -92,9 +165,10 @@ class TestProcessMsg:
         assert conv == ConversationOut.parse_obj(Conversation.from_orm(conv_db))
 
         if df_res.is_end:
-            assert (
-                response.headers["health-data-result"] == self.phd_m.return_value.json()
-            )
+            headers = response.headers
+            assert headers["X-Problems-Parsed"] == self.cp_m.return_value.json()
+            assert headers["X-Health-Data-Result"] == self.phd_m.return_value.json()
+
             self.phd_m.assert_called_once_with(mock.ANY)
             self.cp_m.assert_called_once_with(self.phd_m.return_value)
             self.gr_m.assert_called_once_with(self.cp_m.return_value, lang=lang)

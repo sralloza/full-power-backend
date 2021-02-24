@@ -44,6 +44,7 @@ class FileCreateInner(FileCreate):
 
 
 class FileCreateResult(FileBase):
+    name: str
     title: str
     lang: str
 
