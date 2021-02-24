@@ -52,7 +52,10 @@ def test_routes():
     # GET routes with parameter can raise 404
     group = [x for x in routes if "GET" in x.methods and x.param_convertors]  # type: ignore
     for route in group:
-        assert 404 in route.responses  # type: ignore
+        # notifications-content routes can't raise 404
+        if "notifications-content" in route.path:  # type: ignore
+            continue
+        assert 404 in route.responses, f"{route.name!r} must define 404"  # type: ignore
         assert "not found" in route.responses[404]["description"]  # type: ignore
 
     # POST routes that create objects must return 201
