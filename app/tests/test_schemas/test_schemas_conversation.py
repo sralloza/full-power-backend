@@ -17,6 +17,7 @@ def test_display_type():
     assert (
         DisplayType["five_stars"] == DisplayType("five_stars") == DisplayType.five_stars
     )
+    assert DisplayType["yes_no"] == DisplayType("yes_no") == DisplayType.yes_no
 
 
 def test_conversation_create():
