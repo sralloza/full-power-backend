@@ -1,20 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from app.schemas.bot import DFResponse, Msg
-
-
-def test_msg():
-    fields = Msg.__fields__
-    assert set(fields) == {"msg"}
-
-    assert fields["msg"].required == True
-    assert fields["msg"].required == True
-
-    with pytest.raises(ValidationError):
-        Msg(msg="")
-
-    Msg(msg="a")
+from app.schemas.bot import DFResponse, QuestionResponse
 
 
 def test_dialogflow_response():
@@ -33,3 +20,23 @@ def test_dialogflow_response():
     DFResponse(
         bot_msg="bot", intent="intent", is_end=True, parameters=dict(key="value")
     )
+
+
+def test_question_response():
+    fields = QuestionResponse.__fields__
+    assert set(fields) == {"user_response", "question_id"}
+
+    assert fields["user_response"].required is True
+    assert fields["question_id"].required is True
+    assert fields["user_response"].type_ == bool
+    assert fields["question_id"].type_ == str
+
+    QuestionResponse(user_response=True, question_id="sleep.1")
+    with pytest.raises(ValidationError):
+        QuestionResponse(user_response=True, question_id="invalid")
+    with pytest.raises(ValidationError):
+        QuestionResponse(user_response=True, question_id="invalid.1")
+    with pytest.raises(ValidationError):
+        QuestionResponse(user_response=True, question_id="sleep.0")
+    with pytest.raises(ValidationError):
+        QuestionResponse(user_response=True, question_id="sleep.9999")

@@ -10,10 +10,10 @@ from pydantic import BaseModel, parse_file_as, parse_obj_as, validator
 
 from app.core.health_data import hdprocessor
 from app.schemas.health_data import (
-    ClassifiedProblemList, HealthDataCreate,
+    ClassifiedProblemList,
+    HealthDataCreate,
     HealthDataProccessResult,
     QuestionCoefficients,
-    ClassifiedProblem,
 )
 from app.tests.utils.utils import random_int
 
