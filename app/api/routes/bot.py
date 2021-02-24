@@ -28,7 +28,9 @@ logger = getLogger(__name__)
     response_model=ConversationOut,
     responses={
         500: {"description": "HealthData was not saved before processing"},
-        400: {"description": "'msg' and 'question_response' are mutually exlusive"},
+        400: {
+            "description": "The user has passed both msg and question_response or none of them"
+        },
     },
     summary="Process user message",
 )
@@ -52,6 +54,8 @@ def bot_message_post(
 
     if msg and question_response:
         raise HTTPException(400, "'msg' and 'question_response' are mutually exlusive")
+    if not msg and not question_response:
+        raise HTTPException(400, "You need to pass 'msg' or 'question_response'")
 
     health_data = None
     message = msg
