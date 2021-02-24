@@ -16,9 +16,6 @@ class ClassifiedProblemList(BaseModel):
     def __iter__(self):
         return iter(self.__root__)
 
-    def __getitem__(self, item):
-        return self.__root__[item]
-
     def __bool__(self):
         return bool(self.__root__)
 
