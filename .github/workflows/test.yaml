@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.7, 3.8]
+        python-version: [3.7, 3.8, 3.9]
     env:
       PYTHON: ${{ matrix.python-version }}
     steps:
@@ -26,13 +26,16 @@ jobs:
         python -m pip install --upgrade pip
         pip install wheel
         pip install -r requirements.txt
-        pip install -r requirements-dev.txt
         pip install -e .
-    - name: Test and generate coverage report
+    - name: Install test dependencies
       run: |
         touch invalid.json
+        pip install numpy
         pip install pytest
+        pip install pytest-env
         pip install pytest-cov
+    - name: Test and generate coverage report
+      run: |
         pytest --cov=./ --cov-report=xml -vvl
       env:
         DIALOGFLOW_PROJECT_ID: dialogflow-project-id
