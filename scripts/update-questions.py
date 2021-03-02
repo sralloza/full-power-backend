@@ -116,9 +116,10 @@ def main(
 
                     # If the old text contains a line jump, it means it's the first intent
                     # The first part should not be edited
-                    splitted_old_text = lang_chunk["speech"][0].split("\n")
-                    if len(splitted_old_text) > 1:
-                        new_text = splitted_old_text[0] + "\n" + new_text
+                    if "a00" in item.filename:
+                        splitted_old_text = lang_chunk["speech"][0].split("\n")
+                        if len(splitted_old_text) > 1:
+                            new_text = splitted_old_text[0] + "\n" + new_text
 
                     lang_chunk["speech"][0] = new_text
 
