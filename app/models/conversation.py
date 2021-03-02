@@ -17,8 +17,8 @@ class Conversation(Base):
     __tablename__ = "conversations"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_msg = Column(String(200), index=True, nullable=False)
-    bot_msg = Column(String(200), index=True, nullable=False)
+    user_msg = Column(String(300), index=True, nullable=False)
+    bot_msg = Column(String(300), index=True, nullable=False)
     intent = Column(String(50), index=True)
     display_type = Column(Enum(DisplayType))
     timestamp = Column(DateTime, server_default=func.now())
