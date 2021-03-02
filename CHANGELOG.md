@@ -7,6 +7,11 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed [#70](https://github.com/BelinguoAG/full-power-backend/issues/70)
+- Fixed [#69](https://github.com/BelinguoAG/full-power-backend/issues/69)
+
 ## [0.13.0] - 2021-02-25
 
 ### Added
