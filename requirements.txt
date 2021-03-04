@@ -7,7 +7,7 @@ gunicorn==20.*
 markdown-include==0.6.0
 mkdocs-material==6.*
 passlib[bcrypt]==1.*
-pydantic==1.7.*
+pydantic==1.*
 PyMySQL==1.*
 python-dotenv==0.15.0
 python-i18n[YAML]==0.3.9
