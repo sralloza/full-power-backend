@@ -34,6 +34,8 @@ jobs:
         pip install pytest
         pip install pytest-env
         pip install pytest-cov
+    - name: Show libraries versions
+      run: pip freeze
     - name: Test and generate coverage report
       run: |
         pytest --cov=./ --cov-report=xml -vvl
