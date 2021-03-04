@@ -7,6 +7,8 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 
 ## [Unreleased]
 
+## [1.0.0] - 2021-03-04
+
 ### Fixed
 
 - Fixed [#70](https://github.com/BelinguoAG/full-power-backend/issues/70)
@@ -224,7 +226,8 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 
 - First version
 
-[unreleased]: https://github.com/BelinguoAG/full-power-backend/compare/v0.13.0...HEAD
+[unreleased]: https://github.com/BelinguoAG/full-power-backend/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/BelinguoAG/full-power-backend/compare/v0.13.0...v1.0.0
 [0.13.0]: https://github.com/BelinguoAG/full-power-backend/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/BelinguoAG/full-power-backend/compare/v0.11.1...v0.12.0
 [0.11.1]: https://github.com/BelinguoAG/full-power-backend/compare/v0.11.0...v0.11.1
