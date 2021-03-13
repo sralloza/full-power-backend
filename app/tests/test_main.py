@@ -9,26 +9,37 @@ from app.main import create_app
 def test_docs_enabled():
     app = create_app()
     client = TestClient(app)
-    response_1 = client.get("/docs")
-    response_2 = client.get("/redoc")
-    response_3 = client.get("/openapi.json")
+    docs_response = client.get("/docs")
+    old_redoc_response = client.get("/redoc")
+    swagger_response = client.get("/idocs")
+    openapi_response = client.get("/openapi.json")
 
-    assert response_1.status_code == 200
-    assert response_2.status_code == 200
-    assert response_3.status_code == 200
+    assert docs_response.status_code == 200
+    assert "redoc" in docs_response.text
+
+    assert swagger_response.status_code == 200
+    assert "swagger" in swagger_response.text
+
+    assert old_redoc_response.status_code == 404
+    assert openapi_response.status_code == 200
 
 
 @mock.patch("app.main.settings.production", True)
 def test_doc_disabled():
     app = create_app()
     client = TestClient(app)
-    response_1 = client.get("/docs")
-    response_2 = client.get("/redoc")
-    response_3 = client.get("/openapi.json")
+    docs_response = client.get("/docs")
+    old_redoc_response = client.get("/redoc")
+    swagger_response = client.get("/idocs")
+    openapi_response = client.get("/openapi.json")
 
-    assert response_1.status_code == 404
-    assert response_2.status_code == 404
-    assert response_3.status_code == 404
+    assert docs_response.status_code == 200
+    assert "redoc" in docs_response.text
+
+    assert swagger_response.status_code == 404
+
+    assert old_redoc_response.status_code == 404
+    assert openapi_response.status_code == 200
 
 
 ignore_routes = (
