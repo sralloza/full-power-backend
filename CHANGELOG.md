@@ -7,6 +7,10 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 
 ## [Unreleased]
 
+### Added
+
+- Endpoints to create and retrieve multiples files at once (`/files/multi`)
+
 ## [1.0.0] - 2021-03-04
 
 ### Fixed
