@@ -11,6 +11,11 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 
 - Endpoints to create and retrieve multiples files at once (`/files/multi`)
 
+### Changed
+
+- *Interactive* docs are now in `/idocs` (previously in `/docs`) and *redoc* docs are now in `/docs` (previously in `/redoc`).
+- Disable only *interactive* docs (`/idocs`) in **production**.
+
 ## [1.0.0] - 2021-03-04
 
 ### Fixed

@@ -18,10 +18,12 @@ def create_app() -> FastAPI:
         title="Health Bot API",
         description="Backend for Health Bot",
         version=__version__,
+        redoc_url="/docs",
+        docs_url="/idocs",
     )
 
     if settings.production:
-        fastapi_kwargs.update(dict(openapi_url=None))
+        fastapi_kwargs.update(dict(docs_url=None))
 
     app = FastAPI(**fastapi_kwargs)
     app.include_router(api.router)
