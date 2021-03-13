@@ -40,6 +40,20 @@ def list_files(
 
 
 @router.get(
+    "/multi",
+    response_model=List[FileResult],
+    responses={404: {"description": "File not found"}},
+    summary="Get multiple files by name and language",
+)
+def get_files_by_name(
+    *, db: Session = Depends(get_db), names: List[str], lang: str = "en"
+):
+    """Finds a file by name and language or returns 404 if it can't find it."""
+    for name in names:
+        yield crud.file.get_or_404_by_name(db, name=name, lang=lang)
+
+
+@router.get(
     "/{name}",
     response_model=FileResult,
     responses={404: {"description": "File not found"}},
@@ -62,6 +76,23 @@ def create_file(*, db: Session = Depends(get_db), file: FileCreate, lang: str = 
     file_id = get_file_id_from_name(file.name, lang)
     real_file = FileCreateInner(id=file_id, lang=lang, **file.dict())
     return crud.file.create(db, obj_in=real_file)
+
+
+@router.post(
+    "/multi",
+    dependencies=[Security(get_current_user, scopes=["admin"])],
+    response_model=List[FileCreateResult],
+    status_code=status.HTTP_201_CREATED,
+    summary="Create multiples files",
+)
+def create_multiple_files(
+    *, db: Session = Depends(get_db), files: List[FileCreate], lang: str = "en"
+):
+    """Creates a new file"""
+    for file in files:
+        file_id = get_file_id_from_name(file.name, lang)
+        real_file = FileCreateInner(id=file_id, lang=lang, **file.dict())
+        yield crud.file.create(db, obj_in=real_file)
 
 
 @router.put(
