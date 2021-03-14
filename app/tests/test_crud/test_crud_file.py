@@ -1,7 +1,11 @@
+from pathlib import Path
+from typing import List
 from unittest import mock
 
 import pytest
 from fastapi import HTTPException
+from pydantic import parse_file_as
+from pydantic.main import BaseModel
 from sqlalchemy.orm.session import Session
 
 from app import crud
@@ -70,7 +74,8 @@ def test_create_already_exists(db: Session):
     assert exc.value.detail == "File with name=vitamins.k and lang=en already exists"
 
 
-def test_update(db: Session):
+@mock.patch("app.crud.file.autoremove_images")
+def test_update(ai_m, db: Session):
     file_db = crud.file.create(db, obj_in=fci("content", "vitamins.qwerty", "r"))
     assert file_db.content == "content"
     assert file_db.name == "vitamins.qwerty"
@@ -86,6 +91,8 @@ def test_update(db: Session):
     assert file_db_2.lang == "es"
     assert file_db_2.title == "x"
     assert file_db == file_db_2
+    ai_m.assert_called_once_with(mock.ANY, db_obj=mock.ANY, content="new-content")
+    ai_m.reset_mock()
 
     # Update lang and name
     file_db_2 = crud.file.update(
@@ -96,6 +103,7 @@ def test_update(db: Session):
     assert file_db_2.lang == "ru"
     assert file_db_2.title == "x"
     assert file_db == file_db_2
+    ai_m.assert_not_called()
 
 
 def test_remove(db: Session):
@@ -105,3 +113,25 @@ def test_remove(db: Session):
     assert result is None
 
     assert crud.file.get(db, id=get_file_id_from_name("vitamins.gh", "pt")) is None
+
+
+class ARITestData(BaseModel):
+    old: str
+    new: str
+    remove: List[int]
+
+
+ari_test_data_path = Path(__file__).parent.parent / "test_data/autoremove_images.json"
+ari_test_data = parse_file_as(List[ARITestData], ari_test_data_path)
+
+
+@pytest.mark.parametrize("test_data", ari_test_data)
+@mock.patch("app.crud.image.remove")
+def test_autoremove_images(remove_image_m, db: Session, test_data: ARITestData):
+    m = mock.MagicMock()
+    m.content = test_data.old
+    crud.file.autoremove_images(db, db_obj=m, content=test_data.new)
+
+    calls = [mock.call(db, id=x) for x in test_data.remove]
+    remove_image_m.assert_has_calls(calls)
+    assert remove_image_m.call_count == len(calls)

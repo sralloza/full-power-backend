@@ -1,3 +1,4 @@
+import re
 from typing import Generator, Optional
 
 from fastapi import HTTPException
@@ -36,6 +37,7 @@ class CRUDFile(CRUDBase[File, FileCreate, FileUpdateInner]):
         update_dict = obj_in.dict(exclude_unset=True)
         name_supplied = update_dict.get("name", None)
         lang_supplied = update_dict.get("lang", None)
+        content = update_dict.get("content", None)
 
         update = name_supplied is not None or lang_supplied is not None
 
@@ -43,6 +45,9 @@ class CRUDFile(CRUDBase[File, FileCreate, FileUpdateInner]):
             lang = lang_supplied or db_obj.lang
             name = name_supplied or db_obj.name
             update_dict["id"] = get_file_id_from_name(name, lang)
+
+        if content is not None:
+            self.autoremove_images(db, db_obj=db_obj, content=content)
 
         return super().update(db, db_obj=db_obj, obj_in=FileUpdateInner(**update_dict))
 
@@ -67,6 +72,18 @@ class CRUDFile(CRUDBase[File, FileCreate, FileUpdateInner]):
         query = query.order_by(self.model.name.asc()).offset(skip).limit(limit)
         for line in query.all():
             yield FileCreateResult(name=line[0], title=line[1], lang=line[2])
+
+    def autoremove_images(self, db: Session, *, db_obj: File, content: str):
+        from app import crud
+
+        pattern = re.compile(r"<img src=\"https?:\/\/[\w.]+\/images\/(\d+)\">")
+
+        existing_images = {int(x.group(1)) for x in pattern.finditer(db_obj.content)}
+        new_images = {int(x.group(1)) for x in pattern.finditer(content)}
+
+        images_to_remove = existing_images - new_images
+        for image_id in images_to_remove:
+            crud.image.remove(db, id=image_id)
 
 
 file = CRUDFile(File)
