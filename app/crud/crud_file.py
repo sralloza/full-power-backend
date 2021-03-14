@@ -17,6 +17,7 @@ from app.schemas.file import (
 from .base import CRUDBase
 
 NameGenerator = Generator[FileCreateResult, None, None]
+IMAGE_PATTERN = re.compile(r"<img src=\"https?:\/\/[\w.]+\/images\/(\d+)\">")
 
 
 class CRUDFile(CRUDBase[File, FileCreate, FileUpdateInner]):
@@ -61,8 +62,12 @@ class CRUDFile(CRUDBase[File, FileCreate, FileUpdateInner]):
 
     def remove_by_name(self, db: Session, *, name: str, lang: str) -> None:
         obj = self.get_or_404_by_name(db, name=name, lang=lang)
-        db.delete(obj)
-        db.commit()
+        return self.remove(db, id=obj.id)
+
+    def remove(self, db: Session, *, id: str):
+        obj = self.get_or_404(db, id=id)
+        self.autoremove_images(db, db_obj=obj, content="")
+        super().remove(db, id=id)
 
     def get_db_file_list(
         self, db: Session, *, lang: str, skip: int = 0, limit: int = 100
@@ -76,10 +81,9 @@ class CRUDFile(CRUDBase[File, FileCreate, FileUpdateInner]):
     def autoremove_images(self, db: Session, *, db_obj: File, content: str):
         from app import crud
 
-        pattern = re.compile(r"<img src=\"https?:\/\/[\w.]+\/images\/(\d+)\">")
 
-        existing_images = {int(x.group(1)) for x in pattern.finditer(db_obj.content)}
-        new_images = {int(x.group(1)) for x in pattern.finditer(content)}
+        existing_images = {int(x.group(1)) for x in IMAGE_PATTERN.finditer(db_obj.content)}
+        new_images = {int(x.group(1)) for x in IMAGE_PATTERN.finditer(content)}
 
         images_to_remove = existing_images - new_images
         for image_id in images_to_remove:

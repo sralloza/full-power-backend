@@ -106,13 +106,15 @@ def test_update(ai_m, db: Session):
     ai_m.assert_not_called()
 
 
-def test_remove(db: Session):
+@mock.patch("app.crud.file.autoremove_images")
+def test_remove(ari_m, db: Session):
     file_db = crud.file.create(db, obj_in=fci("content", "vitamins.gh", "q", "pt"))
     assert file_db == crud.file.get_by_name(db, name="vitamins.gh", lang="pt")
     result = crud.file.remove(db, id=get_file_id_from_name("vitamins.gh", "pt"))
     assert result is None
 
     assert crud.file.get(db, id=get_file_id_from_name("vitamins.gh", "pt")) is None
+    ari_m.assert_called_once_with(mock.ANY, db_obj=mock.ANY, content="")
 
 
 class ARITestData(BaseModel):
