@@ -18,7 +18,7 @@ from app.schemas.conversation import ConversationCreate, ConversationOut
 from app.schemas.health_data import HealthDataCreate, HealthDataUpdate
 
 router = APIRouter(
-    dependencies=[Depends(get_current_user)], prefix="/bot", tags=["bot"]
+    dependencies=[Depends(get_current_user)], prefix="/bot", tags=["Bot"]
 )
 logger = getLogger(__name__)
 
