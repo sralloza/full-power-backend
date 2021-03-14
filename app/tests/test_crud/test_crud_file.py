@@ -1,7 +1,13 @@
+from pathlib import Path
+from secrets import choice
+from string import ascii_letters
+from typing import List
 from unittest import mock
 
 import pytest
 from fastapi import HTTPException
+from pydantic import parse_file_as
+from pydantic.main import BaseModel
 from sqlalchemy.orm.session import Session
 
 from app import crud
@@ -46,7 +52,8 @@ def test_get_or_404(db: Session):
     assert result.content == "content"
 
 
-def test_create(db: Session):
+@mock.patch("app.crud.file.autoremove_images")
+def test_create(ari_m, db: Session):
     file_db = crud.file.create(db, obj_in=fci("content", "vitamins.calcium", "k"))
     expected_dict = {
         "content": "content",
@@ -55,8 +62,10 @@ def test_create(db: Session):
         "name": "vitamins.calcium",
         "title": "k",
     }
-    assert file_db.dict() == expected_dict  # type: ignore
+    assert file_db.dict() == expected_dict
     assert file_db == crud.file.get_by_name(db, name="vitamins.calcium", lang="es")
+
+    ari_m.assert_called_once()
 
 
 def test_create_already_exists(db: Session):
@@ -70,12 +79,15 @@ def test_create_already_exists(db: Session):
     assert exc.value.detail == "File with name=vitamins.k and lang=en already exists"
 
 
-def test_update(db: Session):
+@mock.patch("app.crud.file.autoremove_images")
+def test_update(ari_m, db: Session):
     file_db = crud.file.create(db, obj_in=fci("content", "vitamins.qwerty", "r"))
     assert file_db.content == "content"
     assert file_db.name == "vitamins.qwerty"
     assert file_db.lang == "es"
     assert file_db.title == "r"
+
+    ari_m.reset_mock()
 
     # Update only content and title
     file_db_2 = crud.file.update(
@@ -86,6 +98,8 @@ def test_update(db: Session):
     assert file_db_2.lang == "es"
     assert file_db_2.title == "x"
     assert file_db == file_db_2
+    ari_m.assert_called_once()
+    ari_m.reset_mock()
 
     # Update lang and name
     file_db_2 = crud.file.update(
@@ -96,12 +110,50 @@ def test_update(db: Session):
     assert file_db_2.lang == "ru"
     assert file_db_2.title == "x"
     assert file_db == file_db_2
+    ari_m.assert_called_once()
 
 
-def test_remove(db: Session):
+@mock.patch("app.crud.file.autoremove_images")
+def test_remove(ari_m, db: Session):
     file_db = crud.file.create(db, obj_in=fci("content", "vitamins.gh", "q", "pt"))
     assert file_db == crud.file.get_by_name(db, name="vitamins.gh", lang="pt")
+    ari_m.reset_mock()
+
     result = crud.file.remove(db, id=get_file_id_from_name("vitamins.gh", "pt"))
     assert result is None
 
     assert crud.file.get(db, id=get_file_id_from_name("vitamins.gh", "pt")) is None
+    ari_m.assert_called_once()
+
+
+class ARITestData(BaseModel):
+    files: List[str]
+    images: List[int]
+    remove: List[int]
+
+
+ari_test_data_path = Path(__file__).parent.parent / "test_data/autoremove_images.json"
+ari_test_data = parse_file_as(List[ARITestData], ari_test_data_path)
+
+
+@pytest.mark.parametrize("test_data", ari_test_data)
+@mock.patch("app.crud.image.get_id_list")
+@mock.patch("app.crud.image.remove")
+def test_autoremove_images(remove_image_m, gil_m, db: Session, test_data: ARITestData):
+    gil_m.return_value = test_data.images
+
+    for content in test_data.files:
+        name = "vitamins." + choice(ascii_letters)
+        file = fci(content, name, "title")
+        crud.file.create(db, obj_in=file)
+
+    remove_image_m.reset_mock()
+    gil_m.reset_mock()
+
+    crud.file.autoremove_images(db)
+
+    calls = [mock.call(db, id=x) for x in test_data.remove]
+    remove_image_m.assert_has_calls(calls, any_order=True)
+    assert remove_image_m.call_count == len(calls)
+
+    gil_m.assert_called_once()
