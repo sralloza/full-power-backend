@@ -1,7 +1,6 @@
 """Useful functions for the entire application."""
 
-import logging
-from logging.handlers import TimedRotatingFileHandler
+from logging import FileHandler, basicConfig, getLogger
 from pathlib import Path
 from uuid import uuid4
 
@@ -10,7 +9,7 @@ from starlette.responses import JSONResponse
 
 from app.core.config import settings
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
 def setup_logging():
@@ -18,26 +17,18 @@ def setup_logging():
 
     Path(settings.log_path).parent.mkdir(parents=True, exist_ok=True)
 
-    file_handler = TimedRotatingFileHandler(
-        settings.log_path,
-        when="midnight",
-        encoding="utf-8",
-        backupCount=settings.max_logs,
-    )
+    file_handler = FileHandler(settings.log_path, encoding="utf-8")
 
-    if file_handler.shouldRollover(None):  # type: ignore noqa
-        file_handler.doRollover()
-
-    logging.basicConfig(
+    basicConfig(
         handlers=[file_handler],
         level=settings.logging_level.as_python_logging(),
         format=fmt,
     )
 
-    logging.getLogger("asyncio").setLevel(50)
-    logging.getLogger("multipart").setLevel(50)
-    logging.getLogger("passlib").setLevel(50)
-    logging.getLogger("werkzeug").setLevel(50)
+    getLogger("asyncio").setLevel(50)
+    getLogger("multipart").setLevel(50)
+    getLogger("passlib").setLevel(50)
+    getLogger("werkzeug").setLevel(50)
 
 
 def catch_errors(request: Request, exc: Exception):

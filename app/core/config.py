@@ -43,7 +43,6 @@ class Settings(BaseSettings):
     # Logging
     log_path: Path
     logging_level: ValidLoggingLevel = ValidLoggingLevel.INFO
-    max_logs: int = 30
 
     # Bot generics
     bot_split_char: str = "~"

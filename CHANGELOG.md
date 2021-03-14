@@ -17,6 +17,11 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 - *Interactive* docs are now in `/idocs` (previously in `/docs`) and *redoc* docs are now in `/docs` (previously in `/redoc`).
 - Disable only *interactive* docs (`/idocs`) in **production**.
 
+### Removed
+
+- Disable logs rolling.
+- Settings `max_logs`.
+
 ## [1.0.0] - 2021-03-04
 
 ### Fixed

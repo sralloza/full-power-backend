@@ -35,7 +35,6 @@ Here is a list of all the settings clasified by category.
 
 - 🚩 `log_path`: absolute path to the log file. The folder and the folder's parents are created at runtime.
 - `logging_level`: logging level. Must be `DEBUG`, `INFO`, `WARNING`, `ERROR` or `CRITICAL`. Defaults to `INFO`.
-- `max_logs`: max number of logs. Defaults to 30.
 
 ## Bot generics
 
