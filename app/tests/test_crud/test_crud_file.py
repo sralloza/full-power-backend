@@ -1,4 +1,6 @@
 from pathlib import Path
+from secrets import choice
+from string import ascii_letters
 from typing import List
 from unittest import mock
 
@@ -118,8 +120,8 @@ def test_remove(ari_m, db: Session):
 
 
 class ARITestData(BaseModel):
-    old: str
-    new: str
+    files: List[str]
+    images: List[int]
     remove: List[int]
 
 
@@ -128,12 +130,20 @@ ari_test_data = parse_file_as(List[ARITestData], ari_test_data_path)
 
 
 @pytest.mark.parametrize("test_data", ari_test_data)
+@mock.patch("app.crud.image.get_id_list")
 @mock.patch("app.crud.image.remove")
-def test_autoremove_images(remove_image_m, db: Session, test_data: ARITestData):
-    m = mock.MagicMock()
-    m.content = test_data.old
-    crud.file.autoremove_images(db, db_obj=m, content=test_data.new)
+def test_autoremove_images(remove_image_m, gil_m, db: Session, test_data: ARITestData):
+    gil_m.return_value = test_data.images
+
+    for content in test_data.files:
+        name = "vitamins." + choice(ascii_letters)
+        file = fci(content, name, "title")
+        crud.file.create(db, obj_in=file)
+
+    crud.file.autoremove_images(db)
 
     calls = [mock.call(db, id=x) for x in test_data.remove]
-    remove_image_m.assert_has_calls(calls)
+    remove_image_m.assert_has_calls(calls, any_order=True)
     assert remove_image_m.call_count == len(calls)
+
+    gil_m.assert_called_once()

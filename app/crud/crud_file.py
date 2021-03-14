@@ -1,3 +1,4 @@
+import logging
 import re
 from typing import Generator, Optional
 
@@ -16,6 +17,7 @@ from app.schemas.file import (
 
 from .base import CRUDBase
 
+logger = logging.getLogger(__name__)
 NameGenerator = Generator[FileCreateResult, None, None]
 IMAGE_PATTERN = re.compile(r"<img src=\"https?:\/\/[\w.]+\/images\/(\d+)\">")
 
@@ -38,7 +40,6 @@ class CRUDFile(CRUDBase[File, FileCreate, FileUpdateInner]):
         update_dict = obj_in.dict(exclude_unset=True)
         name_supplied = update_dict.get("name", None)
         lang_supplied = update_dict.get("lang", None)
-        content = update_dict.get("content", None)
 
         update = name_supplied is not None or lang_supplied is not None
 
@@ -47,10 +48,11 @@ class CRUDFile(CRUDBase[File, FileCreate, FileUpdateInner]):
             name = name_supplied or db_obj.name
             update_dict["id"] = get_file_id_from_name(name, lang)
 
-        if content is not None:
-            self.autoremove_images(db, db_obj=db_obj, content=content)
-
-        return super().update(db, db_obj=db_obj, obj_in=FileUpdateInner(**update_dict))
+        new_file = super().update(
+            db, db_obj=db_obj, obj_in=FileUpdateInner(**update_dict)
+        )
+        self.autoremove_images(db)
+        return new_file
 
     def get_or_404_by_name(self, db: Session, name: str, lang: str) -> File:
         file_id = get_file_id_from_name(name, lang)
@@ -65,9 +67,8 @@ class CRUDFile(CRUDBase[File, FileCreate, FileUpdateInner]):
         return self.remove(db, id=obj.id)
 
     def remove(self, db: Session, *, id: str):
-        obj = self.get_or_404(db, id=id)
-        self.autoremove_images(db, db_obj=obj, content="")
         super().remove(db, id=id)
+        self.autoremove_images(db)
 
     def get_db_file_list(
         self, db: Session, *, lang: str, skip: int = 0, limit: int = 100
@@ -78,14 +79,20 @@ class CRUDFile(CRUDBase[File, FileCreate, FileUpdateInner]):
         for line in query.all():
             yield FileCreateResult(name=line[0], title=line[1], lang=line[2])
 
-    def autoremove_images(self, db: Session, *, db_obj: File, content: str):
+    def autoremove_images(self, db: Session):
         from app import crud
 
+        used_images = set()
 
-        existing_images = {int(x.group(1)) for x in IMAGE_PATTERN.finditer(db_obj.content)}
-        new_images = {int(x.group(1)) for x in IMAGE_PATTERN.finditer(content)}
+        for file in self.get_multi(db, limit=10000):
+            used_images |= {
+                int(x.group(1)) for x in IMAGE_PATTERN.finditer(file.content)
+            }
 
-        images_to_remove = existing_images - new_images
+        existing_images = set(crud.image.get_id_list(db, limit=10000))
+        images_to_remove = existing_images - used_images
+        logger.info("Automatically removing useless images: %r", images_to_remove)
+
         for image_id in images_to_remove:
             crud.image.remove(db, id=image_id)
 
