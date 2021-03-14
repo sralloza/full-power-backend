@@ -1,5 +1,7 @@
+from typing import List
 from unittest import mock
 
+from fastapi.routing import APIRoute
 from fastapi.testclient import TestClient
 
 from app.main import create_app
@@ -53,30 +55,34 @@ ignore_routes = (
 
 def test_routes():
     app = create_app()
-    routes = [x for x in app.routes if x.name not in ignore_routes]  # type: ignore
+    routes: List[APIRoute] = [x for x in app.routes if x.name not in ignore_routes]  # type: ignore
 
     for route in routes:
-        assert route.summary, f"{route.name!r} must have summary"  # type: ignore
-        assert route.description, f"{route.name!r} must have description"  # type: ignore
-        assert route.tags, f"{route.name!r} must have tags"  # type: ignore
+        assert route.summary, f"{route.name!r} must have summary"
+        assert route.description, f"{route.name!r} must have description"
+        assert route.tags, f"{route.name!r} must have tags"
+
+        for tag in route.tags:
+            assert tag, f"{route.name!r} tags can't be empty"
+            assert tag.istitle(), f"{route.name!r} tags must be titled"
 
     # GET routes with parameter can raise 404
-    group = [x for x in routes if "GET" in x.methods and x.param_convertors]  # type: ignore
+    group = [x for x in routes if "GET" in x.methods and x.param_convertors]
     for route in group:
         # notifications-content routes can't raise 404
-        if "notifications-content" in route.path:  # type: ignore
+        if "notifications-content" in route.path:
             continue
-        assert 404 in route.responses, f"{route.name!r} must define 404"  # type: ignore
-        assert "not found" in route.responses[404]["description"]  # type: ignore
+        assert 404 in route.responses, f"{route.name!r} must define 404"
+        assert "not found" in route.responses[404]["description"]
 
     # POST routes that create objects must return 201
-    group = [x for x in routes if "POST" in x.methods and x.param_convertors]  # type: ignore
+    group = [x for x in routes if "POST" in x.methods and x.param_convertors]
     for route in group:  # noqa
-        assert route.status_code == 201  # type: ignore
+        assert route.status_code == 201
 
     # DELETE routes can raise 404 and must return 204
-    group = [x for x in routes if "DELETE" in x.methods]  # type: ignore
+    group = [x for x in routes if "DELETE" in x.methods]
     for route in group:
-        assert route.status_code == 204  # type: ignore
-        assert 404 in route.responses  # type: ignore
-        assert "not found" in route.responses[404]["description"]  # type: ignore
+        assert route.status_code == 204
+        assert 404 in route.responses
+        assert "not found" in route.responses[404]["description"]
