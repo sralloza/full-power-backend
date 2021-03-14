@@ -1,7 +1,7 @@
 """Useful functions for the entire application."""
 
 import logging
-from logging.handlers import TimedRotatingFileHandler
+from logging.handlers import FileHandler
 from pathlib import Path
 from uuid import uuid4
 
@@ -18,15 +18,10 @@ def setup_logging():
 
     Path(settings.log_path).parent.mkdir(parents=True, exist_ok=True)
 
-    file_handler = TimedRotatingFileHandler(
+    file_handler = FileHandler(
         settings.log_path,
-        when="midnight",
         encoding="utf-8",
-        backupCount=settings.max_logs,
     )
-
-    if file_handler.shouldRollover(None):  # type: ignore noqa
-        file_handler.doRollover()
 
     logging.basicConfig(
         handlers=[file_handler],
