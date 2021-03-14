@@ -29,7 +29,9 @@ class CRUDFile(CRUDBase[File, FileCreate, FileUpdateInner]):
 
     def create(self, db: Session, *, obj_in: FileCreateInner) -> File:
         try:
-            return super().create(db, obj_in=obj_in)
+            file = super().create(db, obj_in=obj_in)
+            self.autoremove_images(db)
+            return file
         except HTTPException as exc:
             name = obj_in.name
             lang = obj_in.lang

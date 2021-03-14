@@ -52,7 +52,8 @@ def test_get_or_404(db: Session):
     assert result.content == "content"
 
 
-def test_create(db: Session):
+@mock.patch("app.crud.file.autoremove_images")
+def test_create(ari_m, db: Session):
     file_db = crud.file.create(db, obj_in=fci("content", "vitamins.calcium", "k"))
     expected_dict = {
         "content": "content",
@@ -61,8 +62,10 @@ def test_create(db: Session):
         "name": "vitamins.calcium",
         "title": "k",
     }
-    assert file_db.dict() == expected_dict  # type: ignore
+    assert file_db.dict() == expected_dict
     assert file_db == crud.file.get_by_name(db, name="vitamins.calcium", lang="es")
+
+    ari_m.assert_called_once()
 
 
 def test_create_already_exists(db: Session):
@@ -77,12 +80,14 @@ def test_create_already_exists(db: Session):
 
 
 @mock.patch("app.crud.file.autoremove_images")
-def test_update(ai_m, db: Session):
+def test_update(ari_m, db: Session):
     file_db = crud.file.create(db, obj_in=fci("content", "vitamins.qwerty", "r"))
     assert file_db.content == "content"
     assert file_db.name == "vitamins.qwerty"
     assert file_db.lang == "es"
     assert file_db.title == "r"
+
+    ari_m.reset_mock()
 
     # Update only content and title
     file_db_2 = crud.file.update(
@@ -93,8 +98,8 @@ def test_update(ai_m, db: Session):
     assert file_db_2.lang == "es"
     assert file_db_2.title == "x"
     assert file_db == file_db_2
-    ai_m.assert_called_once_with(mock.ANY, db_obj=mock.ANY, content="new-content")
-    ai_m.reset_mock()
+    ari_m.assert_called_once()
+    ari_m.reset_mock()
 
     # Update lang and name
     file_db_2 = crud.file.update(
@@ -105,18 +110,20 @@ def test_update(ai_m, db: Session):
     assert file_db_2.lang == "ru"
     assert file_db_2.title == "x"
     assert file_db == file_db_2
-    ai_m.assert_not_called()
+    ari_m.assert_called_once()
 
 
 @mock.patch("app.crud.file.autoremove_images")
 def test_remove(ari_m, db: Session):
     file_db = crud.file.create(db, obj_in=fci("content", "vitamins.gh", "q", "pt"))
     assert file_db == crud.file.get_by_name(db, name="vitamins.gh", lang="pt")
+    ari_m.reset_mock()
+
     result = crud.file.remove(db, id=get_file_id_from_name("vitamins.gh", "pt"))
     assert result is None
 
     assert crud.file.get(db, id=get_file_id_from_name("vitamins.gh", "pt")) is None
-    ari_m.assert_called_once_with(mock.ANY, db_obj=mock.ANY, content="")
+    ari_m.assert_called_once()
 
 
 class ARITestData(BaseModel):
@@ -139,6 +146,9 @@ def test_autoremove_images(remove_image_m, gil_m, db: Session, test_data: ARITes
         name = "vitamins." + choice(ascii_letters)
         file = fci(content, name, "title")
         crud.file.create(db, obj_in=file)
+
+    remove_image_m.reset_mock()
+    gil_m.reset_mock()
 
     crud.file.autoremove_images(db)
 
