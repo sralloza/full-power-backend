@@ -11,7 +11,7 @@ from app.core.config import Settings, settings
 from app.models import User
 from app.schemas.user import UserPublic, UserUpdateAdmin
 
-router = APIRouter(tags=["utils"])
+router = APIRouter(tags=["Utils"])
 
 
 @router.get("/", summary="Get server state")

@@ -5,7 +5,7 @@ from fastapi import APIRouter, HTTPException
 from app.schemas.notification import QuestionNotification
 from app.utils.translate import i18n
 
-router = APIRouter(prefix="/notifications-content", tags=["notifications"])
+router = APIRouter(prefix="/notifications-content", tags=["Notifications"])
 
 
 @router.get(

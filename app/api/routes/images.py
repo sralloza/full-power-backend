@@ -11,7 +11,7 @@ from app.api.dependencies.security import get_current_user
 from app.api.dependencies.utils import get_limits
 from app.schemas.image import ImageCreate, ImageCreateResult
 
-router = APIRouter(prefix="/images", tags=["images"])
+router = APIRouter(prefix="/images", tags=["Images"])
 
 
 @router.get(

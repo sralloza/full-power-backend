@@ -14,7 +14,7 @@ from app.schemas.user import UserCreateAdmin, UserInDB
 router = APIRouter(
     dependencies=[Security(get_current_user, scopes=["admin"])],
     prefix="/users",
-    tags=["users"],
+    tags=["Users"],
 )
 
 

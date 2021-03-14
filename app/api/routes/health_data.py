@@ -15,7 +15,7 @@ from app.schemas.health_data import HealthData, HealthDataCreate
 router = APIRouter(
     dependencies=[Security(get_current_user, scopes=["admin"])],
     prefix="/health-data",
-    tags=["health-data"],
+    tags=["Health-Data"],
 )
 
 
