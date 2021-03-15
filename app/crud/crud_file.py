@@ -1,5 +1,7 @@
 import logging
 import re
+from collections import namedtuple
+from itertools import groupby
 from typing import Generator, Optional
 
 from fastapi import HTTPException
@@ -13,6 +15,7 @@ from app.schemas.file import (
     FileCreateResult,
     FileUpdate,
     FileUpdateInner,
+    GroupedFile,
 )
 
 from .base import CRUDBase
@@ -80,6 +83,17 @@ class CRUDFile(CRUDBase[File, FileCreate, FileUpdateInner]):
         query = query.order_by(self.model.name.asc()).offset(skip).limit(limit)
         for line in query.all():
             yield FileCreateResult(name=line[0], title=line[1], lang=line[2])
+
+    def get_grouped_file_list(self, db: Session):
+        TempFile = namedtuple("TempFile", "name lang")
+        query = db.query(self.model.name, self.model.lang)
+        query = query.order_by(self.model.name.asc())
+        files = [TempFile(line[0], line[1]) for line in query.all()]
+
+        for name, named_files in groupby(files, lambda x: x.name):
+            langs = [x.lang for x in named_files]
+            langs.sort()
+            yield GroupedFile(name=name, langs=langs)
 
     def autoremove_images(self, db: Session):
         from app import crud

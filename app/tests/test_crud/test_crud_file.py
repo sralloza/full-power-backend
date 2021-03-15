@@ -36,6 +36,18 @@ def test_get_db_file_list(db: Session):
     ]
 
 
+def test_list_files_grouped(db: Session):
+    crud.file.create(db, obj_in=fci("data", "vitamins.t1", "t", "ru"))
+    crud.file.create(db, obj_in=fci("data", "vitamins.t2", "t", "ru"))
+    crud.file.create(db, obj_in=fci("data", "vitamins.t2", "t", "es"))
+
+    grouped_file_list = list(crud.file.get_grouped_file_list(db))
+    assert grouped_file_list == [
+        {"name": "vitamins.t1", "langs": ["ru"]},
+        {"name": "vitamins.t2", "langs": ["es", "ru"]},
+    ]
+
+
 def test_get_or_404(db: Session):
     with pytest.raises(HTTPException) as exc:
         crud.file.get_or_404_by_name(db, name="health.something.act", lang="es")

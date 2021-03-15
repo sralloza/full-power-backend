@@ -19,6 +19,7 @@ from app.schemas.file import (
     FileDelete,
     FileResult,
     FileUpdate,
+    GroupedFile,
 )
 
 router = APIRouter(prefix="/files", tags=["Files"])
@@ -37,6 +38,14 @@ def list_files(
 ):
     """Returns a list of the names written in a specific language."""
     return crud.file.get_db_file_list(db, lang=lang, **limits)
+
+
+@router.get(
+    "/all", response_model=List[GroupedFile], summary="List files grouped by language"
+)
+def list_files_grouped(*, db: Session = Depends(get_db)):
+    """Lists all the files from the database grouped by language."""
+    return crud.file.get_grouped_file_list(db)
 
 
 @router.get(
