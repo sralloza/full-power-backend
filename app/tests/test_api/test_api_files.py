@@ -28,6 +28,21 @@ def test_list_files(db: Session, client: TestClient):
     ]
 
 
+def test_list_files_grouped(db: Session, client: TestClient):
+    crud.file.create(db, obj_in=fci("data", "vitamins.t1", "t", "ru"))
+    crud.file.create(db, obj_in=fci("data", "vitamins.t2", "t", "ru"))
+    crud.file.create(db, obj_in=fci("data", "vitamins.t2", "t", "es"))
+
+    response = client.get("/files/all")
+    assert response.status_code == 200
+
+    data = response.json()
+    assert data == [
+        {"name": "vitamins.t1", "langs": ["ru"]},
+        {"name": "vitamins.t2", "langs": ["es", "ru"]},
+    ]
+
+
 def test_get_files_by_name(db: Session, client: TestClient):
     crud.file.create(db, obj_in=fci("vits", "vitamins.v1", "i", "en"))
     crud.file.create(db, obj_in=fci("vits", "vitamins.v2", "i", "en"))

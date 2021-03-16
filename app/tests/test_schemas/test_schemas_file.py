@@ -1,3 +1,5 @@
+from typing import List
+
 import pytest
 from pydantic import ValidationError
 
@@ -11,6 +13,7 @@ from app.schemas.file import (
     FileResult,
     FileUpdate,
     FileUpdateInner,
+    GroupedFile,
 )
 
 invalid_name_test_data = (
@@ -46,6 +49,16 @@ valid_ids = (
 @pytest.mark.parametrize("name", valid_ids)
 def test_name_validator_valid(name):
     FileBase(name=name)
+
+
+def test_grouped_file():
+    fields = GroupedFile.__fields__
+
+    assert set(fields) == {"name", "langs"}
+    assert fields["name"].required is True
+    assert fields["name"].type_ == str
+    assert fields["langs"].required is True
+    assert fields["langs"].outer_type_ == List[str]
 
 
 def test_file_create():

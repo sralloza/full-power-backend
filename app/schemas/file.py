@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 
 from pydantic import BaseModel, validator
 
@@ -31,6 +31,10 @@ class FileBase(BaseModel):
                 )
 
         return value
+
+
+class GroupedFile(FileBase):
+    langs: List[str]
 
 
 class FileCreate(FileBase):
