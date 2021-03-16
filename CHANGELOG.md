@@ -10,7 +10,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 ### Added
 
 - Endpoints to create and retrieve multiples files at once (`/files/multi`).
-- Endpoint to list the files grouped by lang (`/files/all`)
+- Endpoint to list the files grouped by language (`/files/all`)
 - A `POST`, `PUT` or `DELETE` request to `/files` will trigger the image outdated detection (if an image is not referenced in any file, it will be automatically removed).
 
 ### Changed
