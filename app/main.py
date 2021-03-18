@@ -39,3 +39,5 @@ def create_app() -> FastAPI:
     app.add_exception_handler(500, catch_errors)
 
     return app
+
+app = create_app()
