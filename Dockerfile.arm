@@ -1,0 +1,22 @@
+FROM --platform=linux/arm/v7 python:3.7
+
+EXPOSE 80
+
+COPY ./backendtest-oiix-ba9d6341437a.json ./requirements.txt ./alembic.ini .gitignore ./
+COPY ./.git /.git
+COPY ./scripts /scripts
+COPY ./alembic /alembic
+COPY ./app /app
+COPY ./prestart.sh /prestart.sh
+COPY ./wait-for-it.sh /wait-for-it.sh
+
+
+ENV DIALOGFLOW_PROJECT_ID=backendtest-oiix \
+    GOOGLE_APPLICATION_CREDENTIALS=./backendtest-oiix-ba9d6341437a.json \
+    LOG_PATH=/logs
+
+RUN python -m pip install --upgrade pip && \
+    python -m pip install wheel && \
+    python -m pip install -r ./requirements.txt
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]

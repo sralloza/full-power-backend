@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  backend:
+    image: sralloza/backend:stable-arm
+    depends_on:
+      - database
+    env_file:
+      backend.env
+    ports:
+      - 80:80
+  database:
+    image: jsurf/rpi-mariadb:latest
+    env_file:
+      backend.env
+    volumes:
+      - data:/var/lib/mysql
+
+volumes:
+  data:
