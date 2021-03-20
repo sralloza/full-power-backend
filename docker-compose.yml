@@ -2,23 +2,19 @@ version: "3.9"
 
 services:
   backend:
-    build:
-      context: .
-      args:
-        SQLALCHEMY_DATABASE_URL: mysql+pymysql://root:secret@database:3306/backend
+    image: sralloza/backend:stable
     depends_on:
       - database
+    env_file:
+      backend.env
     ports:
       - 80:80
   database:
     image: mysql:5.7
+    env_file:
+      backend.env
     volumes:
       - data:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: secret
-      MYSQL_DATABASE: backend
-    ports:
-    - 3306:3306
 
 volumes:
   data:
