@@ -1,3 +1,4 @@
+export MYSQL_PORT=3306
 export SQLALCHEMY_DATABASE_URL="mysql+pymysql://root:${MYSQL_ROOT_PASSWORD}@database:${MYSQL_PORT}/backend"
 echo "backend's database: '${SQLALCHEMY_DATABASE_URL}'"
 
@@ -10,8 +11,9 @@ python -c "from app.core.config import settings;print(repr(settings))"
 
 ./wait-for-it.sh -t 30 "database:${MYSQL_PORT}"
 
+python ./scripts/ensure-database.py
+
 # Run migrations
 alembic upgrade head
 
-python ./scripts/ensure-database.py
 python ./scripts/create-first-admin.py
