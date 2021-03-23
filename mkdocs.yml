@@ -23,6 +23,7 @@ nav:
       - release-changelog: scripts/release-changelog.md
       - update-questions: scripts/update-questions.md
   - Deploy:
+      - Docker deploy: deploy/docker.md
       - Generic deploy: deploy/generic.md
       - O2Switch deploy: deploy/deploy-o2switch.md
   - Develop: develop.md
