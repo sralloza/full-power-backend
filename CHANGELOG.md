@@ -25,7 +25,6 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 - Fixed [#70](https://github.com/BelinguoAG/full-power-backend/issues/70)
 - Fixed [#69](https://github.com/BelinguoAG/full-power-backend/issues/69)
 
-
 ### Removed
 
 - Disable logs rolling.
