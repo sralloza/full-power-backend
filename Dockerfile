@@ -8,6 +8,7 @@ COPY ./docker/prestart.sh /app/prestart.sh
 COPY ./docker/wait-for-it.sh /app/wait-for-it.sh
 COPY ./scripts /app/scripts
 
+RUN chmod +x /app/prestart.sh /app/wait-for-it.sh
 
 ENV DIALOGFLOW_PROJECT_ID=backendtest-oiix \
     GOOGLE_APPLICATION_CREDENTIALS=./backendtest-oiix-ba9d6341437a.json \
