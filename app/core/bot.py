@@ -1,11 +1,17 @@
 """Bot related code."""
 
+import logging
+
 import dialogflow
+from fastapi import HTTPException
+from google.api_core.exceptions import PermissionDenied
 from google.protobuf.json_format import MessageToDict
 
 from app.core.config import settings
 from app.schemas.bot import DFResponse, QuestionResponse
 from app.utils.translate import i18n
+
+logger = logging.getLogger(__name__)
 
 
 def detect_end(df_response: dict):
@@ -26,7 +32,14 @@ def get_df_response(session_id: int, text: str, language_code: str) -> DFRespons
 
     query_input = dialogflow.types.QueryInput(text=text_input)
 
-    response = session_client.detect_intent(session=session, query_input=query_input)
+    try:
+        response = session_client.detect_intent(
+            session=session, query_input=query_input
+        )
+    except PermissionDenied:
+        logger.exception("Dialogflow permission denied")
+        raise HTTPException(500, "Dialogflow permission denied")
+
     response = MessageToDict(response.query_result)
     return parse_df_response(response)
 

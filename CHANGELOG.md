@@ -21,6 +21,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 ### Fixed
 
 - Fix `codecov`'s flags.
+- Catch `dialogflow` permission errors
 
 ### Removed
 
