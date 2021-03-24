@@ -21,6 +21,8 @@ RUN python -m pip install --upgrade pip && \
     python -m pip install wheel && \
     python -m pip install -r ./requirements.txt
 
+VOLUME /var/log/gunicorn
+
 WORKDIR /
 
 CMD ["/start.sh"]

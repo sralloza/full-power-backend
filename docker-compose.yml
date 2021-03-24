@@ -9,6 +9,8 @@ services:
       backend.env
     ports:
       - 80:80
+    volumes:
+      - ./logs:/var/log/gunicorn
   database:
     image: mysql:5.7
     env_file:

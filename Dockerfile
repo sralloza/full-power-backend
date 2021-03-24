@@ -16,3 +16,5 @@ ENV DIALOGFLOW_PROJECT_ID=backendtest-oiix \
 
 RUN python -m pip install --upgrade pip &&\
     pip install -r ./requirements.txt
+
+VOLUME /var/log/gunicorn
