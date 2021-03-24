@@ -5,7 +5,7 @@ EXPOSE 80
 COPY ./.git /.git
 COPY ./alembic /alembic
 COPY ./app /app
-COPY ./backendtest-oiix-ba9d6341437a.json ./requirements.txt ./alembic.ini .gitignore ./
+COPY ./mega-jvki-71d99bea9a36.json ./requirements.txt ./alembic.ini .gitignore ./
 COPY ./docker/gunicorn_conf.py /gunicorn_conf.py
 COPY ./docker/prestart.sh /prestart.sh
 COPY ./docker/start.sh /start.sh
@@ -14,8 +14,8 @@ COPY ./scripts /scripts
 
 RUN chmod +x /prestart.sh /start.sh /wait-for-it.sh
 
-ENV DIALOGFLOW_PROJECT_ID=backendtest-oiix \
-    GOOGLE_APPLICATION_CREDENTIALS=./backendtest-oiix-ba9d6341437a.json \
+ENV DIALOGFLOW_PROJECT_ID=mega-jvki \
+    GOOGLE_APPLICATION_CREDENTIALS=./mega-jvki-71d99bea9a36.json \
     LOG_PATH=/logs
 
 RUN python -m pip install --upgrade pip && \
