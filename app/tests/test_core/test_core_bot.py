@@ -2,6 +2,8 @@ from unittest import mock
 
 import dialogflow
 import pytest
+from fastapi import HTTPException
+from google.api_core.exceptions import PermissionDenied
 
 from app.core.bot import (
     detect_end,
@@ -22,7 +24,7 @@ class TestGetDFResonse:
         yield
         mock.patch.stopall()
 
-    def test_get_df_response(self):
+    def test_ok(self):
         result = get_df_response(500, "text", "lc")
         self.client_m.assert_called_once_with()
         session_client = self.client_m.return_value
@@ -41,6 +43,29 @@ class TestGetDFResonse:
         )
         self.parse_df_response_m.assert_called_once_with(self.mtd_m.return_value)
         assert result == self.parse_df_response_m.return_value
+
+    def test_fail(self):
+        self.client_m.return_value.detect_intent.side_effect = PermissionDenied(
+            "for some reason"
+        )
+
+        with pytest.raises(HTTPException) as exc_info:
+            result = get_df_response(500, "text", "it")
+
+        exc = exc_info.value
+        assert exc.status_code == 500
+        assert exc.detail == "Dialogflow permission denied"
+
+        self.client_m.assert_called_once_with()
+        session_client = self.client_m.return_value
+        session_client.session_path.assert_called_once_with(600, 500)
+        session_client.detect_intent.assert_called_once()
+
+        self.mtd_m.assert_not_called()
+        self.parse_df_response_m.assert_not_called()
+
+        with pytest.raises(NameError):
+            assert not result
 
 
 expected = (
