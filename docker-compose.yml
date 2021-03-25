@@ -2,7 +2,8 @@ version: "3.9"
 
 services:
   backend:
-    image: sralloza/backend:stable
+    build: .
+    # image: sralloza/backend:stable
     depends_on:
       - database
     env_file:
