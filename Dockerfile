@@ -24,8 +24,8 @@ ENV DIALOGFLOW_PROJECT_ID=mega-jvki \
 
 
 RUN python -m pip install --upgrade pip && \
-    pip install -r ./requirements.txt && \
-    pip install /app/custom_uvicorn
+    python -m pip install -r ./requirements.txt && \
+    python -m pip install /app/custom_uvicorn
 
 
 VOLUME /var/log/gunicorn
