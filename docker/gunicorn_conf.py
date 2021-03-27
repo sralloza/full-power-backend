@@ -47,7 +47,7 @@ graceful_timeout = int(graceful_timeout_str)
 timeout = int(timeout_str)
 keepalive = int(keepalive_str)
 
-# access_log_format = '%(h)s - %(u)s %(t)s "%(r)s" %(s)s %(B)s %(f)s %(a)s'
+access_log_format = '%(h)s - %(u)s %(t)s "%({host}i)s" "%(r)s" %(s)s %(B)s "%(a)s"'
 
 # For debugging and testing
 log_data = {

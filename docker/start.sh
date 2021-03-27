@@ -33,4 +33,4 @@ else
 fi
 
 # Start Gunicorn
-exec gunicorn -k "$WORKER_CLASS" -c "$GUNICORN_CONF" --access-logformat "%(h)s - %(u)s %(t)s \"%(r)s\" %(s)s %(B)s %(f)s %(a)s" "$APP_MODULE"
+exec gunicorn -k "$WORKER_CLASS" -c "$GUNICORN_CONF" "$APP_MODULE"
