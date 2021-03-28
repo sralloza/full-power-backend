@@ -19,7 +19,7 @@ RUN chmod +x /app/prestart.sh /app/wait-for-it.sh
 
 ENV DIALOGFLOW_PROJECT_ID=mega-jvki \
     GOOGLE_APPLICATION_CREDENTIALS=./mega-jvki-71d99bea9a36.json \
-    LOG_PATH=/var/log/gunicorn/core-backend.log \
+    LOG_PATH=/var/log/gunicorn/backend-core.log \
     MYSQL_PORT=3306
 
 
