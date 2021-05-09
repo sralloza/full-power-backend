@@ -24,8 +24,9 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 
 - Fix `codecov`'s flags.
 - Catch `dialogflow` permission errors
-- Fixed [#70](https://github.com/sralloza/full-power-backend/issues/70)
-- Fixed [#69](https://github.com/sralloza/full-power-backend/issues/69)
+- Fixed _Bot sends some questions twice_
+- Fixed _Bot responses (questions) are too big for the table's column_
+- Improve checks in changelog script.
 
 ### Removed
 
