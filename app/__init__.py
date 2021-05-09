@@ -8,6 +8,4 @@ del get_versions
 
 setup_logging()
 
-from .main import create_app  # pylint: disable=wrong-import-position
-
-app = create_app()
+from .main import app

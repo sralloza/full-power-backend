@@ -79,3 +79,48 @@ $ python -m coverage html
 </div>
 
 The tests are automatically executed using **Github Actions** when a _pull request_ is created or a commit to `master` is pushed to the remote.
+
+## Docker
+
+=== "Normal"
+    To build the normal image, run
+
+    <div class="termy">
+    ```shell
+    $ docker build -t &lt;username&gt;/backend:&lt;tag&gt; .
+    ```
+    </div>
+
+    Then you upload it to dockerhub:
+
+    <div class="termy">
+    ```shell
+    $ docker push &lt;username&gt;/backend:&lt;tag&gt;
+    ```
+    </div>
+
+    Then you upload it to dockerhub:
+
+    <div class="termy">
+    ```shell
+    $ docker push &lt;username&gt;/backend:&lt;tag&gt;-arm
+    ```
+    </div>
+
+=== "ARM"
+    To build the `ARM` image, run
+
+    <div class="termy">
+
+    ```shell
+    // Build and publish to dockerhub (recommended)
+    $ docker buildx build -f Dockerfile.arm -t &lt;username&gt;/backend:&lt;tag&gt;-arm --platform=linux/arm/v7 --push .
+
+    // Build only
+    $ docker buildx build -f Dockerfile.arm -t &lt;username&gt;/backend:&lt;tag&gt;-arm --platform=linux/arm/v7 --load .
+    ```
+
+    </div>
+
+!!! warning
+    It takes a lot of time to compile, it's normal to see a bunch of messages like `Building wheel for grpcio (setup.py): still running...`. It's because grpcio doesn't provide wheels for `armv7`, so you have to compile the wheel yourself.

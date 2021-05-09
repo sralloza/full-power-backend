@@ -19,9 +19,11 @@ nav:
       - clean-after-pr: scripts/clean-after-pr.md
       - create-first-admin: scripts/create-first-admin.md
       - create-scripts-docs: scripts/create-scripts-docs.md
+      - ensure-database: scripts/ensure-database.md
       - release-changelog: scripts/release-changelog.md
       - update-questions: scripts/update-questions.md
   - Deploy:
+      - Docker deploy: deploy/docker.md
       - Generic deploy: deploy/generic.md
   - Develop: develop.md
   - Troubleshoot: troubleshoot.md
@@ -72,6 +74,7 @@ markdown_extensions:
       generic: true
   - pymdownx.tasklist:
       custom_checkbox: true
+  - pymdownx.snippets
   - pymdownx.emoji:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg

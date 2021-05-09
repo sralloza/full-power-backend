@@ -1,0 +1,37 @@
+FROM --platform=linux/arm/v7 python:3.7
+
+EXPOSE 80
+
+COPY ./.git /.git
+COPY ./alembic /alembic
+COPY ./app /app
+COPY ./mega-jvki-71d99bea9a36.json ./requirements.txt ./alembic.ini .gitignore ./
+COPY ./docker/gunicorn_conf.py /gunicorn_conf.py
+COPY ./docker/prestart.sh /prestart.sh
+COPY ./docker/start.sh /start.sh
+COPY ./docker/wait-for-it.sh /wait-for-it.sh
+COPY ./scripts /scripts
+
+
+COPY ./docker/uvicorn /custom_uvicorn
+
+
+RUN chmod +x /prestart.sh /start.sh /wait-for-it.sh
+
+
+ENV DIALOGFLOW_PROJECT_ID=mega-jvki \
+    GOOGLE_APPLICATION_CREDENTIALS=./mega-jvki-71d99bea9a36.json \
+    LOG_PATH=/var/log/gunicorn/backend-core.log \
+    MYSQL_PORT=3306
+
+
+RUN python -m pip install --upgrade pip && \
+    python -m pip install wheel && \
+    python -m pip install -r ./requirements.txt && \
+    python -m pip install /custom_uvicorn
+
+VOLUME /var/log/gunicorn
+
+WORKDIR /
+
+CMD ["/start.sh"]
