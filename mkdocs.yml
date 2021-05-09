@@ -25,7 +25,6 @@ nav:
   - Deploy:
       - Docker deploy: deploy/docker.md
       - Generic deploy: deploy/generic.md
-      - O2Switch deploy: deploy/deploy-o2switch.md
   - Develop: develop.md
   - Troubleshoot: troubleshoot.md
   - Technical:
