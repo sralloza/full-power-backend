@@ -16,8 +16,8 @@ The [update-questions script](../scripts/update-questions.md) is used to update 
 
 ## Internal links
 
-- The algorithm is implemented in <a href="https://github.com/BelinguoAG/full-power-backend/blob/master/app/core/health_data.py" class="external-link" target="_blank">core/health_data.py</a>
-- Coefficients are stored in <a href="https://github.com/BelinguoAG/full-power-backend/blob/master/app/db/files/coefficients.json" class="external-link" target="_blank">db/files/coefficients.json</a>
+- The algorithm is implemented in <a href="https://github.com/sralloza/full-power-backend/blob/master/app/core/health_data.py" class="external-link" target="_blank">core/health_data.py</a>
+- Coefficients are stored in <a href="https://github.com/sralloza/full-power-backend/blob/master/app/db/files/coefficients.json" class="external-link" target="_blank">db/files/coefficients.json</a>
 
 ## Algorithm description
 

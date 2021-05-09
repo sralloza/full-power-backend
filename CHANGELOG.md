@@ -24,8 +24,9 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 
 - Fix `codecov`'s flags.
 - Catch `dialogflow` permission errors
-- Fixed [#70](https://github.com/BelinguoAG/full-power-backend/issues/70)
-- Fixed [#69](https://github.com/BelinguoAG/full-power-backend/issues/69)
+- Fixed _Bot sends some questions twice_
+- Fixed _Bot responses (questions) are too big for the table's column_
+- Improve checks in changelog script.
 
 ### Removed
 
@@ -114,7 +115,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 
 - When processing a complete HealthData, now it identifies real problems using the setting `problem_ratio_threshold` and explains them in the returned string.
 - Return `409` instead of `400` in case of id conflict creating models.
-- Make `POST /image` return `415` if image processing fails. ([#38](https://github.com/BelinguoAG/full-power-backend/issues/38))
+- Make `POST /image` return `415` if image processing fails. ([#38](https://github.com/sralloza/full-power-backend/issues/38))
 - Return `201` instead of `200` on model creation.
 - Return `404` in endpoints which returns a user attribute if the user does not exist.
 
@@ -122,7 +123,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 
 ### Fixed
 
-- `display_type` not showing in `POST /process/process-msg`. ([#35](https://github.com/BelinguoAG/full-power-backend/issues/35))
+- `display_type` not showing in `POST /process/process-msg`. ([#35](https://github.com/sralloza/full-power-backend/issues/35))
 
 ## [0.8.0] - 2020-12-07
 
@@ -244,23 +245,23 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 
 - First version
 
-[unreleased]: https://github.com/BelinguoAG/full-power-backend/compare/v0.13.0...HEAD
-[0.13.0]: https://github.com/BelinguoAG/full-power-backend/compare/v0.12.0...v0.13.0
-[0.12.0]: https://github.com/BelinguoAG/full-power-backend/compare/v0.11.1...v0.12.0
-[0.11.1]: https://github.com/BelinguoAG/full-power-backend/compare/v0.11.0...v0.11.1
-[0.11.0]: https://github.com/BelinguoAG/full-power-backend/compare/v0.10.0...v0.11.0
-[0.10.0]: https://github.com/BelinguoAG/full-power-backend/compare/v0.9.0...v0.10.0
-[0.9.0]: https://github.com/BelinguoAG/full-power-backend/compare/v0.8.1...v0.9.0
-[0.8.1]: https://github.com/BelinguoAG/full-power-backend/compare/v0.8.0...v0.8.1
-[0.8.0]: https://github.com/BelinguoAG/full-power-backend/compare/v0.7.1...v0.8.0
-[0.7.1]: https://github.com/BelinguoAG/full-power-backend/compare/v0.7.0...v0.7.1
-[0.7.0]: https://github.com/BelinguoAG/full-power-backend/compare/v0.6.0...v0.7.0
-[0.6.0]: https://github.com/BelinguoAG/full-power-backend/compare/v0.5.1...v0.6.0
-[0.5.1]: https://github.com/BelinguoAG/full-power-backend/compare/v0.5.0...v0.5.1
-[0.5.0]: https://github.com/BelinguoAG/full-power-backend/compare/v0.4.1...v0.5.0
-[0.4.1]: https://github.com/BelinguoAG/full-power-backend/compare/v0.4.0...v0.4.1
-[0.4.0]: https://github.com/BelinguoAG/full-power-backend/compare/v0.3.1...v0.4.0
-[0.3.1]: https://github.com/BelinguoAG/full-power-backend/compare/v0.3.0...v0.3.1
-[0.3.0]: https://github.com/BelinguoAG/full-power-backend/compare/v0.2.0...v0.3.0
-[0.2.0]: https://github.com/BelinguoAG/full-power-backend/compare/v0.1.0...v0.2.0
-[0.1.0]: https://github.com/BelinguoAG/full-power-backend/releases/tag/v0.1.0
+[unreleased]: https://github.com/sralloza/full-power-backend/compare/v0.13.0...HEAD
+[0.13.0]: https://github.com/sralloza/full-power-backend/compare/v0.12.0...v0.13.0
+[0.12.0]: https://github.com/sralloza/full-power-backend/compare/v0.11.1...v0.12.0
+[0.11.1]: https://github.com/sralloza/full-power-backend/compare/v0.11.0...v0.11.1
+[0.11.0]: https://github.com/sralloza/full-power-backend/compare/v0.10.0...v0.11.0
+[0.10.0]: https://github.com/sralloza/full-power-backend/compare/v0.9.0...v0.10.0
+[0.9.0]: https://github.com/sralloza/full-power-backend/compare/v0.8.1...v0.9.0
+[0.8.1]: https://github.com/sralloza/full-power-backend/compare/v0.8.0...v0.8.1
+[0.8.0]: https://github.com/sralloza/full-power-backend/compare/v0.7.1...v0.8.0
+[0.7.1]: https://github.com/sralloza/full-power-backend/compare/v0.7.0...v0.7.1
+[0.7.0]: https://github.com/sralloza/full-power-backend/compare/v0.6.0...v0.7.0
+[0.6.0]: https://github.com/sralloza/full-power-backend/compare/v0.5.1...v0.6.0
+[0.5.1]: https://github.com/sralloza/full-power-backend/compare/v0.5.0...v0.5.1
+[0.5.0]: https://github.com/sralloza/full-power-backend/compare/v0.4.1...v0.5.0
+[0.4.1]: https://github.com/sralloza/full-power-backend/compare/v0.4.0...v0.4.1
+[0.4.0]: https://github.com/sralloza/full-power-backend/compare/v0.3.1...v0.4.0
+[0.3.1]: https://github.com/sralloza/full-power-backend/compare/v0.3.0...v0.3.1
+[0.3.0]: https://github.com/sralloza/full-power-backend/compare/v0.2.0...v0.3.0
+[0.2.0]: https://github.com/sralloza/full-power-backend/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/sralloza/full-power-backend/releases/tag/v0.1.0

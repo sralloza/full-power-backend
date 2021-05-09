@@ -11,9 +11,9 @@ This project uses the following conventions:
 
 ## Related links
 
-- <a href="https://github.com/BelinguoAG/full-power-backend" class="external-link" target="_blank">Project homepage</a>
-- <a href="https://github.com/BelinguoAG/full-power-backend" class="external-link" target="_blank">Repository</a>
-- <a href="https://github.com/BelinguoAG/full-power-backend/issues" class="external-link" target="_blank">Issue tracker</a>
+- <a href="https://github.com/sralloza/full-power-backend" class="external-link" target="_blank">Project homepage</a>
+- <a href="https://github.com/sralloza/full-power-backend" class="external-link" target="_blank">Repository</a>
+- <a href="https://github.com/sralloza/full-power-backend/issues" class="external-link" target="_blank">Issue tracker</a>
 - [Changelog](changelog.md)
 - Related projects:
     - <a href="https://github.com/BelinguoAG/bot-frontend" class="external-link" target="_blank">Frontend repo</a>

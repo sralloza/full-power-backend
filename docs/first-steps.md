@@ -11,7 +11,7 @@ If you haven't cloned the repo follow these steps to do it.
 <div class="termy">
 
 ```shell
-$ git clone https://github.com/BelinguoAG/full-power-backend.git
+$ git clone https://github.com/sralloza/full-power-backend.git
 
 ---> 100%
 

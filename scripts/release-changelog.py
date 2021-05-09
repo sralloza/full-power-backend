@@ -3,12 +3,16 @@ from datetime import datetime
 from pathlib import Path
 
 import typer
+from click import ClickException
 
 app = typer.Typer(add_completion=False)
 
 
 class ChangelogEditor:
     def __init__(self):
+        if not Path("CHANGELOG.md").is_file():
+            raise ClickException("You have to be on the root folder.")
+
         self.lines = Path("CHANGELOG.md").read_text("utf8").splitlines()
         self.current_release = self.find_current_version()
 
@@ -28,7 +32,7 @@ class ChangelogEditor:
         for i, line in enumerate(self.lines):
             if "[unreleased]" in line and "#" not in line:
                 self.lines[i] = line.replace(self.current_release, new_version)
-                new_link = "https://github.com/BelinguoAG/full-power-backend/compare/v{}...v{}".format(
+                new_link = "https://github.com/sralloza/full-power-backend/compare/v{}...v{}".format(
                     self.current_release, new_version
                 )
                 new_link = f"[{new_version}]: {new_link}"
