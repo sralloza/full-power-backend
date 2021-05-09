@@ -35,7 +35,7 @@ nav:
   - Changelog: changelog.md
   - Contributing: contributing.md
 
-repo_url: https://github.com/BelinguoAG/full-power-backend
+repo_url: https://github.com/sralloza/full-power-backend
 repo_name: full-power-backend
 
 extra_css:

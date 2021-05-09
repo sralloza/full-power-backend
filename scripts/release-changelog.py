@@ -28,7 +28,7 @@ class ChangelogEditor:
         for i, line in enumerate(self.lines):
             if "[unreleased]" in line and "#" not in line:
                 self.lines[i] = line.replace(self.current_release, new_version)
-                new_link = "https://github.com/BelinguoAG/full-power-backend/compare/v{}...v{}".format(
+                new_link = "https://github.com/sralloza/full-power-backend/compare/v{}...v{}".format(
                     self.current_release, new_version
                 )
                 new_link = f"[{new_version}]: {new_link}"

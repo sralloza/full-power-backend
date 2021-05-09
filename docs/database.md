@@ -19,7 +19,7 @@ $ alembic upgrade head
 </div>
 
 !!! note "About migrations"
-    Database migrations are managed by `alembic`. Each migration info is stored in <a href="https://github.com/BelinguoAG/full-power-backend/tree/master/alembic/versions" class="external-link" target="_blank">alembic/versions</a>. You can list them in chronological order using the history command:
+    Database migrations are managed by `alembic`. Each migration info is stored in <a href="https://github.com/sralloza/full-power-backend/tree/master/alembic/versions" class="external-link" target="_blank">alembic/versions</a>. You can list them in chronological order using the history command:
 
     <div class="termy">
     ```shell
