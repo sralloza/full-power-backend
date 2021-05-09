@@ -24,9 +24,6 @@ $ cd full-power-backend
 
 It's very recomended to create a virtual environment to separate python proyects. If you don't have one or you don't know what it is, follow this steps:
 
-!!! note "o2switch"
-    If you are deploying the backend on o2switch, you don't have to create a virtual environment, it's already created. Read [o2switch deploy instructions](deploy/deploy-o2switch.md).
-
 === "Linux, macOS"
     <div class="termy">
 

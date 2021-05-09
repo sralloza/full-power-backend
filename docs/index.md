@@ -1,6 +1,6 @@
 # Chatbot Backend
 
-Backend for the ingage's health chatbot application.
+Backend for the full-poewr health chatbot application.
 
 ## Build the docs
 
