@@ -34,7 +34,7 @@ ecdsa==0.14.1
     # via python-jose
 email-validator==1.1.2
     # via -r requirements.in
-fastapi==0.63.0
+fastapi==0.65.1
     # via -r requirements.in
 future==0.18.2
     # via lunr
@@ -103,7 +103,7 @@ pyasn1==0.4.8
     #   rsa
 pycparser==2.20
     # via cffi
-pydantic==1.8.1
+pydantic==1.8.2
     # via
     #   -r requirements.in
     #   fastapi
@@ -170,7 +170,7 @@ sqlalchemy==1.3.24
     #   -r requirements.in
     #   alembic
     #   sqlalchemy-utils
-starlette==0.13.6
+starlette==0.14.2
     # via fastapi
 tenacity==6.3.1
     # via -r requirements.in
