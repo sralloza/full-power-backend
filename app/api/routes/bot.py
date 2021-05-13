@@ -27,10 +27,11 @@ logger = getLogger(__name__)
     "/process-msg",
     response_model=ConversationOut,
     responses={
-        500: {"description": "HealthData was not saved before processing"},
         400: {
             "description": "The user has passed both msg and question_response or none of them"
         },
+        401: {"description": "User not logged in"},
+        500: {"description": "HealthData was not saved before processing"},
     },
     summary="Process user message",
 )
