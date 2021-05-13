@@ -77,6 +77,7 @@ def get_file_by_name(*, db: Session = Depends(get_db), name: str, lang: str = "e
     "",
     dependencies=[Security(get_current_user, scopes=["admin"])],
     response_model=FileCreateResult,
+    responses={401: {"description": "Admin required"}},
     status_code=status.HTTP_201_CREATED,
     summary="Create new file",
 )
@@ -91,6 +92,7 @@ def create_file(*, db: Session = Depends(get_db), file: FileCreate, lang: str = 
     "/multi",
     dependencies=[Security(get_current_user, scopes=["admin"])],
     response_model=List[FileCreateResult],
+    responses={401: {"description": "Admin required"}},
     status_code=status.HTTP_201_CREATED,
     summary="Create multiples files",
 )
@@ -108,7 +110,10 @@ def create_multiple_files(
     "/{name}",
     dependencies=[Security(get_current_user, scopes=["admin"])],
     response_model=FileCreateResult,
-    responses={404: {"description": "File not found"}},
+    responses={
+        401: {"description": "Admin required"},
+        404: {"description": "File not found"},
+    },
     summary="Update the contents of a file",
 )
 def update_file(
@@ -123,7 +128,10 @@ def update_file(
     "/multiple",
     dependencies=[Security(get_current_user, scopes=["admin"])],
     response_class=Response,
-    responses={404: {"description": "File not found"}},
+    responses={
+        401: {"description": "Admin required"},
+        404: {"description": "File not found"},
+    },
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Remove multiple files",
 )
@@ -137,7 +145,10 @@ def remove_file_list(*, db: Session = Depends(get_db), files: List[FileDelete]):
     "/{name}",
     dependencies=[Security(get_current_user, scopes=["admin"])],
     response_class=Response,
-    responses={404: {"description": "File not found"}},
+    responses={
+        401: {"description": "Admin required"},
+        404: {"description": "File not found"},
+    },
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Remove a file",
 )

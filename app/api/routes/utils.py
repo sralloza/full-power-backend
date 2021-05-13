@@ -30,6 +30,7 @@ def get_version():
     "/settings",
     dependencies=[Security(get_current_user, scopes=["admin"])],
     response_model=Settings,
+    responses={401: {"description": "Admin required"}},
     summary="Get server settings",
 )
 def get_settings():
@@ -38,15 +39,23 @@ def get_settings():
     return settings
 
 
-@router.get("/me", response_model=UserPublic, summary="Get logged user")
-def users_get_current_user(current_user: User = Depends(get_current_user)):
+@router.get(
+    "/me",
+    response_model=UserPublic,
+    responses={401: {"description": "User not logged in"}},
+    summary="Get logged user",
+)
+def users_get_me(current_user: User = Depends(get_current_user)):
     """Returns the current user."""
 
     return current_user
 
 
 @router.post(
-    "/accept-disclaimer", response_class=Response, summary="User accepts disclaimer"
+    "/accept-disclaimer",
+    response_class=Response,
+    responses={401: {"description": "User not logged in"}},
+    summary="User accepts disclaimer",
 )
 def accept_disclaimer(
     db: Session = Depends(get_db), *, current_user: User = Depends(get_current_user)
@@ -57,7 +66,12 @@ def accept_disclaimer(
     crud.user.update(db, db_obj=current_user, obj_in=user)
 
 
-@router.post("/survey-filled", response_class=Response, summary="User fills survey")
+@router.post(
+    "/survey-filled",
+    response_class=Response,
+    responses={401: {"description": "User not logged in"}},
+    summary="User fills survey",
+)
 def survey_filled(
     db: Session = Depends(get_db), *, current_user: User = Depends(get_current_user)
 ):

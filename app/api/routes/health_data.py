@@ -15,6 +15,7 @@ from app.schemas.health_data import HealthData, HealthDataCreate
 router = APIRouter(
     dependencies=[Security(get_current_user, scopes=["admin"])],
     prefix="/health-data",
+    responses={401: {"description": "Admin required"}},
     tags=["Health-Data"],
 )
 

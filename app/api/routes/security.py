@@ -61,7 +61,12 @@ def register_basic_user(*, db: Session = Depends(get_db), user: UserCreateBasic)
     return crud.user.create(db, obj_in=real_user)
 
 
-@router.post("/refresh", response_model=Token, summary="Update token")
+@router.post(
+    "/refresh",
+    response_model=Token,
+    responses={401: {"description": "User not logged in"}},
+    summary="Update token",
+)
 def refresh_post(user=Depends(get_current_user)):
     """Endpoint to create a new valid token."""
     access_token_expires = timedelta(minutes=settings.token_expire_minutes)

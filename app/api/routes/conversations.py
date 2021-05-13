@@ -15,6 +15,7 @@ from app.schemas.conversation import Conversation, ConversationCreate
 router = APIRouter(
     dependencies=[Security(get_current_user, scopes=["admin"])],
     prefix="/conversations",
+    responses={401: {"description": "Admin required"}},
     tags=["Conversations"],
 )
 

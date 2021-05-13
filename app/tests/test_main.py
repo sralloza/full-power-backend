@@ -1,6 +1,9 @@
+from inspect import signature
 from typing import List
 from unittest import mock
 
+import pytest
+from fastapi.params import Depends, Security
 from fastapi.routing import APIRoute
 from fastapi.testclient import TestClient
 
@@ -53,11 +56,57 @@ ignore_routes = (
 )
 
 
-def test_routes():
+def is_public(route: APIRoute) -> bool:
+    if route.name == "login_post":
+        return True
+    if requires_admin(route):
+        return False
+    return not requires_normal_user(route)
+
+
+def requires_normal_user(route: APIRoute) -> bool:
+    if requires_admin(route):
+        return False
+    for dependency in route.dependencies:
+        if isinstance(dependency, Depends) and dependency.dependency:
+            if dependency.dependency.__name__ == "get_current_user":
+                return True
+
+    for argument in signature(route.endpoint).parameters.values():
+        dependency = argument.default
+        if isinstance(dependency, Depends) and dependency.dependency:
+            if dependency.dependency.__name__ == "get_current_user":
+                return True
+    return False
+
+
+def requires_admin(route: APIRoute) -> bool:
+    for dependency in route.dependencies:
+        if isinstance(dependency, Security) and dependency.dependency:
+            if "admin" in dependency.scopes:
+                return True
+
+    for argument in signature(route.endpoint).parameters.values():
+        dependency = argument.default
+        if isinstance(dependency, Security) and dependency.dependency:
+            if "admin" in dependency.scopes:
+                return True
+
+    return False
+
+
+class TestRoutesDocs:
     app = create_app()
     routes: List[APIRoute] = [x for x in app.routes if x.name not in ignore_routes]  # type: ignore
+    get_group = [x for x in routes if "GET" in x.methods and x.param_convertors]
+    create_group = [x for x in routes if "POST" in x.methods and x.param_convertors]
+    delete_group = [x for x in routes if "DELETE" in x.methods]
+    admin_group = [x for x in routes if requires_admin(x)]
+    user_group = [x for x in routes if requires_normal_user(x)]
+    public_group = [x for x in routes if is_public(x)]
 
-    for route in routes:
+    @pytest.mark.parametrize("route", routes)
+    def test_general(self, route: APIRoute):
         assert route.summary, f"{route.name!r} must have summary"
         assert route.description, f"{route.name!r} must have description"
         assert route.tags, f"{route.name!r} must have tags"
@@ -66,23 +115,40 @@ def test_routes():
             assert tag, f"{route.name!r} tags can't be empty"
             assert tag.istitle(), f"{route.name!r} tags must be titled"
 
-    # GET routes with parameter can raise 404
-    group = [x for x in routes if "GET" in x.methods and x.param_convertors]
-    for route in group:
+    @pytest.mark.parametrize("route", get_group)
+    def test_get_404(self, route: APIRoute):
+        # GET routes with parameter can raise 404
         # notifications-content routes can't raise 404
         if "notifications-content" in route.path:
-            continue
+            return
         assert 404 in route.responses, f"{route.name!r} must define 404"
         assert "not found" in route.responses[404]["description"]
 
-    # POST routes that create objects must return 201
-    group = [x for x in routes if "POST" in x.methods and x.param_convertors]
-    for route in group:  # noqa
+    @pytest.mark.parametrize("route", create_group)
+    def test_post_201(self, route: APIRoute):
+        # POST routes that create objects must return 201
         assert route.status_code == 201
 
-    # DELETE routes can raise 404 and must return 204
-    group = [x for x in routes if "DELETE" in x.methods]
-    for route in group:
+    @pytest.mark.parametrize("route", delete_group)
+    def test_delete_401_204(self, route: APIRoute):
+        # DELETE routes can raise 404 and must return 204
         assert route.status_code == 204
-        assert 404 in route.responses
+        assert 404 in route.responses, f"{route.name!r} must define 404"
         assert "not found" in route.responses[404]["description"]
+
+    @pytest.mark.parametrize("route", user_group)
+    def test_user_401(self, route: APIRoute):
+        assert 401 in route.responses, f"{route.name!r} must define 401 (user)"
+        assert route.responses[401]["description"] == "User not logged in"
+
+    @pytest.mark.parametrize("route", admin_group)
+    def test_admin_401(self, route: APIRoute):
+        assert 401 in route.responses, f"{route.name!r} must define 401 (admin)"
+        assert route.responses[401]["description"] == "Admin required"
+
+    @pytest.mark.parametrize("route", public_group)
+    def test_not_401(self, route: APIRoute):
+        if route.name == "login_post":
+            return
+        msg = f"{route.name!r} must not define 401 (public)"
+        assert 401 not in route.responses, msg
