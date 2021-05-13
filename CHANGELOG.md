@@ -7,6 +7,8 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 
 ## [Unreleased]
 
+## [1.0.2] - 2021-05-13
+
 ### Changed
 
 - Add `401` examples on private routes.
@@ -257,7 +259,8 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 
 - First version
 
-[unreleased]: https://github.com/sralloza/full-power-backend/compare/v1.0.1...HEAD
+[unreleased]: https://github.com/sralloza/full-power-backend/compare/v1.0.2...HEAD
+[1.0.2]: https://github.com/sralloza/full-power-backend/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/sralloza/full-power-backend/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/sralloza/full-power-backend/compare/v0.13.0...v1.0.0
 [0.13.0]: https://github.com/sralloza/full-power-backend/compare/v0.12.0...v0.13.0
