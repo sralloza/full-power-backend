@@ -7,6 +7,10 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 
 ## [Unreleased]
 
+### Changed
+
+- Add `401` examples on private routes.
+
 ## [1.0.1] - 2021-05-13
 
 ### Fixed
