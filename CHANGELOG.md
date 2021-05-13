@@ -7,6 +7,10 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class=
 
 ## [Unreleased]
 
+### Fixed
+
+- Pinned pydantic to 1.8.2 and fastapi to 0.65.1 to fix pydantic's security fix.
+
 ## [1.0.0] - 2021-05-09
 
 ### Added
