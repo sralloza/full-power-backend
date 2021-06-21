@@ -55,12 +55,12 @@ def users_get_me(current_user: User = Depends(get_current_user)):
     "/accept-disclaimer",
     response_class=Response,
     responses={401: {"description": "User not logged in"}},
-    summary="User accepts disclaimer",
+    summary="User accepts the disclaimer",
 )
 def accept_disclaimer(
     db: Session = Depends(get_db), *, current_user: User = Depends(get_current_user)
 ):
-    """Accepts the disclaimer."""
+    """User accepts the disclaimer."""
 
     user = UserUpdateAdmin(accepted_disclaimer=True)
     crud.user.update(db, db_obj=current_user, obj_in=user)
@@ -70,12 +70,12 @@ def accept_disclaimer(
     "/survey-filled",
     response_class=Response,
     responses={401: {"description": "User not logged in"}},
-    summary="User fills survey",
+    summary="User fills the first survey",
 )
 def survey_filled(
     db: Session = Depends(get_db), *, current_user: User = Depends(get_current_user)
 ):
-    """Accepts the disclaimer."""
+    """User fills the first survey."""
 
     user = UserUpdateAdmin(survey_filled=True)
     crud.user.update(db, db_obj=current_user, obj_in=user)

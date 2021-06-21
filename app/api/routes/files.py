@@ -28,7 +28,7 @@ router = APIRouter(prefix="/files", tags=["Files"])
 @router.get(
     "",
     response_model=List[FileCreateResult],
-    summary="List file names for language in the database",
+    summary="List file names given the language",
 )
 def list_files(
     *,
@@ -41,10 +41,10 @@ def list_files(
 
 
 @router.get(
-    "/all", response_model=List[GroupedFile], summary="List files grouped by language"
+    "/all", response_model=List[GroupedFile], summary="List file names grouped by name"
 )
 def list_files_grouped(*, db: Session = Depends(get_db)):
-    """Lists all the files from the database grouped by language."""
+    """Lists all the file names grouped by name."""
     return crud.file.get_grouped_file_list(db)
 
 
