@@ -65,7 +65,7 @@ def get_current_user(
     for scope in sec_scopes.scopes:
         if scope not in token_data.scopes:
             raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
+                status_code=status.HTTP_403_FORBIDDEN,
                 detail=f"Not enough permissions [{scope} access required]",
                 headers={"WWW-Authenticate": authenticate_value},
             )

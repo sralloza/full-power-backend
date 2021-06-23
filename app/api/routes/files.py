@@ -86,7 +86,7 @@ def get_file_by_name(*, db: Session = Depends(get_db), name: str, lang: str = "e
     summary="Create new file",
     **gen_responses(
         {
-            401: "Admin access required",
+            403: "Admin access required",
             409: "File already registered (same name and language)",
         }
     ),
@@ -107,7 +107,7 @@ def create_file(*, db: Session = Depends(get_db), file: FileCreate, lang: str = 
     summary="Create multiples files",
     **gen_responses(
         {
-            401: "Admin access required",
+            403: "Admin access required",
             409: "File already registered (same name and language)",
         }
     ),
@@ -128,7 +128,7 @@ def create_multiple_files(
     response_description="The file info and content",
     response_model=FileCreateResult,
     summary="Update the contents of a file",
-    **gen_responses({401: "Admin access required", 404: "File not found"}),
+    **gen_responses({403: "Admin access required", 404: "File not found"}),
 )
 def update_file(
     *, db: Session = Depends(get_db), name: str, file: FileUpdate, lang: str = "en"
@@ -145,7 +145,7 @@ def update_file(
     response_description="Files removed successfully",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Remove multiple files",
-    **gen_responses({401: "Admin access required", 404: "File not found"}),
+    **gen_responses({403: "Admin access required", 404: "File not found"}),
 )
 def remove_file_list(*, db: Session = Depends(get_db), files: List[FileDelete]):
     """Removes a bulk of files using their names and language."""
@@ -160,7 +160,7 @@ def remove_file_list(*, db: Session = Depends(get_db), files: List[FileDelete]):
     response_description="File removed successfully",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Remove a file",
-    **gen_responses({401: "Admin access required", 404: "File not found"}),
+    **gen_responses({403: "Admin access required", 404: "File not found"}),
 )
 def remove_file(*, db: Session = Depends(get_db), name: str, lang: str = "en"):
     """Remove a file given its name and language."""

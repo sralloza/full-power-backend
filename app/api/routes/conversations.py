@@ -17,7 +17,7 @@ router = APIRouter(
     dependencies=[Security(get_current_user, scopes=["admin"])],
     prefix="/conversations",
     tags=["Conversations"],
-    **gen_responses({401: "Admin access required"}),
+    **gen_responses({403: "Admin access required"}),
 )
 
 

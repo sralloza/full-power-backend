@@ -49,7 +49,7 @@ def get_image_id_list(
     summary="Create image",
     **gen_responses(
         {
-            401: "Admin access required",
+            403: "Admin access required",
             415: "Image type or mime type could not be identified",
         }
     ),
@@ -67,7 +67,7 @@ def create_image(*, db: Session = Depends(get_db), image_content: bytes = File(.
     response_description="Images deleted successfully",
     status_code=204,
     summary="Remove multiple images",
-    **gen_responses({401: "Admin access required", 404: "Image not found"}),
+    **gen_responses({403: "Admin access required", 404: "Image not found"}),
 )
 def remove_image_list(*, db: Session = Depends(get_db), ids: List[int]):
     """Removes a bulk of images using their ids."""
@@ -82,7 +82,7 @@ def remove_image_list(*, db: Session = Depends(get_db), ids: List[int]):
     response_description="Image deleted successfully",
     status_code=204,
     summary="Remove one image",
-    **gen_responses({401: "Admin access required", 404: "Image not found"}),
+    **gen_responses({403: "Admin access required", 404: "Image not found"}),
 )
 def remove_image(*, db: Session = Depends(get_db), image_id: int):
     """Removes an image using its id."""

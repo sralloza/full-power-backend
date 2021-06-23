@@ -43,7 +43,7 @@ def get_version():
     response_description="Current server settings",
     response_model=Settings,
     summary="Get server settings",
-    **gen_responses({401: "Admin access required"}),
+    **gen_responses({403: "Admin access required"}),
 )
 def get_settings():
     """Returns the current api settings. Requires admin."""

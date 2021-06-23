@@ -32,7 +32,7 @@ def test_get_settings_admin(client: TestClient, superuser_token_headers: dict):
 
 def test_get_settings_normal_user(client: TestClient, normal_user_token_headers: dict):
     response = client.get("/settings", headers=normal_user_token_headers)
-    assert response.status_code == 401
+    assert response.status_code == 403
     assert "[admin access required]" in response.json()["detail"]
 
 
