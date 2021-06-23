@@ -12,7 +12,7 @@ from app.api.dependencies.security import get_current_user
 from app.api.dependencies.utils import get_limits
 from app.schemas.health_data import HealthData, HealthDataCreate
 from app.utils.responses import gen_responses
-from docker.uvicorn.tests import response
+
 
 router = APIRouter(
     dependencies=[Security(get_current_user, scopes=["admin"])],

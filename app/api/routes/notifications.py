@@ -42,7 +42,7 @@ def get_generic_notifications(lang: str):
     """Returns a random generic notification."""
 
     i18n.set("locale", lang)
-    nchoices = int(i18n.t(f"notifications.generic.length"))
+    nchoices = int(i18n.t("notifications.generic.length"))
     choice = random.randint(1, nchoices)
 
     return QuestionNotification(

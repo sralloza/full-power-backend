@@ -16,7 +16,7 @@ from app.models import User
 from app.schemas.bot import QuestionResponse
 from app.schemas.conversation import ConversationCreate, ConversationOut
 from app.schemas.health_data import HealthDataCreate, HealthDataUpdate
-from app.utils.responses import ErrorMessage, gen_responses
+from app.utils.responses import gen_responses
 
 router = APIRouter(prefix="/bot", tags=["Bot"])
 logger = getLogger(__name__)

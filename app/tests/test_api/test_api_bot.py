@@ -1,7 +1,6 @@
 from unittest import mock
 
 import pytest
-from pydantic import BaseModel, confloat
 
 from app import crud
 from app.core.config import settings
@@ -69,7 +68,7 @@ class TestProcessMsg:
 
     def test_no_args(self, client, normal_user_token_headers):
         response = client.post(
-            f"/bot/process-msg?lang=en", headers=normal_user_token_headers
+            "/bot/process-msg?lang=en", headers=normal_user_token_headers
         )
         assert response.status_code == 400
         detail = response.json()["detail"]
@@ -79,7 +78,7 @@ class TestProcessMsg:
 
     def test_both_args(self, client, normal_user_token_headers):
         response = client.post(
-            f"/bot/process-msg?lang=en",
+            "/bot/process-msg?lang=en",
             headers=normal_user_token_headers,
             json={
                 "msg": "this is the user message",
@@ -94,7 +93,7 @@ class TestProcessMsg:
 
     def test_response_to_question(self, client, normal_user_token_headers):
         response = client.post(
-            f"/bot/process-msg?lang=en",
+            "/bot/process-msg?lang=en",
             json={
                 "question_response": {"user_response": True, "question_id": "sleep.1"}
             },
@@ -113,7 +112,7 @@ class TestProcessMsg:
 
     def test_ask_question(self, client, normal_user_token_headers):
         response = client.post(
-            f"/bot/process-msg?lang=en",
+            "/bot/process-msg?lang=en",
             json={"msg": settings.bot_question_message_flag + "this is the question"},
             headers=normal_user_token_headers,
         )
@@ -148,10 +147,10 @@ class TestProcessMsg:
         assert conv.user_msg == "this is the user message"
         if not df_res.is_end:
             assert conv.bot_msg == ["this is the bot message"]
-            response.json()["bot_msg"] == "this is the bot message"
+            assert response.json()["bot_msg"] == "this is the bot message"
         else:
             assert conv.bot_msg == ["this is the bot message", "<problem>"]
-            response.json()["bot_msg"] == "this is the bot message <problem>"
+            assert response.json()["bot_msg"] == "this is the bot message <problem>"
 
         assert conv.intent == "this is the intent"
         assert conv.display_type == DisplayType.default

@@ -106,7 +106,7 @@ def test_create_file(db: Session, client: TestClient, superuser_token_headers):
         "/files?lang=ch", data=file_in.json(), headers=superuser_token_headers
     )
     assert response_3.status_code == 409
-    error = f"File with name=vitamins.power and lang=ch already exists"
+    error = "File with name=vitamins.power and lang=ch already exists"
     assert response_3.json()["detail"] == error
 
 
