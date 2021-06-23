@@ -69,10 +69,10 @@ def conversation_get_from_user(
     response_description="List of transcripted conversations",
 )
 def conversations_get_from_all_users(
-    *, db: Session = Depends(get_db), skip: int = 0, limit: int = 100
+    *, db: Session = Depends(get_db), limits: dict = Depends(get_limits)
 ):
     """Returns a list of all conversations."""
-    return crud.conversation.get_multi(db, skip=skip, limit=limit)
+    return crud.conversation.get_multi(db, **limits)
 
 
 @router.delete(

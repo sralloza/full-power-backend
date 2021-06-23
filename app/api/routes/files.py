@@ -44,9 +44,11 @@ def list_files(
 @router.get(
     "/all", response_model=List[GroupedFile], summary="List file names grouped by name"
 )
-def list_files_grouped(*, db: Session = Depends(get_db)):
+def list_files_grouped(
+    *, db: Session = Depends(get_db), limits: dict = Depends(get_limits)
+):
     """Lists all the file names grouped by name."""
-    return crud.file.get_grouped_file_list(db)
+    return crud.file.get_grouped_file_list(db, **limits)
 
 
 @router.get(

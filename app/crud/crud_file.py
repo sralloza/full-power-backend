@@ -84,10 +84,10 @@ class CRUDFile(CRUDBase[File, FileCreate, FileUpdateInner]):
         for line in query.all():
             yield FileCreateResult(name=line[0], title=line[1], lang=line[2])
 
-    def get_grouped_file_list(self, db: Session):
+    def get_grouped_file_list(self, db: Session, skip: int = 0, limit: int = 100):
         TempFile = namedtuple("TempFile", "name lang")
         query = db.query(self.model.name, self.model.lang)
-        query = query.order_by(self.model.name.asc())
+        query = query.order_by(self.model.name.asc()).offset(skip).limit(limit)
         files = [TempFile(line[0], line[1]) for line in query.all()]
 
         for name, named_files in groupby(files, lambda x: x.name):
