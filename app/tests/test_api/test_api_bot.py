@@ -147,10 +147,10 @@ class TestProcessMsg:
         assert conv.user_msg == "this is the user message"
         if not df_res.is_end:
             assert conv.bot_msg == ["this is the bot message"]
-            assert response.json()["bot_msg"] == "this is the bot message"
         else:
             assert conv.bot_msg == ["this is the bot message", "<problem>"]
-            assert response.json()["bot_msg"] == "this is the bot message <problem>"
+
+        assert response.json()["bot_msg"] == conv.bot_msg
 
         assert conv.intent == "this is the intent"
         assert conv.display_type == DisplayType.default
