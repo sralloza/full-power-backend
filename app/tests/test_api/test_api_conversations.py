@@ -95,7 +95,7 @@ def test_conversation_get_from_all_users(
     convs_db = crud.conversation.get_multi(db)
     convs = [Conversation.from_orm(x) for x in convs_db]
 
-    response = client.get(f"/conversations", headers=superuser_token_headers)
+    response = client.get("/conversations", headers=superuser_token_headers)
     assert response.status_code == 200
     real_convs = parse_obj_as(List[Conversation], response.json())
     assert real_convs == convs

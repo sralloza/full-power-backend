@@ -1,6 +1,7 @@
 """Backend of chatbot application."""
 
 from logging import getLogger
+from typing import Any, Dict
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -14,7 +15,7 @@ logger = getLogger(__name__)
 
 def create_app() -> FastAPI:
     """Creates the FastAPI app."""
-    fastapi_kwargs = dict(
+    fastapi_kwargs: Dict[str, Any] = dict(
         title="Health Bot API",
         description="Backend for Health Bot",
         version=__version__,
@@ -23,7 +24,7 @@ def create_app() -> FastAPI:
     )
 
     if settings.production:
-        fastapi_kwargs.update(dict(docs_url=None))
+        fastapi_kwargs["docs_url"] = None
 
     app = FastAPI(**fastapi_kwargs)
     app.include_router(api.router)
@@ -39,5 +40,6 @@ def create_app() -> FastAPI:
     app.add_exception_handler(500, catch_errors)
 
     return app
+
 
 app = create_app()

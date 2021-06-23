@@ -75,8 +75,6 @@ def create_test_user(db: Session):
 
 
 def get_superuser_token_headers(client: TestClient) -> Dict[str, str]:
-    from .user import user_authentication_headers
-
     return user_authentication_headers(
         client=client,
         username=settings.first_superuser,
@@ -85,8 +83,6 @@ def get_superuser_token_headers(client: TestClient) -> Dict[str, str]:
 
 
 def get_normal_user_token_headers(client: TestClient) -> Dict[str, str]:
-    from .user import user_authentication_headers
-
     return user_authentication_headers(
         client=client,
         username=settings.username_test_user,

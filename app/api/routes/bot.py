@@ -16,24 +16,24 @@ from app.models import User
 from app.schemas.bot import QuestionResponse
 from app.schemas.conversation import ConversationCreate, ConversationOut
 from app.schemas.health_data import HealthDataCreate, HealthDataUpdate
+from app.utils.responses import gen_responses
 
-router = APIRouter(
-    dependencies=[Depends(get_current_user)], prefix="/bot", tags=["Bot"]
-)
+router = APIRouter(prefix="/bot", tags=["Bot"])
 logger = getLogger(__name__)
 
 
 @router.post(
     "/process-msg",
+    response_description="The transcripted conversation",
     response_model=ConversationOut,
-    responses={
-        400: {
-            "description": "The user has passed both msg and question_response or none of them"
-        },
-        401: {"description": "User not logged in"},
-        500: {"description": "HealthData was not saved before processing"},
-    },
-    summary="Process user message",
+    summary="User talks with chatbot",
+    **gen_responses(
+        {
+            400: "The user has passed both `msg` and `question_response` or none of them",
+            401: "User not logged in",
+            500: "HealthData was not saved before processing",
+        }
+    ),
 )
 def bot_message_post(
     *,
@@ -45,7 +45,7 @@ def bot_message_post(
     question_response: QuestionResponse = Body(None),
 ):
     """Sends a message to the bot and returns the response back. You need to pass
-    'msg' or 'question_response', but no both.
+    `msg` or `question_response`, but not both.
 
     The final intent includes two headers:
 

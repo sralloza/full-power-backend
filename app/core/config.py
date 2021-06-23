@@ -28,7 +28,7 @@ class Settings(BaseSettings):
 
     # Security
     encryption_algorithm: str = "HS256"
-    server_secret: str = secrets.token_urlsafe(32)
+    server_secret: str
     token_expire_minutes: int = 30
 
     # Database

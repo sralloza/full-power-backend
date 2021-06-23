@@ -1,11 +1,11 @@
-from typing import List, Set
+from typing import Set
 
 from fastapi.testclient import TestClient
 from pydantic import parse_obj_as
 from sqlalchemy.orm import Session
 
 from app import crud
-from app.schemas.user import UserCreateAdmin, UserInDB, UserPublic
+from app.schemas.user import UserCreateAdmin, UserInDB
 from app.tests.utils.utils import random_lower_string
 
 
@@ -19,8 +19,8 @@ def test_create_user_normal_user(client: TestClient, normal_user_token_headers: 
         json=data,
     )
 
-    assert response.status_code == 401
-    assert "[admin required]" in response.json()["detail"]
+    assert response.status_code == 403
+    assert "[admin access required]" in response.json()["detail"]
 
 
 def test_create_user_admin(
@@ -75,7 +75,7 @@ def test_get_existing_user(
 
 
 def test_get_nonexisting_user(client: TestClient, superuser_token_headers: dict):
-    response = client.get(f"/users/165468321231323", headers=superuser_token_headers)
+    response = client.get("/users/165468321231323", headers=superuser_token_headers)
     assert response.status_code == 404
 
     error = response.json()
@@ -124,7 +124,7 @@ def test_remove_existing_user(
 def test_remove_nonexisting_user(
     client: TestClient, superuser_token_headers: dict, db: Session
 ):
-    response = client.delete(f"/users/46549812123", headers=superuser_token_headers)
+    response = client.delete("/users/46549812123", headers=superuser_token_headers)
     assert response.status_code == 404
 
     error = response.json()

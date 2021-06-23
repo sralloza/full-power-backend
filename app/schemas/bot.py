@@ -1,6 +1,6 @@
 """Data schematics for bot endpoints."""
 
-from pydantic import BaseModel, constr, validator
+from pydantic import BaseModel, validator
 
 from app.utils.translate import i18n
 

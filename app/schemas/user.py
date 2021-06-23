@@ -1,11 +1,9 @@
 """Data schematics for user endpoints."""
 
 from datetime import datetime
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import BaseModel
-
-from .conversation import Conversation
 
 # pylint: disable=too-few-public-methods
 

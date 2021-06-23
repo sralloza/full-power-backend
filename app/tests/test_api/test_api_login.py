@@ -8,7 +8,6 @@ from sqlalchemy.orm.session import Session
 
 from app import crud
 from app.core.config import settings
-from app.models.user import User
 from app.schemas.token import Token
 from app.schemas.user import UserCreateAdmin, UserPublic
 from app.tests.utils.utils import random_lower_string

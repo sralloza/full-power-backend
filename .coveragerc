@@ -5,10 +5,11 @@ source = app, app/tests, ./
 
 omit =
     .venv/*
-    app/_version.py
-    app/db/init_db.py
     app/scripts/*
     app/tests/utils/*
+    docker/uvicorn/*
+    app/_version.py
+    app/db/init_db.py
     wsgi.py
     run_windows.py
     setup.py
