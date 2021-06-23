@@ -11,17 +11,20 @@ from app.api.dependencies.database import get_db
 from app.api.dependencies.security import get_current_user
 from app.api.dependencies.utils import get_limits
 from app.schemas.health_data import HealthData, HealthDataCreate
+from app.utils.responses import gen_responses
+from docker.uvicorn.tests import response
 
 router = APIRouter(
     dependencies=[Security(get_current_user, scopes=["admin"])],
     prefix="/health-data",
-    responses={401: {"description": "Admin required"}},
     tags=["Health-Data"],
+    **gen_responses({401: "Admin access required"}),
 )
 
 
 @router.post(
     "",
+    response_description="The created health data result",
     response_model=HealthData,
     status_code=status.HTTP_201_CREATED,
     summary="Create health data results",
@@ -35,9 +38,10 @@ def health_data_create_post(
 
 @router.get(
     "/user/{user_id}",
+    response_description="List of user's health data result",
     response_model=List[HealthData],
     summary="Get health data results from a user",
-    responses={404: {"description": "User not found"}},
+    **gen_responses({404: "User not found"}),
 )
 def health_data_get_from_user(
     *, db: Session = Depends(get_db), user_id: int, limits: dict = Depends(get_limits)
@@ -49,6 +53,7 @@ def health_data_get_from_user(
 
 @router.get(
     "/{health_data_id}",
+    response_description="The health data result",
     response_model=HealthData,
     summary="Get health data results by id",
     responses={404: {"description": "Health data results not found"}},
@@ -60,6 +65,7 @@ def get_health_data_by_id(*, db: Session = Depends(get_db), health_data_id: int)
 
 @router.get(
     "",
+    response_description="All the user's health data results",
     response_model=List[HealthData],
     summary="Get health data results from all users",
 )
@@ -73,9 +79,10 @@ def health_data_get_from_all_users(
 @router.delete(
     "/{health_data_id}",
     response_class=Response,
-    responses={404: {"description": "Health data not found"}},
+    response_description="Health data result removed successfully",
     status_code=204,
     summary="Remove health data result",
+    **gen_responses({404: "Health data not found"}),
 )
 def health_data_delete(*, db: Session = Depends(get_db), health_data_id: int):
     """Remove health data result given its id."""

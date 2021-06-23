@@ -11,17 +11,19 @@ from app.api.dependencies.database import get_db
 from app.api.dependencies.security import get_current_user
 from app.api.dependencies.utils import get_limits
 from app.schemas.conversation import Conversation, ConversationCreate
+from app.utils.responses import gen_responses
 
 router = APIRouter(
     dependencies=[Security(get_current_user, scopes=["admin"])],
     prefix="/conversations",
-    responses={401: {"description": "Admin required"}},
     tags=["Conversations"],
+    **gen_responses({401: "Admin access required"}),
 )
 
 
 @router.post(
     "",
+    response_description="The created transcripted conversation",
     response_model=Conversation,
     status_code=status.HTTP_201_CREATED,
     summary="Create simple conversation",
@@ -35,9 +37,10 @@ def conversation_create_post(
 
 @router.get(
     "/{conversation_id}",
+    response_description="The transcripted conversation",
     response_model=Conversation,
-    responses={404: {"description": "Conversation not found"}},
     summary="Get conversation by id",
+    **gen_responses({404: "Conversation not found"}),
 )
 def conversation_get_by_id(*, db: Session = Depends(get_db), conversation_id: int):
     """Finds the conversation by id or returns 404 if it wasn't found."""
@@ -46,9 +49,10 @@ def conversation_get_by_id(*, db: Session = Depends(get_db), conversation_id: in
 
 @router.get(
     "/user/{user_id}",
+    response_description="The user's transcripted conversations",
     response_model=List[Conversation],
-    responses={404: {"description": "User not found"}},
     summary="Get conversations from user",
+    **gen_responses({404: "User not found"}),
 )
 def conversation_get_from_user(
     *, db: Session = Depends(get_db), user_id: int, limits: dict = Depends(get_limits)
@@ -58,7 +62,12 @@ def conversation_get_from_user(
     return crud.conversation.get_user(db, user_id=user_id, **limits)
 
 
-@router.get("", response_model=List[Conversation], summary="Get all conversations")
+@router.get(
+    "",
+    response_model=List[Conversation],
+    summary="Get all conversations",
+    response_description="List of transcripted conversations",
+)
 def conversations_get_from_all_users(
     *, db: Session = Depends(get_db), skip: int = 0, limit: int = 100
 ):
@@ -69,9 +78,10 @@ def conversations_get_from_all_users(
 @router.delete(
     "/{conversation_id}",
     response_class=Response,
-    responses={404: {"description": "Conversation not found"}},
+    response_description="Transcripted conversation removed successfully",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Remove a conversation",
+    **gen_responses({404: "Conversation not found"}),
 )
 def conversation_delete(*, db: Session = Depends(get_db), conversation_id: int):
     """Removes a conversation using its id."""

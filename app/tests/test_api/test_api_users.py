@@ -20,7 +20,7 @@ def test_create_user_normal_user(client: TestClient, normal_user_token_headers: 
     )
 
     assert response.status_code == 401
-    assert "[admin required]" in response.json()["detail"]
+    assert "[admin access required]" in response.json()["detail"]
 
 
 def test_create_user_admin(

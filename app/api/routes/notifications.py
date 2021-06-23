@@ -3,6 +3,7 @@ import random
 from fastapi import APIRouter, HTTPException
 
 from app.schemas.notification import QuestionNotification
+from app.utils.responses import gen_responses
 from app.utils.translate import i18n
 
 router = APIRouter(prefix="/notifications-content", tags=["Notifications"])
@@ -10,9 +11,10 @@ router = APIRouter(prefix="/notifications-content", tags=["Notifications"])
 
 @router.get(
     "/second-survey/{problem}",
+    response_description="Notification content",
     response_model=QuestionNotification,
     summary="Second survey notifications",
-    responses={400: {"description": "Invalid problem or lang"}},
+    **gen_responses({400: "Invalid problem or language"}),
 )
 def get_second_survey_notifications(problem: str, lang: str):
     """Returns a random question from the second survey questions."""
@@ -32,6 +34,7 @@ def get_second_survey_notifications(problem: str, lang: str):
 
 @router.get(
     "/generic",
+    response_description="Notification content",
     response_model=QuestionNotification,
     summary="Generic notifications",
 )

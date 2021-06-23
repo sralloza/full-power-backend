@@ -13,17 +13,19 @@ from app.core.config import settings
 from app.core.security import authenticate_user, create_access_token
 from app.schemas.token import Token
 from app.schemas.user import UserCreateAdmin, UserCreateBasic, UserPublic
+from app.utils.responses import gen_responses
 
 router = APIRouter(tags=["Security"])
 
 
 @router.post(
     "/login",
+    response_description="The login token",
     response_model=Token,
-    responses={401: {"description": "Incorrect username of password"}},
-    summary="Grants access to users",
+    summary="Login",
+    **gen_responses({401: "Incorrect username of password"}),
 )
-def login_post(
+def login(
     *,
     db: Session = Depends(get_db),
     form_data: OAuth2PasswordRequestForm = Depends(),
@@ -50,10 +52,11 @@ def login_post(
 
 @router.post(
     "/register",
+    response_description="The registered user",
     response_model=UserPublic,
-    responses={409: {"description": "Username already registered"}},
     status_code=201,
     summary="Register new user",
+    **gen_responses({409: "Username already registered"}),
 )
 def register_basic_user(*, db: Session = Depends(get_db), user: UserCreateBasic):
     """Register endpoint."""
@@ -63,11 +66,12 @@ def register_basic_user(*, db: Session = Depends(get_db), user: UserCreateBasic)
 
 @router.post(
     "/refresh",
+    response_description="A new valid token",
     response_model=Token,
-    responses={401: {"description": "User not logged in"}},
     summary="Update token",
+    **gen_responses({401: "User not logged in"}),
 )
-def refresh_post(user=Depends(get_current_user)):
+def refresh_token(user=Depends(get_current_user)):
     """Endpoint to create a new valid token."""
     access_token_expires = timedelta(minutes=settings.token_expire_minutes)
     access_token = create_access_token(

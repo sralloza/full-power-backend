@@ -153,7 +153,7 @@ class TestRoutesDocs:
     @pytest.mark.parametrize("route", admin_group, ids=id_generator)
     def test_admin_401(self, route: APIRoute):
         assert 401 in route.responses, f"{route.name!r} must define 401 (admin)"
-        assert route.responses[401]["description"] == "Admin required"
+        assert route.responses[401]["description"] == "Admin access required"
 
     @pytest.mark.parametrize("route", public_group, ids=id_generator)
     def test_not_401(self, route: APIRoute):
