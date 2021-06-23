@@ -21,7 +21,7 @@ def gen_responses(responses: Dict[int, str], ignore: List[int] = None):
 
     for code, reason in responses.items():
         data[code] = {"description": reason}
-        if code not in ignore:
+        if code not in ignore: # noqa
             data[code]["model"] = ErrorMessage
 
     return {"responses": data}
