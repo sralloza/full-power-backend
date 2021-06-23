@@ -58,7 +58,7 @@ ignore_routes = (
 
 
 def is_public(route: APIRoute) -> bool:
-    if route.name == "login_post":
+    if route.name == "login":
         return True
     if requires_admin(route):
         return False
@@ -157,7 +157,7 @@ class TestRoutesDocs:
 
     @pytest.mark.parametrize("route", public_group, ids=id_generator)
     def test_not_401(self, route: APIRoute):
-        if route.name == "login_post":
+        if route.name == "login":
             return
         msg = f"{route.name!r} must not define 401 (public)"
         assert 401 not in route.responses, msg
